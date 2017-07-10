@@ -576,7 +576,7 @@ function handleMoveSeries() {
 		}
 	}
 
-	userMoveSeries(list_src_id, list_dst_id, move_series_id_arr, function () {
+	userMoveSeries(list_src_id, list_dst_id, move_series_id_arr, function (data) {
 		var dst_list_table = getListTableById(list_dst_id);
 		if (dst_list_table !== null) {
 			var updated_table = buildListTable(getListById(data.lists, list_dst_id));
@@ -757,6 +757,8 @@ function handleCompleteEditLink(event) {
 		var series_row = getInputLinksSeriesRow(input_link);
 		var series_id = getSeriesRowsId(series_row);
 		userSetSeriesLink(series_id, link);
+		var title_cont = getSeriesRowsTitleContents(series_row);
+		title_cont.setAttribute("user_link", link);
 	}
 }
 
