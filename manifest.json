@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "name": "en",
+  "description": "Get notified of new English translated asian media releases (manga, light/web novels, etc.) and track your progress",
+  "version": "0.5",
+  "permissions": [
+    "*://www.mangaupdates.com/*",
+    "storage",
+    "unlimitedStorage",
+    "notifications",
+    "webRequest"
+  ],
+  "browser_action": {
+    "default_icon": "img/icon16.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "persistent": true,
+    "scripts": [
+      "encore_mu.js",
+      "mu_comm.js",
+      "background.js"
+    ]
+  },
+  "icons": {
+    "16" :  "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  }
+}

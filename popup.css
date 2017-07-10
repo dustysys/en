@@ -1,0 +1,517 @@
+
+::-webkit-scrollbar {
+    width: 1px;
+}
+
+:root {
+    --text-color: #164296;
+    --text-color-new: #85020e;
+    --bg-color: #E0F1FF;
+    --bg-color-new: #FFFFEE;
+    --border-color: #a9b6c0;
+    --border-color-new: #f3a29e;
+    --block-color: #d4e2f9;
+    --block-color-new: #f5e2e1;
+    --button-color-hover: #edf5ff;
+    --button-color-hover-new: #fff7f3;
+    --button-text-color: #12367a;
+    --button-text-color-new: #522731;
+    --input-color-bg: var(--button-color-hover);
+    --input-color-bg-new: var(--button-color-hover-new);
+
+    --popup-height: 600px;
+    --popup-width: 510px;
+    --navbar-height: 35px;
+    --row-height: 50px;
+    --row-margin-vert: 3px;
+    --table-margin-horiz: 3px;
+    --series-border-width: 1px;
+}
+
+html {
+    width: var(--popup-width);
+    min-width: var(--popup-width);
+    max-width: var(--popup-width);
+    height: var(--popup-height);
+    overflow-y: scroll;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    margin-top: 5px;
+}
+
+body {
+    background: var(--bg-color);
+    width: var(--popup-width);
+    /*linear-gradient(var(--bg-color-new), var(--bg-color));*/
+    cursor: default;
+    user-select: none;
+    margin: 0;
+}
+
+
+
+.listTable {
+    margin-left: var(--table-margin-horiz);
+    margin-right: var(--table-margin-horiz);
+    margin-top: var(--navbar-height);
+}
+
+.seriesRow {
+    border-radius: 5px;
+    border-width: var(--series-border-width);
+    border-style: dotted;
+    height: var(--row-height);
+    margin-bottom: var(--row-margin-vert);
+    margin-top: var(--row-margin-vert);
+    overflow: hidden;
+}
+
+.seriesRowWrap {
+    will-change: transform;
+}
+
+.seriesTitleBlock {
+    width: 180px;
+    float: left;
+    font-weight: bold;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-right: 1px #a9b6c0 dotted;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    overflow:hidden;
+}
+
+.titleDisplay {
+    display: table;
+    width: 180px;
+    height: 50px;
+    overflow:hidden;
+}
+
+    .titleDisplay p {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+.editLinkWrap {
+    position: relative;
+}
+
+.editLinkButton {
+    position:absolute;
+    border: 1px dotted;
+    border-radius:5px;
+    right:169px;
+    bottom:34px;
+    width:15px;
+    height:15px;
+    overflow:hidden;
+    opacity:.5;
+}
+    .editLinkButton:hover {
+        cursor:pointer;
+    }
+    .editLinkButton:active {
+        transform: translateY(1px)
+    }
+
+.editLinkIcon {
+    position:relative;
+    right:2px;
+    bottom:7px;
+    font-size: 20px;
+    transform: scale(-1,1) skew(0deg,30deg) rotate(30deg);
+    font-weight: bolder;
+}
+
+.seriesReleaseBlock {
+    overflow: hidden;
+    height: 50px;
+    font-size: 12px;
+    padding-left: 10px;
+    white-space: nowrap;
+    display:block;
+}
+
+.releaseLineDisplay {
+    padding-top: 8px;
+}
+
+.releaseReadLine {
+    height: 12px;
+}
+
+.releaseLatestLine {
+    padding-top: 3px;
+}
+
+    .releaseLatestLine:hover {
+        padding-top: 3px;
+    }
+
+.buttonBlock {
+    width: 130px;
+    height: 50px;
+    float: right;
+    overflow: hidden;
+}
+
+.releaseReadDescription {
+    display: inline;
+}
+
+.releaseReadDisplay {
+    display: inline;
+}
+
+.releaseLatestDescription {
+    display: inline;
+}
+
+.releaseLatestDisplay {
+    display: inline;
+}
+
+.readVolume {
+    cursor: auto;
+    margin-right:4px;
+}
+
+.readChapter {
+    cursor: auto;
+}
+
+.readChapVolNA {
+    cursor: auto;
+}
+
+.readVolumeInput, .readVolumeInput:focus {
+    font-size: 12px;
+    width: 15px;
+    height: 12px;
+    box-shadow: none;
+    border-width: 1px;
+    border-style: dotted;
+}
+
+.readChapterInput, .readChapterInput:focus {
+    font-size: 12px;
+    width: 21px;
+    height: 12px;
+    box-shadow: none;
+    border-width: 1px;
+    border-style: dotted;
+}
+
+.upToDateButtonWrap {
+    position: relative;
+    height: 0px;
+    text-align: center;
+}
+
+.upToDateButton {
+    border-radius: 4px;
+    border: 1px solid;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 12px 12px;
+    margin-top: 4px;
+}
+
+    .upToDateButton:hover {
+        cursor: pointer;
+    }
+
+    .upToDateButton:active {
+        position: inherit;
+        top: 1px;
+    }
+
+.seriesSelectWrap {
+    position: relative;
+    height: 0px;
+    text-align: center;
+}
+
+
+
+
+
+button {
+    font-size: 12px;
+}
+
+.navBar {
+    position: fixed;
+    top: 0px;
+    background-color: var(--block-color);
+    z-index: 5;
+    height: var(--navbar-height);
+    width: 513px;
+    left: -2px;
+    border-bottom: dotted 1px var(--border-color);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+
+#currentListField{
+    display: inline-block;
+    float: left;
+    margin-top: 5px;
+}
+
+#seriesRowListFilter {
+    width: 80px;
+    height: 20px;
+}
+
+#currentListSelect {
+    top:5px;
+    margin-left: 5px;
+    height:25px;
+    width: 100px;
+}
+
+#manageSeriesField {
+    display: inline-block;
+    position: absolute;
+    width: 200px;
+    height: var(--navbar-height);
+    top: 5px;
+    left: 216px;
+    text-align: center;
+}
+
+#deleteSeriesButton {
+    width: 24px;
+    height: 24px;
+    font-size: 20px;
+    font-weight:bolder;
+    background-color: var(--block-color-new);
+    color: var(--text-color-new);
+    display: inline-block;
+    position:relative;
+    border: 1px solid;
+    border-radius:3px;
+    padding-left:5px;
+    padding-right:5px;
+    overflow:hidden;
+}
+    #deleteSeriesButton:hover {
+        background-color: var(--button-color-hover-new);
+        cursor: pointer;
+    }
+    #deleteSeriesButton:active{
+        top: 1px;
+    }
+
+#deleteButtonDescription{
+   position:absolute;
+   right:6px;
+   bottom:0px;
+}
+
+#moveSeriesButton {
+    width: 50px;
+    height: 24px;
+    background-color: var(--block-color);
+    border: solid 1px;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+    border-color: var(--text-color);
+    position: relative;
+    display: inline-block;
+    bottom: 0px;
+    margin-left: 3px;
+    overflow:visible;
+}
+    #moveSeriesButton:hover {
+        background-color: var(--button-color-hover);
+        cursor: pointer;
+    }
+    #moveSeriesButton:active {
+        top: 1px;
+    }
+
+#moveButtonDescription{
+    position: absolute;
+    width:50px;
+    height:24px;
+    display:inline-block;
+    text-wrap:none;
+    right:0px;
+    top:3px;
+    color:var(--button-text-color);
+}
+
+#manageSeriesListSelect {
+    width: 100px;
+    height: 26px;
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+    display:inline-block;
+    transform: translateY(-9px);
+}
+
+
+
+#manageSeriesButton {
+    width: 30px;
+    height: 24px;
+    left: 470px;
+    margin-top: 5px;
+    margin-right:5px;
+    position:relative;
+    background-color:var(--block-color);
+    border: 1px solid;
+    border-color: var(--text-color);
+    border-radius: 3px;
+}
+    #manageSeriesButton:hover {
+        background-color: var(--button-color-hover);
+        cursor: pointer;
+    }
+
+    #manageSeriesButton:active {
+        top: 1px;
+    }
+
+#manageButtonDescription {
+    position:absolute;
+    font-size: 27px;
+    transform:translateY(-7px);
+    color:var(--text-color);
+    left: 5px;
+}
+
+.seriesSelectButton, #selectAllButton {
+    border-radius: 50%;
+    color: #FFFFFF;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0,0,0,.5);
+    position: relative;
+    width: 25px;
+    height: 25px;
+    margin-top: 11px;
+    margin-right: 3px;
+    display: inline-block;
+}
+    .seriesSelectButton:hover, #selectAllButton:hover {
+        cursor: pointer;
+    }
+
+#selectAllButton {
+    transform: translateY(-45px);
+    margin-left: 216px;
+    margin-right:0px;
+    margin-top: 14px;
+    width: 16px;
+    height: 16px;
+}
+
+[new_releases=true] {
+    background-color: var(--block-color-new);
+    color: var(--text-color-new);
+    border-color: var(--border-color-new);
+}
+
+    [new_releases=true] .upToDateButton {
+        background-color: var(--block-color-new);
+        color: var(--button-text-color-new);
+        border-color: var(--button-text-color-new);
+    }
+
+        [new_releases=true] .upToDateButton:hover {
+            background-color: var(--button-color-hover-new);
+        }
+
+    [new_releases=true] .seriesSelectButton {
+        background-color: var(--block-color-new);
+        color: var(--button-text-color-new);
+        border-color: var(--button-text-color-new);
+    }
+
+        [new_releases=true] .seriesSelectButton:hover {
+            background-color: var(--button-color-hover-new);
+        }
+
+        [new_releases=true] .seriesSelectButton[toggle=on] {
+            background-color: var(--button-text-color-new);
+        }
+
+        [new_releases=true] .seriesTitleBlock {
+            border-color: var(--border-color-new);
+        }
+
+        [new_releases=true] .editLinkButton {
+            border-color: var(--border-color-new);
+            background-color: var(--block-color-new);
+            color: var(--text-color-new);
+        }
+            [new_releases=true] .editLinkButton:hover {
+                background-color: var(--button-color-hover-new);
+            }
+
+    [new_releases=true] .readVolumeInput, [new_releases=true] .readVolumeInput:focus,
+    [new_releases=true] .readChapterInput, [new_releases=true] .readChapterInput:focus {
+        background-color: var(--input-color-bg-new);
+        color: var(--text-color-new);
+        border-color: var(--border-color-new);
+    }
+
+
+[new_releases=false] {
+    background-color: var(--block-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+    [new_releases=false] .upToDateButton {
+        background-color: var(--block-color);
+        color: var(--button-text-color);
+        border-color: var(--button-text-color);
+    }
+
+        [new_releases=false] .upToDateButton:hover {
+            background-color: var(--button-color-hover);
+        }
+
+    [new_releases=false] .seriesSelectButton, #selectAllButton {
+        background-color: var(--block-color);
+        color: var(--button-text-color);
+        border-color: var(--button-text-color);
+    }
+
+        [new_releases=false] .seriesSelectButton:hover, 
+        [new_releases=false] #selectAllButton:hover {
+            background-color: var(--button-color-hover);
+        }
+
+        [new_releases=false] .seriesSelectButton[toggle=on], 
+        #selectAllButton[toggle=on] {
+            background-color: var(--button-text-color);
+        }
+
+        [new_releases=false] .seriesSelectButton[toggle=on]:hover {
+            background-color: var(--text-color);
+        }
+
+    [new_releases=false] .editLinkButton {
+        border-color: var(--border-color);
+        background-color: var(--block-color);
+        color: var(--text-color);
+    }
+        [new_releases=false] .editLinkButton:hover {
+            background-color: var(--button-color-hover);
+        }
+
+    [new_releases=false] .readVolumeInput, [new_releases=false] .readVolumeInput:focus,
+    [new_releases=false] .readChapterInput, [new_releases=false] .readChapterInput:focus {
+        background-color: var(--input-color-bg);
+        color: var(--text-color);
+        border-color: var(--border-color);
+    }
