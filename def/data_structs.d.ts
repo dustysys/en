@@ -27,6 +27,7 @@ interface Series {
 	latest_unread_release: Release;
 	last_update_was_manual: boolean;
 	no_published_releases: boolean;
+	user_link: string;
 }
 
 interface List {
