@@ -24,6 +24,10 @@ function getSeriesRowsEditLinkWrap(series_row) {
 	return series_row.firstChild.children[1];
 }
 
+function getInputLinksSeriesRow(input_link) {
+	return input_link.parentElement.parentElement;
+}
+
 /**
  * 
  * @param {Element} series_row
@@ -731,6 +735,31 @@ function handleEnableReadReleaseEdit(event) {
 	chap_input.value = chapter.innerHTML;
 }
 
+function handleTitleClick(event) {
+	if (event.target.hasAttribute("user_link")) {
+		var user_link = event.target.getAttribute("user_link");
+		if (!isEmpty(user_link)) {
+			chrome.tabs.create({ active: true, url: user_link }, function () {
+				if (chrome.runtime.lastError) {
+					console.error("Failed to load user url: " + chrome.runtime.lastError);
+				}
+			});
+		}
+	}
+}
+
+function handleCompleteEditLink(event) {
+	var input_link = event.target;
+	var link = input_link.value;
+	if (link === "") {
+		return;
+	} else {
+		var series_row = getInputLinksSeriesRow(input_link);
+		var series_id = getSeriesRowsId(series_row);
+		userSetSeriesLink(series_id, link);
+	}
+}
+
 /**
  * creates the textbox to enter custom series link
  * @param {Event} event
@@ -741,6 +770,7 @@ function handleEnableEditLink(event) {
 	edit_link_input.className = "editLinkInput";
 	edit_link_input.placeholder = "Paste link here";
 	edit_link_input.maxLength = 1000;
+	edit_link_input.onblur = handleCompleteEditLink;
 	var title_block;
 	if (event.target.className === "editLinkIcon") {
 		title_block = getEditLinkIconsTitleBlock(event.target);
