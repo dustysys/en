@@ -80,6 +80,20 @@ function getTitleContentsSeriesRow(title_content) {
 
 /**
  * 
+ * @param {Element} edit_link_button
+ * @returns {Element}
+ */
+function getEditLinkButtonsTitleBlock(edit_link_button) {
+	return edit_link_button.parentElement.parentElement;
+}
+
+function getEditLinkIconsTitleBlock(edit_link_icon) {
+	var edit_link_button = edit_link_icon.parentElement;
+	return getEditLinkButtonsTitleBlock(edit_link_button);
+};
+
+/**
+ * 
  * @param {Element} field
  * @returns {Element}
  */
@@ -717,7 +731,23 @@ function handleEnableReadReleaseEdit(event) {
 	chap_input.value = chapter.innerHTML;
 }
 
-function handleEnableEditLink() {
+/**
+ * creates the textbox to enter custom series link
+ * @param {Event} event
+ */
+function handleEnableEditLink(event) {
+	var edit_link_input = document.createElement('input');
+	edit_link_input.type = "text";
+	edit_link_input.className = "editLinkInput";
+	edit_link_input.placeholder = "Paste link here";
+	edit_link_input.maxLength = 1000;
+	var title_block;
+	if (event.target.className === "editLinkIcon") {
+		title_block = getEditLinkIconsTitleBlock(event.target);
+	} else if (event.target.className === "editLinkButton") {
+		title_block = getEditLinkButtonsTitleBlock(event.target);
+	} else return;
+	title_block.appendChild(edit_link_input);
 }
 
 /**
