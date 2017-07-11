@@ -205,6 +205,7 @@ select{
         display: table-cell;
         vertical-align: middle;
         text-align: center;
+        cursor: pointer;
     }
 
 .editLinkWrap {
@@ -237,6 +238,7 @@ select{
     font-size: 20px;
     transform: scale(-1,1) skew(0deg,30deg) rotate(30deg);
     font-weight: bolder;
+    opacity:.8;
 }
 
 .editLinkInput {

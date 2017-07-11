@@ -29,6 +29,24 @@ function getTitleBlocksTitleContent(title_block) {
  * @param {Element} series_row
  * @returns {Element}
  */
+function getSeriesRowsEditLinkButton(series_row) {
+	return series_row.firstChild.children[1].firstChild;
+}
+
+/**
+ * 
+ * @param {Element} link_button
+ * @returns {Element}
+ */
+function getEditLinkButtonsLinkIcon(link_button) {
+	return link_button.firstChild;
+}
+
+/**
+ * 
+ * @param {Element} series_row
+ * @returns {Element}
+ */
 function getSeriesRowsEditLinkWrap(series_row) {
 	return series_row.firstChild.children[1];
 }
@@ -793,7 +811,7 @@ function handleCompleteEditLink(event) {
 	var input_link = event.target;
 	var link = input_link.value;
 	if (link === "") {
-		return;
+		// do nothing
 	} else {
 		link = validateUrl(link);
 		var series_row = getInputLinksSeriesRow(input_link);
@@ -801,8 +819,13 @@ function handleCompleteEditLink(event) {
 		userSetSeriesLink(series_id, link);
 		var title_cont = getSeriesRowsTitleContents(series_row);
 		title_cont.setAttribute("user_link", link);
-
+		var link_button = getSeriesRowsEditLinkButton(series_row);
+		var link_icon = getEditLinkButtonsLinkIcon(link_button);
+		link_button.style.opacity = .9;
+		link_icon.style.opacity = 1;
+		
 	}
+	input_link.parentElement.removeChild(input_link);
 }
 
 /**
@@ -827,6 +850,7 @@ function handleEnableEditLink(event) {
 		edit_link_input.value = title_cont.getAttribute("user_link");
 	}
 	title_block.appendChild(edit_link_input);
+	edit_link_input.focus();
 }
 
 /**

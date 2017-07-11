@@ -97,7 +97,7 @@ function buildTitleBlock(data_series) {
 	if (len > 50) font_size = 10;
 	title_cont.style.fontSize = font_size + 'px';
 
-	var edit_link_wrap = buildEditLinkButton();
+	var edit_link_wrap = buildEditLinkButton(data_series);
 
 	title_block.appendChild(title_disp);
 	title_disp.appendChild(title_cont);
@@ -108,9 +108,10 @@ function buildTitleBlock(data_series) {
 
 /**
  * builds DOM button for editing link associated with selected series
+ * @param {Series} data_series
  * @returns {Element}
  */
-function buildEditLinkButton() {
+function buildEditLinkButton(data_series) {
 	var edit_link_button = document.createElement("div");
 	edit_link_button.className = "editLinkButton";
 	edit_link_button.onclick = handleEnableEditLink;
@@ -123,6 +124,11 @@ function buildEditLinkButton() {
 	if (!manageModeOn()) {
 		edit_link_wrap.style.display = "none";
 	}
+
+	if (exists(data_series.user_link)) {
+		edit_link_icon.style.opacity = 1;
+		edit_link_button.style.opacity = .9;
+	} 
 
 	edit_link_button.appendChild(edit_link_icon);
 	edit_link_wrap.appendChild(edit_link_button);
