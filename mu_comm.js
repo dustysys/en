@@ -479,17 +479,22 @@ function MUComm_UpdateLists(request_details, complete_details, callback, data_li
 		if (form_fields[i].includes("][title]")) {
 			var list_num = parseInt(form_fields[i].substring(6, form_fields[i].indexOf("][title]")));
 			var title_list = getListByEnum(data_lists, list_num);
-			title_list.list_name = form_data["lists[" + list_num + "][title]"][0];
+			if (exists(title_list)) {
+				title_list.list_name = form_data["lists[" + list_num + "][title]"][0];
+			}
 
 		} else if (form_fields[i].includes("][type]")) {
 			var list_num = parseInt(form_fields[i].substring(6, form_fields[i].indexOf("][type]")));
 			var type_list = getListByEnum(data_lists, list_num);
-			type_list.list_type = form_data["lists[" + list_num + "][type]"][0];
-
+			if (exists(type_list)) {
+				type_list.list_type = form_data["lists[" + list_num + "][type]"][0];
+			}
 		} else if (form_fields[i].includes("][description]")) {
 			var list_num = parseInt(form_fields[i].substring(6, form_fields[i].indexOf("][description]")));
 			var description_list = getListByEnum(data_lists, list_num);
-			description_list.list_description = form_data["lists[" + list_num + "][description]"][0];
+			if (exists(description_list)) {
+				description_list.list_description = form_data["lists[" + list_num + "][description]"][0];
+			}
 
 		} else if (form_fields[i].includes("deleteLists[]")){
 			var remove_lists = form_data["deleteLists[]"];
@@ -578,4 +583,4 @@ function beginListening(){
 	chrome.webRequest.onErrorOccurred.addListener(handleErrorMUComm,{urls: [ "*://www.mangaupdates.com/*" ]});
 }
 
-beginListening();
+
