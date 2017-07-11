@@ -20,8 +20,8 @@ var global_last_clicked_el;
  * @param {Element} title_block
  * @returns {Element}
  */
-function getTitleBlocksTitleContent(title_block) {
-	return title_block.firstChild.firstChild;
+function getTitleBlocksTitleLink(title_block) {
+	return title_block.firstChild.firstChild.firstChild;
 }
 
 /**
@@ -102,16 +102,16 @@ function getSeriesRowsWrap(series_row) {
  * @param {Element} series_row
  * @returns {Element}
  */
-function getSeriesRowsTitleContents(series_row) {
-	return series_row.firstChild.firstChild.firstChild;
+function getSeriesRowsTitleLink(series_row) {
+	return series_row.firstChild.firstChild.firstChild.firstChild;
 }
 /**
  * 
- * @param {Element} title_content
+ * @param {Element} title_link
  * @returns {Element}
  */
-function getTitleContentsSeriesRow(title_content) {
-	return title_content.parentElement.parentElement.parentElement;
+function getTitleLinksSeriesRow(title_link) {
+	return title_link.parentElement.parentElement.parentElement.parentElement;
 }
 
 /**
@@ -311,14 +311,14 @@ function updateSeriesRow(series_row, data_list, data_series) {
  * @return {Number} new index of series row 
  */
 function sortInsertMarkedReadSeriesRow(series_row) {
-	var title = series_row.querySelectorAll(".titleContent")[0].innerHTML;
+	var title = series_row.querySelectorAll(".titleLink")[0].innerHTML;
 	var table = getSeriesRowsTable(series_row);
-	var row_titles = table.querySelectorAll(".titleContent");
+	var row_titles = table.querySelectorAll(".titleLink");
 
 	if (row_titles.length === 1) return;
 	let index = 0;
 	while (index < row_titles.length) {
-		var row = getTitleContentsSeriesRow(row_titles[index]);
+		var row = getTitleLinksSeriesRow(row_titles[index]);
 		var has_new_releases = row.getAttribute("new_releases") === "true";
 		if (!has_new_releases) {
 			if (title.toUpperCase() < row_titles[index].innerHTML.toUpperCase()) {
@@ -771,7 +771,7 @@ function handleEnableReadReleaseEdit(event) {
  * Opens the link associated with the series title clicked by user
  * @param {Event} event
  */
-function handleTitleClick(event) {
+function handleTitleLink(event) {
 	if (event.target.hasAttribute("user_link")) {
 		var user_link = event.target.getAttribute("user_link");
 		if (!isEmpty(user_link)) {
@@ -817,8 +817,8 @@ function handleCompleteEditLink(event) {
 		var series_row = getInputLinksSeriesRow(input_link);
 		var series_id = getSeriesRowsId(series_row);
 		userSetSeriesLink(series_id, link);
-		var title_cont = getSeriesRowsTitleContents(series_row);
-		title_cont.setAttribute("user_link", link);
+		var title_link = getSeriesRowsTitleLink(series_row);
+		title_link.setAttribute("user_link", link);
 		var link_button = getSeriesRowsEditLinkButton(series_row);
 		var link_icon = getEditLinkButtonsLinkIcon(link_button);
 		link_button.style.opacity = .9;
@@ -845,9 +845,9 @@ function handleEnableEditLink(event) {
 	} else if (event.target.className === "editLinkButton") {
 		title_block = getEditLinkButtonsTitleBlock(event.target);
 	} else return;
-	var title_cont = getTitleBlocksTitleContent(title_block);
-	if (title_cont.hasAttribute("user_link")) {
-		edit_link_input.value = title_cont.getAttribute("user_link");
+	var title_link = getTitleBlocksTitleLink(title_block);
+	if (title_link.hasAttribute("user_link")) {
+		edit_link_input.value = title_link.getAttribute("user_link");
 	}
 	title_block.appendChild(edit_link_input);
 	edit_link_input.focus();
@@ -861,10 +861,10 @@ function handleListFilter(event) {
 	var input = event.target;
 	var filter = input.value.toUpperCase();
 	var current_list = getCurrentListId();
-	var titles = document.querySelectorAll(".seriesRow[list_id=" + current_list + "] .seriesTitleBlock .titleDisplay .titleContent");
+	var titles = document.querySelectorAll(".seriesRow[list_id=" + current_list + "] .titleLink");
 	interruptAllAnimations();
 	for (var i = 0; i < titles.length; i++) {
-		var series_row = getTitleContentsSeriesRow(titles[i]);
+		var series_row = getTitleLinksSeriesRow(titles[i]);
 		if (titles[i].innerHTML.toUpperCase().includes(filter)) {
 			series_row.style.display = "";
 		} else {

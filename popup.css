@@ -205,8 +205,11 @@ select{
         display: table-cell;
         vertical-align: middle;
         text-align: center;
-        cursor: pointer;
     }
+
+a {
+    cursor: pointer;
+}
 
 .editLinkWrap {
     position: relative;
@@ -216,29 +219,35 @@ select{
 .editLinkButton {
     position: absolute;
     border: 1px dotted;
-    border-radius: var(--block-border-radius);
-    right:169px;
-    bottom: 34px;
-    width: 15px;
-    height: 15px;
+    border-color: var(--border-color);
+    border-top-left-radius: var(--block-border-radius);
+    border-top-right-radius: var(--block-border-radius);
+    border-bottom-left-radius: var(--block-border-radius);
+    border-bottom-right-radius: var(--block-border-radius);
+    right: 168px;
+    bottom: 33px;
+    width: 16px;
+    height: 16px;
     overflow: hidden;
-    opacity: .5;
+    opacity: .95;
 }
     .editLinkButton:hover {
         cursor:pointer;
+        opacity: 1;
     }
     .editLinkButton:active {
-        transform: translateY(1px)
+        transform: translateY(1px);
     }
 
 .editLinkIcon {
     position:relative;
     right:2px;
-    bottom:7px;
+    bottom:6px;
     font-size: 20px;
     transform: scale(-1,1) skew(0deg,30deg) rotate(30deg);
     font-weight: bolder;
-    opacity:.8;
+    opacity:.4;
+    background-color:initial;
 }
 
 .editLinkInput {

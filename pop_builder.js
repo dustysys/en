@@ -81,16 +81,18 @@ function buildTitleBlock(data_series) {
 	var title_block = document.createElement('div');
 	var title_disp = document.createElement('div');
 	var title_cont = document.createElement('p');
+	var title_link = document.createElement('a');
 	title_block.className = "seriesTitleBlock";
 	title_disp.className = "titleDisplay";
 	title_cont.className = "titleContent";
-	title_cont.textContent = data_series.title;
+	title_link.className = "titleLink";
+	title_link.textContent = data_series.title;
 	if (exists(data_series.user_link)) {
-		title_cont.setAttribute("user_link", data_series.user_link);
+		title_link.setAttribute("user_link", data_series.user_link);
 	} else {
-		title_cont.setAttribute("default_link", getDefaultLink(data_series));
+		title_link.setAttribute("default_link", getDefaultLink(data_series));
 	}
-	title_cont.onclick = handleTitleClick;
+	title_link.onclick = handleTitleLink;
 
 	var len = data_series.title.length;
 	var font_size = 14;
@@ -101,6 +103,7 @@ function buildTitleBlock(data_series) {
 
 	title_block.appendChild(title_disp);
 	title_disp.appendChild(title_cont);
+	title_cont.appendChild(title_link);
 	title_block.appendChild(edit_link_wrap);
 
 	return title_block;
