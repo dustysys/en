@@ -17,6 +17,15 @@ var global_last_clicked_el;
 
 /**
  * 
+ * @param {Element} title_block
+ * @returns {Element}
+ */
+function getTitleBlocksTitleContent(title_block) {
+	return title_block.firstChild.firstChild;
+}
+
+/**
+ * 
  * @param {Element} series_row
  * @returns {Element}
  */
@@ -24,6 +33,11 @@ function getSeriesRowsEditLinkWrap(series_row) {
 	return series_row.firstChild.children[1];
 }
 
+/**
+ * 
+ * @param {Element} input_link
+ * @returns {Element}
+ */
 function getInputLinksSeriesRow(input_link) {
 	return input_link.parentElement.parentElement;
 }
@@ -735,16 +749,27 @@ function handleEnableReadReleaseEdit(event) {
 	chap_input.value = chapter.innerHTML;
 }
 
+/**
+ * Opens the link associated with the series title clicked by user
+ * @param {Event} event
+ */
 function handleTitleClick(event) {
 	if (event.target.hasAttribute("user_link")) {
 		var user_link = event.target.getAttribute("user_link");
 		if (!isEmpty(user_link)) {
 			chrome.tabs.create({ active: true, url: user_link }, function () {
 				if (chrome.runtime.lastError) {
-					console.error("Failed to load user url: " + chrome.runtime.lastError);
+					console.error("Failed to load user url: " + chrome.runtime.lastError.message);
 				}
 			});
 		}
+	} else if (event.target.hasAttribute("default_link")) {
+		var default_link = event.target.getAttribute("default_link");
+		chrome.tabs.create({ active: true, url: default_link }, function () {
+			if (chrome.runtime.lastError) {
+				console.error("Failed to load default url: " + chrome.runtime.lastError.message);
+			}
+		});
 	}
 }
 
@@ -776,6 +801,7 @@ function handleCompleteEditLink(event) {
 		userSetSeriesLink(series_id, link);
 		var title_cont = getSeriesRowsTitleContents(series_row);
 		title_cont.setAttribute("user_link", link);
+
 	}
 }
 
@@ -796,6 +822,10 @@ function handleEnableEditLink(event) {
 	} else if (event.target.className === "editLinkButton") {
 		title_block = getEditLinkButtonsTitleBlock(event.target);
 	} else return;
+	var title_cont = getTitleBlocksTitleContent(title_block);
+	if (title_cont.hasAttribute("user_link")) {
+		edit_link_input.value = title_cont.getAttribute("user_link");
+	}
 	title_block.appendChild(edit_link_input);
 }
 

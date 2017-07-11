@@ -88,7 +88,7 @@ function buildTitleBlock(data_series) {
 	if (exists(data_series.user_link)) {
 		title_cont.setAttribute("user_link", data_series.user_link);
 	} else {
-		title_cont.setAttribute("user_link", getDefaultLink(data_series));
+		title_cont.setAttribute("default_link", getDefaultLink(data_series));
 	}
 	title_cont.onclick = handleTitleClick;
 
