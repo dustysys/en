@@ -7,6 +7,7 @@ Handlers call encore_mu functions
 #############################################################################*/
 
 var global_last_clicked_el;
+var global_no_animation = true;
 
 /**
  * DOM HELPER FUNCTIONS

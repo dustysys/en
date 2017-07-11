@@ -88,11 +88,15 @@ function animateListGapClose(series_row_list, start_el_index, end_el_index, gap,
  * @param {boolean} toggle
  */
 function animateToggleManageMode(toggle, callback) {
-	var onscreen_rows = getOnScreenSeriesRows();
+	if (!global_no_animation) {
+		var onscreen_rows = getOnScreenSeriesRows();
 
-	animateToggleManageField(toggle);
-	animateToggleUpToDateSelect(toggle, onscreen_rows, callback);
-	animateToggleEditLink(toggle, onscreen_rows);
+		animateToggleManageField(toggle);
+		animateToggleUpToDateSelect(toggle, onscreen_rows, callback);
+		animateToggleEditLink(toggle, onscreen_rows);
+	} else {
+		callback(toggle);
+	}
 }
 
 /**
