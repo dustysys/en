@@ -623,6 +623,10 @@ function handleMoveSeries() {
  * @param {Event} event
  */
 function handleCurrentListChange(event) {
+	document.getElementById("seriesRowListFilter").value = "";
+	var filter = "";
+	filterList(filter);
+
 	var list_select = event.target;
 	var list_id = list_select.value;
 	resetAllSelectSeriesButtons();
@@ -645,9 +649,8 @@ function handleCurrentListChange(event) {
 			document.body.appendChild(new_table);
 		});
 	}
-	// just a preference, clearing filter avoids momentary confusion
-	// when half the series aren't showing up
-	document.getElementById("seriesRowListFilter").value = "";
+
+	
 }
 
 /**
@@ -871,6 +874,14 @@ function handleEnableEditLink(event) {
 function handleListFilter(event) {
 	var input = event.target;
 	var filter = input.value.toUpperCase();
+	filterList(filter);
+}
+
+/**
+ * shows/hides series rows based on presence of string in series title
+ * @param {string} filter
+ */
+function filterList(filter) {
 	var current_list = getCurrentListId();
 	var titles = document.querySelectorAll(".seriesRow[list_id=" + current_list + "] .titleLink");
 	interruptAllAnimations();
@@ -943,6 +954,7 @@ function buildPopup(data) {
  * Redirects the user if they are not logged in to MU
  */
 function redirectToLogin() {
+	document.write("Log in at www.mangaupdates.com and reload en.");
 	console.log("attempted redirect");
 }
 
