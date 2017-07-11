@@ -3,6 +3,7 @@
     width: 1px;
 }
 
+
 :root {
     --text-color: #164296;
     --text-color-new: #85020e;
@@ -18,14 +19,17 @@
     --button-text-color-new: #522731;
     --input-color-bg: var(--button-color-hover);
     --input-color-bg-new: var(--button-color-hover-new);
-
     --popup-height: 600px;
     --popup-width: 510px;
     --navbar-height: 35px;
     --row-height: 50px;
     --row-margin-vert: 3px;
     --table-margin-horiz: 3px;
+    --block-border-radius: 5px;
     --series-border-width: 1px;
+    --title-block-width: 180px;
+    --std-margin-width: 5px;
+    --button-border-radius: 3px;
 }
 
 html {
@@ -48,7 +52,115 @@ body {
     margin: 0;
 }
 
+:focus {
+  outline-color: transparent;
+  outline-style: none;
+}
 
+input {
+    padding: 0px;
+    color: inherit;
+    background-color: inherit;
+}
+
+select{
+    color:inherit;
+    background-color:inherit;
+}
+
+.seriesRow[new_releases=true],
+[new_releases=true] * {
+    background-color: var(--block-color-new);
+    color: var(--text-color-new);
+    border-color: var(--border-color-new);
+}
+
+    [new_releases=true] .upToDateButton {
+        color: var(--button-text-color-new);
+        border-color: var(--button-text-color-new);
+    }
+
+        [new_releases=true] .upToDateButton:hover {
+            background-color: var(--button-color-hover-new);
+        }
+
+    [new_releases=true] .seriesSelectButton {
+        color: var(--button-text-color-new);
+        border-color: var(--button-text-color-new);
+    }
+
+        [new_releases=true] .seriesSelectButton:hover {
+            background-color: var(--button-color-hover-new);
+        }
+
+        [new_releases=true] .seriesSelectButton[toggle=on] {
+            background-color: var(--button-text-color-new);
+        }
+
+        [new_releases=true] .editLinkButton:hover {
+            background-color: var(--button-color-hover-new);
+        }
+
+    [new_releases=true] .readVolumeInput, [new_releases=true] .readVolumeInput:focus,
+    [new_releases=true] .readChapterInput, [new_releases=true] .readChapterInput:focus {
+        background-color: var(--input-color-bg-new);
+    }
+    [new_releases=true] .editLinkInput::-webkit-input-placeholder {
+        color: var(--text-color-new);
+    }
+    [new_releases=true] .editLinkInput {
+        background-color: var(--input-color-bg-new);
+    } 
+
+.seriesRow[new_releases=false] ,
+[new_releases=false] * {
+    background-color: var(--block-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+    [new_releases=false] .upToDateButton {
+        color: var(--button-text-color);
+        border-color: var(--button-text-color);
+    }
+
+        [new_releases=false] .upToDateButton:hover {
+            background-color: var(--button-color-hover);
+        }
+
+    [new_releases=false] .seriesSelectButton, #selectAllButton {
+        color: var(--button-text-color);
+        border-color: var(--button-text-color);
+    }
+
+        [new_releases=false] .seriesSelectButton:hover,
+        [new_releases=false] #selectAllButton:hover {
+            background-color: var(--button-color-hover);
+        }
+
+        [new_releases=false] .seriesSelectButton[toggle=on],
+        #selectAllButton[toggle=on] {
+            background-color: var(--button-text-color);
+        }
+
+            [new_releases=false] .seriesSelectButton[toggle=on]:hover {
+                background-color: var(--text-color);
+            }
+
+        [new_releases=false] .editLinkButton:hover {
+            background-color: var(--button-color-hover);
+        }
+
+    [new_releases=false] .readVolumeInput, [new_releases=false] .readVolumeInput:focus,
+    [new_releases=false] .readChapterInput, [new_releases=false] .readChapterInput:focus {
+        background-color: var(--input-color-bg);
+    }
+    [new_releases=false] .editLinkInput {
+        background-color: var(--input-color-bg);
+    } 
+    [new_releases=false] .editLinkInput::-webkit-input-placeholder {
+    color: var(--text-color);
+    }
 
 .listTable {
     margin-left: var(--table-margin-horiz);
@@ -57,7 +169,7 @@ body {
 }
 
 .seriesRow {
-    border-radius: 5px;
+    border-radius: var(--block-border-radius);
     border-width: var(--series-border-width);
     border-style: dotted;
     height: var(--row-height);
@@ -71,11 +183,11 @@ body {
 }
 
 .seriesTitleBlock {
-    width: 180px;
+    width: var(--title-block-width);
     float: left;
     font-weight: bold;
-    padding-right: 5px;
-    padding-left: 5px;
+    padding-right: var(--std-margin-width);
+    padding-left: var(--std-margin-width);
     border-right: 1px #a9b6c0 dotted;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
@@ -95,35 +207,62 @@ body {
         text-align: center;
     }
 
+a {
+    cursor: pointer;
+}
+
 .editLinkWrap {
     position: relative;
+    height: 0px;
 }
 
 .editLinkButton {
-    position:absolute;
+    position: absolute;
     border: 1px dotted;
-    border-radius:5px;
-    right:169px;
-    bottom:34px;
-    width:15px;
-    height:15px;
-    overflow:hidden;
-    opacity:.5;
+    border-color: var(--border-color);
+    border-top-left-radius: var(--block-border-radius);
+    border-top-right-radius: var(--block-border-radius);
+    border-bottom-left-radius: var(--block-border-radius);
+    border-bottom-right-radius: var(--block-border-radius);
+    right: 168px;
+    bottom: 33px;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    opacity: .95;
 }
     .editLinkButton:hover {
         cursor:pointer;
+        opacity: 1;
     }
     .editLinkButton:active {
-        transform: translateY(1px)
+        transform: translateY(1px);
     }
 
 .editLinkIcon {
     position:relative;
     right:2px;
-    bottom:7px;
+    bottom:6px;
     font-size: 20px;
     transform: scale(-1,1) skew(0deg,30deg) rotate(30deg);
     font-weight: bolder;
+    opacity:.4;
+    background-color:initial;
+}
+
+.editLinkInput {
+    --posX: calc(0px - var(--std-margin-width));
+    --posY: calc(0px - var(--row-height));
+    position: absolute;
+    transform: translate(var(--posX),var(--posY));
+    border: inherit;
+    border-radius: inherit;
+    border-top-left-radius: var(--block-border-radius);
+    border-bottom-left-radius: var(--block-border-radius);
+    text-align: center;
+    width: calc(var(--title-block-width) + (var(--std-margin-width)*2));
+    height: var(--row-height);
+    opacity:.95;
 }
 
 .seriesReleaseBlock {
@@ -132,7 +271,7 @@ body {
     font-size: 12px;
     padding-left: 10px;
     white-space: nowrap;
-    display:block;
+    display: block;
 }
 
 .releaseLineDisplay {
@@ -253,8 +392,8 @@ button {
     width: 513px;
     left: -2px;
     border-bottom: dotted 1px var(--border-color);
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: var(--block-border-radius);
+    border-bottom-right-radius: var(--block-border-radius);
 }
 
 
@@ -290,16 +429,16 @@ button {
     width: 24px;
     height: 24px;
     font-size: 20px;
-    font-weight:bolder;
+    font-weight: bolder;
     background-color: var(--block-color-new);
     color: var(--text-color-new);
     display: inline-block;
-    position:relative;
+    position: relative;
     border: 1px solid;
-    border-radius:3px;
+    border-radius: var(--button-border-radius);
     padding-left:5px;
-    padding-right:5px;
-    overflow:hidden;
+    padding-right: 5px;
+    overflow: hidden;
 }
     #deleteSeriesButton:hover {
         background-color: var(--button-color-hover-new);
@@ -320,14 +459,14 @@ button {
     height: 24px;
     background-color: var(--block-color);
     border: solid 1px;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
+    border-bottom-left-radius: var(--button-border-radius);
+    border-top-left-radius: var(--button-border-radius);
     border-color: var(--text-color);
     position: relative;
     display: inline-block;
     bottom: 0px;
     margin-left: 3px;
-    overflow:visible;
+    overflow: visible;
 }
     #moveSeriesButton:hover {
         background-color: var(--button-color-hover);
@@ -351,9 +490,9 @@ button {
 #manageSeriesListSelect {
     width: 100px;
     height: 26px;
-    border-bottom-right-radius: 3px;
-    border-top-right-radius: 3px;
-    display:inline-block;
+    border-bottom-right-radius: var(--button-border-radius);
+    border-top-right-radius: var(--button-border-radius);
+    display: inline-block;
     transform: translateY(-9px);
 }
 
@@ -364,12 +503,12 @@ button {
     height: 24px;
     left: 470px;
     margin-top: 5px;
-    margin-right:5px;
-    position:relative;
-    background-color:var(--block-color);
+    margin-right: 5px;
+    position: relative;
+    background-color: var(--block-color);
     border: 1px solid;
     border-color: var(--text-color);
-    border-radius: 3px;
+    border-radius: var(--button-border-radius);
 }
     #manageSeriesButton:hover {
         background-color: var(--button-color-hover);
@@ -390,8 +529,6 @@ button {
 
 .seriesSelectButton, #selectAllButton {
     border-radius: 50%;
-    color: #FFFFFF;
-    background-color: #FFFFFF;
     border: 1px solid rgba(0,0,0,.5);
     position: relative;
     width: 25px;
@@ -413,105 +550,3 @@ button {
     height: 16px;
 }
 
-[new_releases=true] {
-    background-color: var(--block-color-new);
-    color: var(--text-color-new);
-    border-color: var(--border-color-new);
-}
-
-    [new_releases=true] .upToDateButton {
-        background-color: var(--block-color-new);
-        color: var(--button-text-color-new);
-        border-color: var(--button-text-color-new);
-    }
-
-        [new_releases=true] .upToDateButton:hover {
-            background-color: var(--button-color-hover-new);
-        }
-
-    [new_releases=true] .seriesSelectButton {
-        background-color: var(--block-color-new);
-        color: var(--button-text-color-new);
-        border-color: var(--button-text-color-new);
-    }
-
-        [new_releases=true] .seriesSelectButton:hover {
-            background-color: var(--button-color-hover-new);
-        }
-
-        [new_releases=true] .seriesSelectButton[toggle=on] {
-            background-color: var(--button-text-color-new);
-        }
-
-        [new_releases=true] .seriesTitleBlock {
-            border-color: var(--border-color-new);
-        }
-
-        [new_releases=true] .editLinkButton {
-            border-color: var(--border-color-new);
-            background-color: var(--block-color-new);
-            color: var(--text-color-new);
-        }
-            [new_releases=true] .editLinkButton:hover {
-                background-color: var(--button-color-hover-new);
-            }
-
-    [new_releases=true] .readVolumeInput, [new_releases=true] .readVolumeInput:focus,
-    [new_releases=true] .readChapterInput, [new_releases=true] .readChapterInput:focus {
-        background-color: var(--input-color-bg-new);
-        color: var(--text-color-new);
-        border-color: var(--border-color-new);
-    }
-
-
-[new_releases=false] {
-    background-color: var(--block-color);
-    color: var(--text-color);
-    border-color: var(--border-color);
-}
-
-    [new_releases=false] .upToDateButton {
-        background-color: var(--block-color);
-        color: var(--button-text-color);
-        border-color: var(--button-text-color);
-    }
-
-        [new_releases=false] .upToDateButton:hover {
-            background-color: var(--button-color-hover);
-        }
-
-    [new_releases=false] .seriesSelectButton, #selectAllButton {
-        background-color: var(--block-color);
-        color: var(--button-text-color);
-        border-color: var(--button-text-color);
-    }
-
-        [new_releases=false] .seriesSelectButton:hover, 
-        [new_releases=false] #selectAllButton:hover {
-            background-color: var(--button-color-hover);
-        }
-
-        [new_releases=false] .seriesSelectButton[toggle=on], 
-        #selectAllButton[toggle=on] {
-            background-color: var(--button-text-color);
-        }
-
-        [new_releases=false] .seriesSelectButton[toggle=on]:hover {
-            background-color: var(--text-color);
-        }
-
-    [new_releases=false] .editLinkButton {
-        border-color: var(--border-color);
-        background-color: var(--block-color);
-        color: var(--text-color);
-    }
-        [new_releases=false] .editLinkButton:hover {
-            background-color: var(--button-color-hover);
-        }
-
-    [new_releases=false] .readVolumeInput, [new_releases=false] .readVolumeInput:focus,
-    [new_releases=false] .readChapterInput, [new_releases=false] .readChapterInput:focus {
-        background-color: var(--input-color-bg);
-        color: var(--text-color);
-        border-color: var(--border-color);
-    }

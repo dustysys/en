@@ -17,11 +17,47 @@ var global_last_clicked_el;
 
 /**
  * 
+ * @param {Element} title_block
+ * @returns {Element}
+ */
+function getTitleBlocksTitleLink(title_block) {
+	return title_block.firstChild.firstChild.firstChild;
+}
+
+/**
+ * 
+ * @param {Element} series_row
+ * @returns {Element}
+ */
+function getSeriesRowsEditLinkButton(series_row) {
+	return series_row.firstChild.children[1].firstChild;
+}
+
+/**
+ * 
+ * @param {Element} link_button
+ * @returns {Element}
+ */
+function getEditLinkButtonsLinkIcon(link_button) {
+	return link_button.firstChild;
+}
+
+/**
+ * 
  * @param {Element} series_row
  * @returns {Element}
  */
 function getSeriesRowsEditLinkWrap(series_row) {
 	return series_row.firstChild.children[1];
+}
+
+/**
+ * 
+ * @param {Element} input_link
+ * @returns {Element}
+ */
+function getInputLinksSeriesRow(input_link) {
+	return input_link.parentElement.parentElement;
 }
 
 /**
@@ -66,17 +102,31 @@ function getSeriesRowsWrap(series_row) {
  * @param {Element} series_row
  * @returns {Element}
  */
-function getSeriesRowsTitleContents(series_row) {
-	return series_row.firstChild.firstChild.firstChild;
+function getSeriesRowsTitleLink(series_row) {
+	return series_row.firstChild.firstChild.firstChild.firstChild;
 }
 /**
  * 
- * @param {Element} title_content
+ * @param {Element} title_link
  * @returns {Element}
  */
-function getTitleContentsSeriesRow(title_content) {
-	return title_content.parentElement.parentElement.parentElement;
+function getTitleLinksSeriesRow(title_link) {
+	return title_link.parentElement.parentElement.parentElement.parentElement;
 }
+
+/**
+ * 
+ * @param {Element} edit_link_button
+ * @returns {Element}
+ */
+function getEditLinkButtonsTitleBlock(edit_link_button) {
+	return edit_link_button.parentElement.parentElement;
+}
+
+function getEditLinkIconsTitleBlock(edit_link_icon) {
+	var edit_link_button = edit_link_icon.parentElement;
+	return getEditLinkButtonsTitleBlock(edit_link_button);
+};
 
 /**
  * 
@@ -261,14 +311,14 @@ function updateSeriesRow(series_row, data_list, data_series) {
  * @return {Number} new index of series row 
  */
 function sortInsertMarkedReadSeriesRow(series_row) {
-	var title = series_row.querySelectorAll(".titleContent")[0].innerHTML;
+	var title = series_row.querySelectorAll(".titleLink")[0].innerHTML;
 	var table = getSeriesRowsTable(series_row);
-	var row_titles = table.querySelectorAll(".titleContent");
+	var row_titles = table.querySelectorAll(".titleLink");
 
 	if (row_titles.length === 1) return;
 	let index = 0;
 	while (index < row_titles.length) {
-		var row = getTitleContentsSeriesRow(row_titles[index]);
+		var row = getTitleLinksSeriesRow(row_titles[index]);
 		var has_new_releases = row.getAttribute("new_releases") === "true";
 		if (!has_new_releases) {
 			if (title.toUpperCase() < row_titles[index].innerHTML.toUpperCase()) {
@@ -558,7 +608,7 @@ function handleMoveSeries() {
 		}
 	}
 
-	userMoveSeries(list_src_id, list_dst_id, move_series_id_arr, function () {
+	userMoveSeries(list_src_id, list_dst_id, move_series_id_arr, function (data) {
 		var dst_list_table = getListTableById(list_dst_id);
 		if (dst_list_table !== null) {
 			var updated_table = buildListTable(getListById(data.lists, list_dst_id));
@@ -573,6 +623,10 @@ function handleMoveSeries() {
  * @param {Event} event
  */
 function handleCurrentListChange(event) {
+	document.getElementById("seriesRowListFilter").value = "";
+	var filter = "";
+	filterList(filter);
+
 	var list_select = event.target;
 	var list_id = list_select.value;
 	resetAllSelectSeriesButtons();
@@ -595,9 +649,8 @@ function handleCurrentListChange(event) {
 			document.body.appendChild(new_table);
 		});
 	}
-	// just a preference, clearing filter avoids momentary confusion
-	// when half the series aren't showing up
-	document.getElementById("seriesRowListFilter").value = "";
+
+	
 }
 
 /**
@@ -717,7 +770,101 @@ function handleEnableReadReleaseEdit(event) {
 	chap_input.value = chapter.innerHTML;
 }
 
-function handleEnableEditLink() {
+/**
+ * Opens the link associated with the series title clicked by user
+ * @param {Event} event
+ */
+function handleTitleLink(event) {
+	if (event.target.hasAttribute("user_link")) {
+		var user_link = event.target.getAttribute("user_link");
+		if (!isEmpty(user_link)) {
+			chrome.tabs.create({ active: true, url: user_link }, function () {
+				if (chrome.runtime.lastError) {
+					console.error("Failed to load user url: " + chrome.runtime.lastError.message);
+				}
+			});
+		}
+	} else if (event.target.hasAttribute("default_link")) {
+		var default_link = event.target.getAttribute("default_link");
+		chrome.tabs.create({ active: true, url: default_link }, function () {
+			if (chrome.runtime.lastError) {
+				console.error("Failed to load default url: " + chrome.runtime.lastError.message);
+			}
+		});
+	}
+}
+
+/**
+ * attempts to make slightly invalid urls valid
+ * @param {string} url
+ * @returns {string}
+ */
+function validateUrl(url) {
+	var has_www = (url.toLowerCase().includes("www."));
+	var has_http = (url.toLowerCase().includes("http://"));
+	var has_https = (url.toLowerCase().includes("https://"));
+	if (!has_www) {
+		return "http://www." + url;
+	} else if (!has_http && !has_https) {
+		return "http://" + url;
+	} else return url;
+}
+
+function handleCompleteEditLink(event) {
+	var input_link = event.target;
+	var link = input_link.value;
+	var link_is_empty = (link === "");
+	var series_row = getInputLinksSeriesRow(input_link);
+	var series_id = getSeriesRowsId(series_row);
+	var title_link = getSeriesRowsTitleLink(series_row);
+
+	if (link_is_empty && !title_link.hasAttribute("user_link")) {
+		//do nothing
+	} else {
+		var link_button = getSeriesRowsEditLinkButton(series_row);
+		var link_icon = getEditLinkButtonsLinkIcon(link_button);
+
+		if (link_is_empty) {
+			var default_link = getDefaultLink(series_id);
+			userClearSeriesLink(series_id);
+			title_link.removeAttribute("user_link");
+			title_link.setAttribute("default_link", default_link);
+			link_button.style.removeProperty("opacity");
+			link_icon.style.removeProperty("opacity");
+		} else {
+			link = validateUrl(link);
+			userSetSeriesLink(series_id, link);
+			title_link.setAttribute("user_link", link);
+			link_button.style.opacity = .97;
+			link_icon.style.opacity = 1;
+		}
+	}
+	input_link.parentElement.removeChild(input_link);
+}
+
+/**
+ * creates the textbox to enter custom series link
+ * @param {Event} event
+ */
+function handleEnableEditLink(event) {
+	var edit_link_input = document.createElement('input');
+	edit_link_input.type = "text";
+	edit_link_input.className = "editLinkInput";
+	edit_link_input.placeholder = "Paste link here";
+	edit_link_input.maxLength = 1000;
+	edit_link_input.onblur = handleCompleteEditLink;
+	var title_block;
+	if (event.target.className === "editLinkIcon") {
+		title_block = getEditLinkIconsTitleBlock(event.target);
+	} else if (event.target.className === "editLinkButton") {
+		title_block = getEditLinkButtonsTitleBlock(event.target);
+	} else return;
+	var title_link = getTitleBlocksTitleLink(title_block);
+	if (title_link.hasAttribute("user_link")) {
+		edit_link_input.value = title_link.getAttribute("user_link");
+	}
+	title_block.appendChild(edit_link_input);
+	edit_link_input.focus();
 }
 
 /**
@@ -727,11 +874,19 @@ function handleEnableEditLink() {
 function handleListFilter(event) {
 	var input = event.target;
 	var filter = input.value.toUpperCase();
+	filterList(filter);
+}
+
+/**
+ * shows/hides series rows based on presence of string in series title
+ * @param {string} filter
+ */
+function filterList(filter) {
 	var current_list = getCurrentListId();
-	var titles = document.querySelectorAll(".seriesRow[list_id=" + current_list + "] .seriesTitleBlock .titleDisplay .titleContent");
+	var titles = document.querySelectorAll(".seriesRow[list_id=" + current_list + "] .titleLink");
 	interruptAllAnimations();
 	for (var i = 0; i < titles.length; i++) {
-		var series_row = getTitleContentsSeriesRow(titles[i]);
+		var series_row = getTitleLinksSeriesRow(titles[i]);
 		if (titles[i].innerHTML.toUpperCase().includes(filter)) {
 			series_row.style.display = "";
 		} else {
@@ -799,6 +954,7 @@ function buildPopup(data) {
  * Redirects the user if they are not logged in to MU
  */
 function redirectToLogin() {
+	document.write("Log in at www.mangaupdates.com and reload en.");
 	console.log("attempted redirect");
 }
 

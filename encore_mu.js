@@ -678,34 +678,8 @@ function releaseIsNew(data_series, release) {
 	return release_is_new;
 }
 
-/**
- * mark a series up-to-date and pushes the change to MU
- * @param {string} series_id
- * @param {function(Data)} callback
- */
-function userMarkSeriesUpToDate(series_id, callback) {
-	scanSeriesLatestRelease(series_id, function (release) {
-		loadData(function (data) {
-			var series = getSeriesById(data.lists, series_id);
-			series.last_update_was_manual = false;
 
-			if (exists(release)) {
-				series.latest_read_release = release;
-				if (!isEmpty(series.unread_releases)) {
-					series.unread_releases = [];
-				}
 
-				if (!isEmpty(series.latest_unread_release)) {
-					series.latest_unread_release = {};
-				}
-				setMUVolumeChapter(release.volume, release.chapter, series);
-				pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
-				series.last_update_was_manual = false;
-			} else series.no_published_releases = true;
-			saveData(data, callback);
-		});
-	});
-}
 
 /**
  * Sends the user a browser notification with release
@@ -746,6 +720,66 @@ function notifyOfRelease(release) {
 		if (chrome.runtime.lastError) {
 			console.error(chrome.runtime.lastError);
 		} else console.log("Notification successful!");
+	});
+}
+
+/**
+ * mark a series up-to-date and pushes the change to MU
+ * @param {string} series_id
+ * @param {function(Data)} callback
+ */
+function userMarkSeriesUpToDate(series_id, callback) {
+	scanSeriesLatestRelease(series_id, function (release) {
+		loadData(function (data) {
+			var series = getSeriesById(data.lists, series_id);
+			series.last_update_was_manual = false;
+
+			if (exists(release)) {
+				series.latest_read_release = release;
+				if (!isEmpty(series.unread_releases)) {
+					series.unread_releases = [];
+				}
+
+				if (!isEmpty(series.latest_unread_release)) {
+					series.latest_unread_release = {};
+				}
+				setMUVolumeChapter(release.volume, release.chapter, series);
+				pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
+				series.last_update_was_manual = false;
+			} else series.no_published_releases = true;
+			saveData(data, callback);
+		});
+	});
+}
+
+/**
+ * attaches a link provided by the user to the series corresponding to the id
+ * @param {string} series_id
+ * @param {string} link
+ * @param {function} callback
+ */
+function userSetSeriesLink(series_id, link, callback) {
+	loadData(function (data) {
+		var series = getSeriesById(data.lists, series_id);
+		if (exists(series) && exists(link)) {
+			series.user_link = link;
+			saveData(data, callback);
+		}
+	});
+}
+
+/**
+ * removes user_link property from series corresponding to id
+ * @param {string} series_id
+ * @param {function} callback
+ */
+function userClearSeriesLink(series_id, callback) {
+	loadData(function (data) {
+		var series = getSeriesById(data.lists, series_id);
+		if (exists(series)) {
+			delete series.user_link;
+			saveData(data, callback);
+		}
 	});
 }
 

@@ -16,7 +16,7 @@ function buildNavBar(data_lists) {
 	var nav_bar = document.createElement("div");
 	nav_bar.className = "navBar";
 
-	nav_bar.appendChild(buildDevTools());
+	//nav_bar.appendChild(buildDevTools());
 	nav_bar.appendChild(buildCurrentListField(data_lists));
 	nav_bar.appendChild(buildManageSeriesField(data_lists));
 	nav_bar.appendChild(buildManageSeriesButton());
@@ -81,20 +81,29 @@ function buildTitleBlock(data_series) {
 	var title_block = document.createElement('div');
 	var title_disp = document.createElement('div');
 	var title_cont = document.createElement('p');
+	var title_link = document.createElement('a');
 	title_block.className = "seriesTitleBlock";
 	title_disp.className = "titleDisplay";
 	title_cont.className = "titleContent";
-	title_cont.textContent = data_series.title;
+	title_link.className = "titleLink";
+	title_link.textContent = data_series.title;
+	if (exists(data_series.user_link)) {
+		title_link.setAttribute("user_link", data_series.user_link);
+	} else {
+		title_link.setAttribute("default_link", getDefaultLink(data_series.series_id));
+	}
+	title_link.onclick = handleTitleLink;
 
 	var len = data_series.title.length;
 	var font_size = 14;
 	if (len > 50) font_size = 10;
 	title_cont.style.fontSize = font_size + 'px';
 
-	var edit_link_wrap = buildEditLinkButton();
+	var edit_link_wrap = buildEditLinkButton(data_series);
 
 	title_block.appendChild(title_disp);
 	title_disp.appendChild(title_cont);
+	title_cont.appendChild(title_link);
 	title_block.appendChild(edit_link_wrap);
 
 	return title_block;
@@ -102,9 +111,10 @@ function buildTitleBlock(data_series) {
 
 /**
  * builds DOM button for editing link associated with selected series
+ * @param {Series} data_series
  * @returns {Element}
  */
-function buildEditLinkButton() {
+function buildEditLinkButton(data_series) {
 	var edit_link_button = document.createElement("div");
 	edit_link_button.className = "editLinkButton";
 	edit_link_button.onclick = handleEnableEditLink;
@@ -117,6 +127,11 @@ function buildEditLinkButton() {
 	if (!manageModeOn()) {
 		edit_link_wrap.style.display = "none";
 	}
+
+	if (exists(data_series.user_link)) {
+		edit_link_icon.style.opacity = 1;
+		edit_link_button.style.opacity = .9;
+	} 
 
 	edit_link_button.appendChild(edit_link_icon);
 	edit_link_wrap.appendChild(edit_link_button);
@@ -555,4 +570,12 @@ function buildDevTools() {
 	dev_toolbar.appendChild(update_lists_button);
 	dev_toolbar.appendChild(rebuild_popup_button);
 	return dev_toolbar;
+}
+
+function getDefaultLink(series_id) {
+	//TODO: add user-specified default link options, such as
+	// search google "[series.title + read online]"
+
+	var series_id = series_id;
+	return "https://www.mangaupdates.com/series.html?id=" + series_id;
 }
