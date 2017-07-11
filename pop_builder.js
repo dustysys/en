@@ -90,7 +90,7 @@ function buildTitleBlock(data_series) {
 	if (exists(data_series.user_link)) {
 		title_link.setAttribute("user_link", data_series.user_link);
 	} else {
-		title_link.setAttribute("default_link", getDefaultLink(data_series));
+		title_link.setAttribute("default_link", getDefaultLink(data_series.series_id));
 	}
 	title_link.onclick = handleTitleLink;
 
@@ -572,10 +572,10 @@ function buildDevTools() {
 	return dev_toolbar;
 }
 
-function getDefaultLink(series) {
+function getDefaultLink(series_id) {
 	//TODO: add user-specified default link options, such as
 	// search google "[series.title + read online]"
 
-	var series_id = series.series_id;
+	var series_id = series_id;
 	return "https://www.mangaupdates.com/series.html?id=" + series_id;
 }

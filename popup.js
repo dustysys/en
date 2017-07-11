@@ -810,20 +810,31 @@ function validateUrl(url) {
 function handleCompleteEditLink(event) {
 	var input_link = event.target;
 	var link = input_link.value;
-	if (link === "") {
-		// do nothing
+	var link_is_empty = (link === "");
+	var series_row = getInputLinksSeriesRow(input_link);
+	var series_id = getSeriesRowsId(series_row);
+	var title_link = getSeriesRowsTitleLink(series_row);
+
+	if (link_is_empty && !title_link.hasAttribute("user_link")) {
+		//do nothing
 	} else {
-		link = validateUrl(link);
-		var series_row = getInputLinksSeriesRow(input_link);
-		var series_id = getSeriesRowsId(series_row);
-		userSetSeriesLink(series_id, link);
-		var title_link = getSeriesRowsTitleLink(series_row);
-		title_link.setAttribute("user_link", link);
 		var link_button = getSeriesRowsEditLinkButton(series_row);
 		var link_icon = getEditLinkButtonsLinkIcon(link_button);
-		link_button.style.opacity = .9;
-		link_icon.style.opacity = 1;
-		
+
+		if (link_is_empty) {
+			var default_link = getDefaultLink(series_id);
+			userClearSeriesLink(series_id);
+			title_link.removeAttribute("user_link");
+			title_link.setAttribute("default_link", default_link);
+			link_button.style.removeProperty("opacity");
+			link_icon.style.removeProperty("opacity");
+		} else {
+			link = validateUrl(link);
+			userSetSeriesLink(series_id, link);
+			title_link.setAttribute("user_link", link);
+			link_button.style.opacity = .97;
+			link_icon.style.opacity = 1;
+		}
 	}
 	input_link.parentElement.removeChild(input_link);
 }

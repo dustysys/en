@@ -754,15 +754,30 @@ function userMarkSeriesUpToDate(series_id, callback) {
 
 /**
  * attaches a link provided by the user to the series corresponding to the id
- * @param series_id
- * @param link
- * @param callback
+ * @param {string} series_id
+ * @param {string} link
+ * @param {function} callback
  */
 function userSetSeriesLink(series_id, link, callback) {
 	loadData(function (data) {
 		var series = getSeriesById(data.lists, series_id);
 		if (exists(series) && exists(link)) {
 			series.user_link = link;
+			saveData(data, callback);
+		}
+	});
+}
+
+/**
+ * removes user_link property from series corresponding to id
+ * @param {string} series_id
+ * @param {function} callback
+ */
+function userClearSeriesLink(series_id, callback) {
+	loadData(function (data) {
+		var series = getSeriesById(data.lists, series_id);
+		if (exists(series)) {
+			delete series.user_link;
 			saveData(data, callback);
 		}
 	});
