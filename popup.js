@@ -748,12 +748,29 @@ function handleTitleClick(event) {
 	}
 }
 
+/**
+ * attempts to make slightly invalid urls valid
+ * @param {string} url
+ * @returns {string}
+ */
+function validateUrl(url) {
+	var has_www = (url.toLowerCase().includes("www."));
+	var has_http = (url.toLowerCase().includes("http://"));
+	var has_https = (url.toLowerCase().includes("https://"));
+	if (!has_www) {
+		return "http://www." + url;
+	} else if (!has_http && !has_https) {
+		return "http://" + url;
+	} else return url;
+}
+
 function handleCompleteEditLink(event) {
 	var input_link = event.target;
 	var link = input_link.value;
 	if (link === "") {
 		return;
 	} else {
+		link = validateUrl(link);
 		var series_row = getInputLinksSeriesRow(input_link);
 		var series_id = getSeriesRowsId(series_row);
 		userSetSeriesLink(series_id, link);
