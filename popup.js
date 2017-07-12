@@ -455,15 +455,18 @@ function toggleSeriesSelectVisibility(toggle) {
 
 	var uptodate_buttons = document.body.getElementsByClassName("upToDateButton");
 	var select_buttons = document.body.getElementsByClassName("seriesSelectWrap");
-	for (var i = 0; i < uptodate_buttons.length; i++) {
-		if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
-			toggleElementVisibility(uptodate_buttons[i], toggle);
-		}
-	}
 
-	for (var i = 0; i < select_buttons.length; i++) {
-		toggleElementVisibility(select_buttons[i], !toggle);
-	}
+	requestAnimationFrame(function () {
+		for (var i = 0; i < uptodate_buttons.length; i++) {
+			if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
+				toggleElementVisibility(uptodate_buttons[i], toggle);
+			}
+		}
+
+		for (var i = 0; i < select_buttons.length; i++) {
+			toggleElementVisibility(select_buttons[i], !toggle);
+		}
+	});
 }
 
 function toggleEditLinkVisibility(toggle){
@@ -508,7 +511,7 @@ function toggleReleaseFieldVisibility(toggle) {
  */
 function toggleManageModeVisibility(toggle) {
 	toggleSeriesSelectVisibility(toggle);
-	toggleEditLinkVisibility(toggle);
+	//toggleEditLinkVisibility(toggle);
 }
 
 /**
