@@ -110,7 +110,7 @@ function animateToggleEditLink(toggle, onscreen_rows) {
 	var d_y = 100;
 	var y1 = toggle ? 0 : d_y;
 	var y0 = toggle ? d_y : 0;
-	var time_anim = 156;
+	var time_anim = 200;
 	fastdom.mutate(function () {
 		for (var i = 0; i < onscreen_rows.length; i++) {
 			var edit_link_wrap = getSeriesRowsEditLinkWrap(onscreen_rows[i]);
