@@ -456,17 +456,15 @@ function toggleSeriesSelectVisibility(toggle) {
 	var uptodate_buttons = document.body.getElementsByClassName("upToDateButton");
 	var select_buttons = document.body.getElementsByClassName("seriesSelectWrap");
 
-	requestAnimationFrame(function () {
 		for (var i = 0; i < uptodate_buttons.length; i++) {
-			if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
-				toggleElementVisibility(uptodate_buttons[i], toggle);
-			}
+				if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
+					toggleElementVisibility(uptodate_buttons[i], toggle);
+				}
 		}
 
 		for (var i = 0; i < select_buttons.length; i++) {
 			toggleElementVisibility(select_buttons[i], !toggle);
 		}
-	});
 }
 
 function toggleEditLinkVisibility(toggle){
@@ -493,7 +491,7 @@ function toggleElement(element) {
  * @param {boolean} toggle
  */
 function toggleElementVisibility(el, toggle) {
-	el.style.display = toggle ? "" : "none";
+	fastdom.mutate(function () { el.style.display = toggle ? "" : "none"; });
 }
 
 /**
