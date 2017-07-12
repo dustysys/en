@@ -7,7 +7,7 @@ Handlers call encore_mu functions
 #############################################################################*/
 
 var global_last_clicked_el;
-var global_no_animation = true;
+var global_no_animation = false;
 
 /**
  * DOM HELPER FUNCTIONS
@@ -500,7 +500,7 @@ function toggleElementVisibility(el, toggle) {
  */
 function toggleReleaseFieldVisibility(toggle) {
 	var release_field = document.getElementById("manageSeriesField");
-	toggleElementVisibility(release_field, toggle);
+	toggleElementVisibility(release_field, toggle);q
 }
 
 /**
@@ -509,7 +509,7 @@ function toggleReleaseFieldVisibility(toggle) {
  */
 function toggleManageModeVisibility(toggle) {
 	toggleSeriesSelectVisibility(toggle);
-	//toggleEditLinkVisibility(toggle);
+	toggleEditLinkVisibility(toggle);
 }
 
 /**
