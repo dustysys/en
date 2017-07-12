@@ -8,6 +8,7 @@ Handlers call encore_mu functions
 
 var global_last_clicked_el;
 var global_no_animation = false;
+var global_block_manage_mode = false;
 
 /**
  * DOM HELPER FUNCTIONS
@@ -518,9 +519,12 @@ function toggleManageModeVisibility(toggle) {
  */
 function handleManageSeries(event) {
 	//event may be button or its description
-	var manage_button = document.getElementById("manageSeriesButton");
-	var toggle = toggleElement(manage_button);
-	animateToggleManageMode(toggle, toggleManageModeVisibility);
+	if (!global_block_manage_mode || global_no_animation) {
+		global_block_manage_mode = true;
+		var manage_button = document.getElementById("manageSeriesButton");
+		var toggle = toggleElement(manage_button);
+		animateToggleManageMode(toggle, toggleManageModeVisibility);
+	}
 	
 }
 
