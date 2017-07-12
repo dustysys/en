@@ -543,6 +543,7 @@ button {
 
 #selectAllButton {
     transform: translateY(-45px);
+    border-color:var(--button-text-color);
     margin-left: 216px;
     margin-right:0px;
     margin-top: 14px;

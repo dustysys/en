@@ -88,11 +88,17 @@ function animateListGapClose(series_row_list, start_el_index, end_el_index, gap,
  * @param {boolean} toggle
  */
 function animateToggleManageMode(toggle, callback) {
-	var onscreen_rows = getOnScreenSeriesRows();
+	if (!global_no_animation) {
+		fastdom.measure(function () {
+			var onscreen_rows = getOnScreenSeriesRows();
 
-	animateToggleManageField(toggle);
-	animateToggleUpToDateSelect(toggle, onscreen_rows, callback);
-	animateToggleEditLink(toggle, onscreen_rows);
+			animateToggleManageField(toggle);
+			animateToggleUpToDateSelect(toggle, onscreen_rows, callback);
+			animateToggleEditLink(toggle, onscreen_rows);
+		});
+	} else {
+		callback(toggle);
+	}
 }
 
 /**
@@ -104,16 +110,17 @@ function animateToggleEditLink(toggle, onscreen_rows) {
 	var d_y = 100;
 	var y1 = toggle ? 0 : d_y;
 	var y0 = toggle ? d_y : 0;
-	var time_anim = 156;
-
-	for (var i = 0; i < onscreen_rows.length; i++) {
-		var edit_link_wrap = getSeriesRowsEditLinkWrap(onscreen_rows[i]);
-		edit_link_wrap.style.display = "";
-		var link_anim = edit_link_wrap.animate([
-			{ transform: `translateY(${-y1}px)` },
-			{ transform: `translateY(${-y0}px)` }
-		], { duration: time_anim, fill: 'forwards', easing: 'linear' });
-	}
+	var time_anim = 200;
+	fastdom.mutate(function () {
+		for (var i = 0; i < onscreen_rows.length; i++) {
+			var edit_link_wrap = getSeriesRowsEditLinkWrap(onscreen_rows[i]);
+			edit_link_wrap.style.display = "";
+			var link_anim = edit_link_wrap.animate([
+				{ transform: `translateY(${-y1}px)` },
+				{ transform: `translateY(${-y0}px)` }
+			], { duration: time_anim, easing: 'linear' });
+		}
+	});
 }
 
 /**
@@ -126,12 +133,15 @@ function animateToggleManageField(toggle) {
 	var y1 = toggle ? 0 : d_y;
 	var y0 = toggle ? d_y : 0;
 	var time_anim = 200;
-	
-	manage_field.style.display = "";
-	var manage_anim = manage_field.animate([
-		{ transform: `translateY(${-y1}px)` },
-		{ transform: `translateY(${-y0}px)` }
-	], { duration: time_anim, fill: 'forwards', easing: 'linear' });
+	fastdom.mutate(function () {
+		manage_field.style.display = "";
+		var manage_anim = manage_field.animate([
+			{ transform: `translateY(${-y1}px)` },
+			{ transform: `translateY(${-y0}px)` }
+		], { duration: time_anim, fill: 'forwards', easing: 'linear' });
+
+		manage_anim.onfinish = (function () { global_block_manage_mode = false; });
+	});
 }
 
 /**
@@ -146,40 +156,27 @@ function animateToggleUpToDateSelect(toggle, onscreen_rows, callback) {
 	var y0 = toggle ? d_y : 0;
 	var time_anim = 200;
 
-	for (var i = 0; i < onscreen_rows.length; i++) {
-		var uptodate_button = getSeriesRowsUpToDateButton(onscreen_rows[i]);
-		if (uptodate_button.getAttribute("up_to_date") === "false") {
-			uptodate_button.style.display = "";
-			var uptodate_anim = uptodate_button.animate([
-				{ transform: `translateY(${y0}px)` },
-				{ transform: `translateY(${y1}px)` },
-			], { duration: time_anim, fill: 'forwards', easing: 'linear' });
+	fastdom.mutate(function () {
+		for (var i = 0; i < onscreen_rows.length; i++) {
+			var uptodate_button = getSeriesRowsUpToDateButton(onscreen_rows[i]);
+			if (uptodate_button.getAttribute("up_to_date") === "false") {
+				uptodate_button.style.display = "";
+				var uptodate_anim = uptodate_button.animate([
+					{ transform: `translateY(${y0}px)` },
+					{ transform: `translateY(${y1}px)` },
+				], { duration: time_anim, easing: 'linear' });
+			}
+			var select_button_wrap = getSeriesRowsSeriesSelectWrap(onscreen_rows[i]);
+			select_button_wrap.style.display = "";
+			var select_anim = select_button_wrap.animate([
+				{ transform: `translateY(${-y1}px)` },
+				{ transform: `translateY(${-y0}px)` }
+			], { duration: time_anim, easing: 'linear' });
+
+			// syncs toggling of all hiding elements by waiting for the last one engaged to finish
+			if (i === onscreen_rows.length - 1) {
+				select_anim.onfinish = (function () { callback(toggle) });
+			}
 		}
-		var select_button_wrap = getSeriesRowsSeriesSelectWrap(onscreen_rows[i]);
-		select_button_wrap.style.display = "";
-		var select_anim = select_button_wrap.animate([
-			{ transform: `translateY(${-y1}px)` },
-			{ transform: `translateY(${-y0}px)` }
-		], { duration: time_anim, fill:'forwards', easing: 'linear' });
-
-		
-		// syncs toggling of all hiding elements by waiting for the last one to finish
-		// note there is no guarantee the last one will finish first
-		if (i === onscreen_rows.length - 1) {
-			select_anim.onfinish = (function () { callback(toggle) });
-		}
-
-		// an alternative, but very bad performance-wise on large lists:
-		/*
-		select_anim.onfinish = (function () {
-			toggleElementVisibility(select_button_wrap, toggle);
-		}*/
-	}
-
-	// another option for syncing animation finish, still a race condition.
-	// performs badly on firefox:
-	/*
-	setTimeout(function () {
-		callback(toggle);
-	}, time_anim-10);*/
+	});
 }

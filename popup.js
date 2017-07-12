@@ -7,6 +7,8 @@ Handlers call encore_mu functions
 #############################################################################*/
 
 var global_last_clicked_el;
+var global_no_animation = false;
+var global_block_manage_mode = false;
 
 /**
  * DOM HELPER FUNCTIONS
@@ -454,15 +456,16 @@ function toggleSeriesSelectVisibility(toggle) {
 
 	var uptodate_buttons = document.body.getElementsByClassName("upToDateButton");
 	var select_buttons = document.body.getElementsByClassName("seriesSelectWrap");
-	for (var i = 0; i < uptodate_buttons.length; i++) {
-		if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
-			toggleElementVisibility(uptodate_buttons[i], toggle);
-		}
-	}
 
-	for (var i = 0; i < select_buttons.length; i++) {
-		toggleElementVisibility(select_buttons[i], !toggle);
-	}
+		for (var i = 0; i < uptodate_buttons.length; i++) {
+				if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
+					toggleElementVisibility(uptodate_buttons[i], toggle);
+				}
+		}
+
+		for (var i = 0; i < select_buttons.length; i++) {
+			toggleElementVisibility(select_buttons[i], !toggle);
+		}
 }
 
 function toggleEditLinkVisibility(toggle){
@@ -489,7 +492,7 @@ function toggleElement(element) {
  * @param {boolean} toggle
  */
 function toggleElementVisibility(el, toggle) {
-	el.style.display = toggle ? "" : "none";
+	fastdom.mutate(function () { el.style.display = toggle ? "" : "none"; });
 }
 
 /**
@@ -498,7 +501,7 @@ function toggleElementVisibility(el, toggle) {
  */
 function toggleReleaseFieldVisibility(toggle) {
 	var release_field = document.getElementById("manageSeriesField");
-	toggleElementVisibility(release_field, toggle);
+	toggleElementVisibility(release_field, toggle);q
 }
 
 /**
@@ -516,9 +519,12 @@ function toggleManageModeVisibility(toggle) {
  */
 function handleManageSeries(event) {
 	//event may be button or its description
-	var manage_button = document.getElementById("manageSeriesButton");
-	var toggle = toggleElement(manage_button);
-	animateToggleManageMode(toggle, toggleManageModeVisibility);
+	if (!global_block_manage_mode || global_no_animation) {
+		global_block_manage_mode = true;
+		var manage_button = document.getElementById("manageSeriesButton");
+		var toggle = toggleElement(manage_button);
+		animateToggleManageMode(toggle, toggleManageModeVisibility);
+	}
 	
 }
 
