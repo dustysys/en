@@ -200,7 +200,7 @@ function getSeriesRowVerticalSize() {
 	var cs = window.getComputedStyle(document.documentElement);
 	var row_height = cs.getPropertyValue('--row-height');
 	var row_margin = cs.getPropertyValue('--row-margin-vert');
-	var row_border = cs.getPropertyValue('--series-border-width');
+	var row_border = cs.getPropertyValue('--std-border-width');
 	var vert = parseInt(row_height) + parseInt(row_margin) + parseInt(row_border) + parseInt(row_border);
 	return vert;
 }
@@ -960,8 +960,10 @@ function buildPopup(data) {
  * Redirects the user if they are not logged in to MU
  */
 function redirectToLogin() {
-	document.write("Log in at www.mangaupdates.com and reload en.");
-	console.log("attempted redirect");
+	var redirect_page = buildRedirectPage();
+	document.body.append(redirect_page);
+
+	console.log("Attempted redirect.");
 }
 
 /**
