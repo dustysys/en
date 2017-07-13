@@ -157,11 +157,46 @@ function isFirstSession(callback) {
 function finishFirstSession(callback) {
 	var session_desc = "first_session";
 	var sess_obj = {};
-	sess_obj[first_session] = false;
+	sess_obj[session_desc] = false;
 	chrome.storage.local.set(sess_obj, function () {
 		if (chrome.runtime.lastError) {
 			console.error(chrome.runtime.lastError);
 			console.error("Error: failed to finalize first session");
+		} else if (callback) callback();
+	});
+}
+
+/**
+ * load the most recent release examined from the main MU Releases page
+ * @param {function(Release)} callback
+ */
+function loadLatestReleaseUpdate(callback) {
+	var release_desc = "latest_release_update";
+	chrome.storage.local.get(release_desc, function (latest_updated_release) {
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError);
+			console.error("Error: failed to load latest release");
+		} else if (!exists(latest_updated_release)) {
+			callback("No Release");
+		} else {
+			callback(latest_updated_release);
+		}
+	});
+}
+
+/**
+ * save the most recent release examined from the main MU Releases page
+ * @param {Release} release
+ * @param {function} callback
+ */
+function saveLatestReleaseUpdate(release, callback) {
+	var release_desc = "latest_release_update";
+	var release_obj = {};
+	release_obj[release_desc] = release;
+	chrome.storage.local.set(release_obj, function () {
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError);
+			console.error("Error: failed to save latest release");
 		} else if (callback) callback();
 	});
 }
