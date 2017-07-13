@@ -200,7 +200,7 @@ function getSeriesRowVerticalSize() {
 	var cs = window.getComputedStyle(document.documentElement);
 	var row_height = cs.getPropertyValue('--row-height');
 	var row_margin = cs.getPropertyValue('--row-margin-vert');
-	var row_border = cs.getPropertyValue('--series-border-width');
+	var row_border = cs.getPropertyValue('--std-border-width');
 	var vert = parseInt(row_height) + parseInt(row_margin) + parseInt(row_border) + parseInt(row_border);
 	return vert;
 }
@@ -960,21 +960,10 @@ function buildPopup(data) {
  * Redirects the user if they are not logged in to MU
  */
 function redirectToLogin() {
-	document.write("Log in at www.mangaupdates.com and reload en.");
-	console.log("attempted redirect");
-}
+	var redirect_page = buildRedirectPage();
+	document.body.append(redirect_page);
 
-/**
- * creates a new session based on logged in user and downloads
- * all data, followed by creating the popup from scratch
- * @param user_id
- */
-function initializeNewSession(user_id) {
-	saveCurrentUserId(user_id, function () {
-		pullAllData(function () {
-			rebuildPopup();
-		});
-	});
+	console.log("Attempted redirect.");
 }
 
 /**
@@ -1019,11 +1008,11 @@ function validateSession(data) {
 			}
 		} else {
 			if (current_user_id === "No User") {
-				initializeNewSession(logged_in_user_id);
+				initializeNewSession(logged_in_user_id, rebuildPopup);
 			} else if (current_user_id !== logged_in_user_id) {
-				initializeNewSession(logged_in_user_id);
+				initializeNewSession(logged_in_user_id, rebuildPopup);
 			} else if (data === "No Data") {
-				initializeNewSession(current_user_id);
+				initializeNewSession(current_user_id, rebuildPopup);
 			}//else session is valid
 		}
 	});
@@ -1045,7 +1034,7 @@ function hookListeners() {
  * defers session validation to async while popup loads
  * to give general case user better performance
  */
-function init() {
+function popupInit() {
 
 	loadData(function (data) {
 
@@ -1063,4 +1052,4 @@ function init() {
 }
 
 // startup data load, popup building and session validation once DOM loads
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', popupInit);

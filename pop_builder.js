@@ -494,6 +494,50 @@ function buildManageSeriesButton() {
 	return manage_series_button;
 }
 
+function buildRedirectPage() {
+	var redirect_page = document.createElement('div');
+	var redirect_box = document.createElement('div');
+	var redirect_text = document.createElement('span');
+	var redirect_login = document.createElement('div');
+	var redirect_register = document.createElement('div');
+	redirect_page.id = "redirectPage";
+	redirect_box.id = "redirectBox";
+	redirect_box.className = "enBox";
+	redirect_text.id = "redirectText";
+	redirect_text.textContent = "Use of en requires a mangaupdates.com account.";
+	redirect_login.id = "loginButton";
+	redirect_login.className = "enButton";
+	redirect_login.textContent = "Login"
+	redirect_register.id = "registerButton";
+	redirect_register.className = "enButton";
+	redirect_register.textContent = "Register";
+
+	redirect_login.onclick = (function () {
+		chrome.tabs.create({
+			active: true, url: "https://www.mangaupdates.com/" }, function () {
+			if (chrome.runtime.lastError) {
+				console.error("Failed to load login page: " + chrome.runtime.lastError.message);
+			}
+		})
+	});
+
+	redirect_register.onclick = (function () {
+		chrome.tabs.create({
+			active: true, url: "https://www.mangaupdates.com/signup.html" }, function () {
+			if (chrome.runtime.lastError) {
+				console.error("Failed to load register page: " + chrome.runtime.lastError.message);
+			}
+		})
+	});
+
+	redirect_box.appendChild(redirect_text);
+	redirect_box.appendChild(redirect_login);
+	redirect_box.appendChild(redirect_register);
+	redirect_page.appendChild(redirect_box);
+
+	return redirect_page;
+}
+
 /**
  * dev tool DOM button for easy clearing of all chrome extension data
  * @returns {Element}

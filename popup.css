@@ -26,8 +26,8 @@
     --row-margin-vert: 3px;
     --table-margin-horiz: 3px;
     --block-border-radius: 5px;
-    --series-border-width: 1px;
     --title-block-width: 180px;
+    --std-border-width: 1px;
     --std-margin-width: 5px;
     --button-border-radius: 3px;
 }
@@ -40,7 +40,6 @@ html {
     overflow-y: scroll;
     margin-left: 0px !important;
     margin-right: 0px !important;
-    margin-top: 5px;
 }
 
 body {
@@ -165,12 +164,12 @@ select{
 .listTable {
     margin-left: var(--table-margin-horiz);
     margin-right: var(--table-margin-horiz);
-    margin-top: var(--navbar-height);
+    margin-top: calc(var(--navbar-height) + var(--row-margin-vert) + 1px);
 }
 
 .seriesRow {
     border-radius: var(--block-border-radius);
-    border-width: var(--series-border-width);
+    border-width: var(--std-border-width);
     border-style: dotted;
     height: var(--row-height);
     margin-bottom: var(--row-margin-vert);
@@ -551,3 +550,67 @@ button {
     height: 16px;
 }
 
+#redirectPage {
+    background-color: var(--bg-color-new);
+    width: var(--popup-width);
+    height: var(--popup-height);
+    display: flex;
+    justify-content: center;
+    align-items:center;
+}
+
+.enBox {
+    border-radius: var(--block-border-radius);
+    border-style: dotted;
+    border-width: var(--std-border-width);
+}
+
+.enButton {
+    border-radius: 4px;
+    border: 1px solid;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 12px 12px;
+    margin-top: 4px;
+}
+
+#redirectBox {
+    width: 80vw;
+    height:40vw;
+    background-color: var(--block-color-new);
+    border-color: var(--border-color-new);
+    transform: translateY(-30px);
+    text-align:center;
+}
+
+#redirectText {
+    font-size: 16px;
+    color: var(--button-text-color-new);
+    font-weight:600;
+    position: relative;
+    margin-top: 30px;
+    top:30px;
+}
+
+#loginButton, #registerButton {
+    color: var(--button-text-color-new);
+    background-color: var(--block-color-new);
+    border-color: var(--button-text-color-new);
+    position: relative;
+    margin-top: 80px;
+    font-size: 14px;
+}
+
+#loginButton {
+    margin-right:8%;
+}
+
+#registerButton {
+    
+    margin-left:8%;
+}
+
+#loginButton:hover, #registerButton:hover {
+    background-color: var(--button-color-hover-new);
+}
