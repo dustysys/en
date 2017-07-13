@@ -29,13 +29,13 @@ var ListEnum = {
  * @param {function(Object)} callback
  */
 function loadStorage(callback) {
-	chrome.storage.local.get(null, function (storage) {
+	chrome.storage.local.get(null, function (local_storage) {
 		if (chrome.runtime.lastError) {
 			console.error(chrome.runtime.lastError);
 			console.error("Failed to load storage");
-		} else if (!exists(storage)) {
+		} else if (!exists(local_storage)) {
 			callback("No Storage");
-		} else callback(storage);
+		} else callback(local_storage);
 	});
 }
 
@@ -100,8 +100,10 @@ function loadRequest(request_id, callback) {
  */
 function saveRequest(details, callback) {
 	var req_name = "req_" + details.requestId;
+	details.enTime = Date.now();
 	var req_obj = {};
 	req_obj[req_name] = details;
+
 	chrome.storage.local.set(req_obj, function () {
 		if (chrome.runtime.lastError) {
 			console.error(chrome.runtime.lastError);
