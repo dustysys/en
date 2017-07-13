@@ -393,7 +393,7 @@ function buildListFilter() {
 	var list_filter = document.createElement("input");
 	list_filter.id = ("seriesRowListFilter");
 	list_filter.onkeyup = handleListFilter;
-	list_filter.placeholder = "Search List";
+	list_filter.placeholder = "Filter List";
 
 	return list_filter;
 }
@@ -446,6 +446,7 @@ function buildMoveSeriesButton() {
 	var move_series_button = document.createElement("div");
 	move_series_button.id = "moveSeriesButton";
 	move_series_button.onclick = handleMoveSeries;
+	move_series_button.title = "Move Series";
 	var move_button_desc = document.createElement("span");
 	move_button_desc.id = "moveButtonDescription";
 	move_button_desc.textContent = "Move \u21FE";

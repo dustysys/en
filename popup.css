@@ -60,11 +60,17 @@ input {
     padding: 0px;
     color: inherit;
     background-color: inherit;
+    -webkit-appearance: none;
+    box-shadow: none !important;
+    border:none;
+
 }
 
-select{
-    color:inherit;
-    background-color:inherit;
+
+
+select {
+    color: inherit;
+    background-color: inherit;
 }
 
 .seriesRow[new_releases=true],
@@ -395,23 +401,52 @@ button {
     border-bottom-right-radius: var(--block-border-radius);
 }
 
+    .navBar select {
+        background-color: var(--button-color-hover);
+    }
+    .navBar input {
+        background-color: var(--button-color-hover);
+        box-shadow: none;
+        outline: none;
+        border-width: 1px;
+
+    }
+
 
 #currentListField{
     display: inline-block;
     float: left;
     margin-top: 5px;
+    transform:translateX(7px);
 }
 
 #seriesRowListFilter {
-    width: 80px;
-    height: 20px;
+    width: 85px;
+    height: 24px;
+    margin-left: var(--std-margin-width);
+    text-indent: var(--std-margin-width);
+    box-shadow: none !important;
+    border-style: solid;
+    border-color: var(--button-text-color);
+    border-radius: var(--button-border-radius);
+    color: var(--text-color);
 }
 
+    #seriesRowListFilter::-webkit-input-placeholder {
+        color: var(--button-text-color);
+        opacity: .5;
+    }
+
 #currentListSelect {
-    top:5px;
+    top: 5px;
     margin-left: 5px;
-    height:25px;
-    width: 100px;
+    height: 26px;
+    width: 112px;
+    border-color: var(--button-text-color);
+    color: var(--button-text-color);
+    border-radius: var(--button-border-radius);
+    /* makes font not blur during animations*/
+    -webkit-backface-visibility: hidden;
 }
 
 #manageSeriesField {
@@ -460,7 +495,8 @@ button {
     border: solid 1px;
     border-bottom-left-radius: var(--button-border-radius);
     border-top-left-radius: var(--button-border-radius);
-    border-color: var(--text-color);
+    border-color: var(--button-text-color);
+    color: var(--button-text-color);
     position: relative;
     display: inline-block;
     bottom: 0px;
@@ -492,7 +528,12 @@ button {
     border-bottom-right-radius: var(--button-border-radius);
     border-top-right-radius: var(--button-border-radius);
     display: inline-block;
-    transform: translateY(-9px);
+    transform: translate(-1px, -9px);
+    border-color: var(--button-text-color);
+    color: var(--button-text-color);
+    text-shadow: none;
+    /* makes font not blur during animations*/
+    -webkit-backface-visibility: hidden;
 }
 
 
