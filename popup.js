@@ -967,19 +967,6 @@ function redirectToLogin() {
 }
 
 /**
- * creates a new session based on logged in user and downloads
- * all data, followed by creating the popup from scratch
- * @param user_id
- */
-function initializeNewSession(user_id) {
-	saveCurrentUserId(user_id, function () {
-		pullAllData(function () {
-			rebuildPopup();
-		});
-	});
-}
-
-/**
  * if chrome.storage fails to load data or user info this will either
  * prompt the user or to address them or if there is a current session
  * it will do nothing so as not to interfere with user
@@ -1021,11 +1008,11 @@ function validateSession(data) {
 			}
 		} else {
 			if (current_user_id === "No User") {
-				initializeNewSession(logged_in_user_id);
+				initializeNewSession(logged_in_user_id, rebuildPopup);
 			} else if (current_user_id !== logged_in_user_id) {
-				initializeNewSession(logged_in_user_id);
+				initializeNewSession(logged_in_user_id, rebuildPopup);
 			} else if (data === "No Data") {
-				initializeNewSession(current_user_id);
+				initializeNewSession(current_user_id, rebuildPopup);
 			}//else session is valid
 		}
 	});
@@ -1047,7 +1034,7 @@ function hookListeners() {
  * defers session validation to async while popup loads
  * to give general case user better performance
  */
-function init() {
+function popupInit() {
 
 	loadData(function (data) {
 
@@ -1065,4 +1052,4 @@ function init() {
 }
 
 // startup data load, popup building and session validation once DOM loads
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', popupInit);

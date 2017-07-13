@@ -133,6 +133,40 @@ function loadCurrentUserId(callback) {
 }
 
 /**
+ * reads storage to determine if en has been previously run
+ * @param {function(boolean)} callback
+ */
+function isFirstSession(callback) {
+	var session_desc = "first_session";
+	chrome.storage.local.get(session_desc, function (first_session) {
+		if (chrome.runtime.lastError) {
+			console.error(console.runtime.lastError);
+			console.error("Error: could not determine if this is first session");
+		} else if (!exists(first_session)) {
+			callback(true);
+		} else {
+			callback(false);
+		}
+	});
+}
+
+/**
+ * finalizes first session by setting first session flag
+ * @param {function} callback
+ */
+function finishFirstSession(callback) {
+	var session_desc = "first_session";
+	var sess_obj = {};
+	sess_obj[first_session] = false;
+	chrome.storage.local.set(sess_obj, function () {
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError);
+			console.error("Error: failed to finalize first session");
+		} else if (callback) callback();
+	});
+}
+
+/**
  * deletes an xhr's saved details
  * @param {string} request_id
  * @param {function} callback
@@ -1303,6 +1337,16 @@ function pullSeriesToListById(data_list, series_id, callback) {
 }
 
 /**
+ * pulls specified series' latest release
+ * @param {Series} series
+ */
+function pullSeriesLatestRelease(data_series) {
+	scanSeriesLatestRelease(data_series.series_id, function (release) {
+		
+	});
+}
+
+/**
  * updates series from any read lists in listset
  * with any new entries from new releases page
  * @param {List[]} data_lists
@@ -1372,4 +1416,18 @@ function updateLists(){
 			});
 		}
 	});		
+}
+
+/**
+ * creates a new session based on logged in user and downloads
+ * all data
+ * @param {string} user_id
+ * @param {function} callback
+ */
+function initializeNewSession(user_id, callback) {
+	saveCurrentUserId(user_id, function () {
+		pullAllData(function () {
+			callback();
+		});
+	});
 }
