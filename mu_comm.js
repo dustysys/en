@@ -511,19 +511,45 @@ function MUComm_UpdateLists(request_details, complete_details, callback, data_li
 }
 
 /**
+ * deletes stale requests
+ */
+function cleanMUComms() {
+	loadStorage(function (local_storage) {
+		var current_time = Date.now();
+		for (const key of Object.keys(local_storage)) {
+			if (key.includes("req_")) {
+				var req_id = key.substring(key.indexOf("req_") + 4);
+				var timestamp = new Date(local_storage[key].enTime);
+				var TWO_MINUTES = 2 * 60 * 1000;
+				if (current_time - timestamp > TWO_MINUTES) {
+					console.log("Deleted request: " + req_id);
+					deleteRequest(req_id);
+				}
+			}
+		}
+	});
+}
+
+/**
  * captures and saves the initial xhr to MU
  * @param {ReqDetails} request_details
  */
 function handleMURequestComm(request_details){
-	//TODO: garbage clean requests before saving
 	console.log("Request");
-	console.log(request_details);
+	console.log(request_details.requestId);
 	// filter out our own requests
 	if (request_details.tabId >= 0) {
 		loadRequest(request_details.requestId, function (req_details) {
 			if (!exists(req_details)) {
-				//avoid overwriting POST request
+				//MU POST requests have a corresponding GET request after
+				//Checking to make sure there isn't already a saved POST
+				//request of the same id avoids losing the request.
 				saveRequest(request_details);
+
+				if (parseInt(request_details.requestId) % 10 == 0) {
+					//cleans requests occasionally
+					cleanMUComms();
+				}
 			}
 		});
 	}
@@ -545,7 +571,7 @@ function handleMUCompleteComm(complete_details){
 				if (complete_details.requestId === req_id) {
 					handleMUComm(request_details, complete_details);
 					console.log("Complete");
-					console.log(complete_details);
+					console.log(complete_details.requestId);
 				} else console.log("Error: Request mismatch");
 			} else {
 				//console.warn("Warning: Failed to load request");
