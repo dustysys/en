@@ -8,13 +8,14 @@ function bgSync() {
 					});
 				}
 			} else {
-				// Do update
+				pullAllData();
 			}
 		});
 	});
 }
 
 function bgUpdateReleases() {
+	updateLists();
 }
 
 function checkAlarm(alarm) {
@@ -28,7 +29,7 @@ function checkAlarm(alarm) {
 }
 
 function scheduleNextReleaseUpdate() {
-	chrome.alarms.create("update_releases", { periodInMinutes: 3 });
+	chrome.alarms.create("update_releases", { periodInMinutes: 1 });
 }
 
 function scheduleNextSync() {
@@ -36,11 +37,11 @@ function scheduleNextSync() {
 }
 
 function backgroundInit() {
-
+	scheduleNextReleaseUpdate();
+	scheduleNextSync();
+	beginListeningMUComm();
+	chrome.runtime.onInstalled.addListener(backgroundInit);
+	chrome.alarms.onAlarm.addListener(checkAlarm);
 }
 
-scheduleNextReleaseUpdate();
-scheduleNextSync();
-beginListeningMUComm();
-chrome.runtime.onInstalled.addListener(backgroundInit);
-chrome.alarms.onAlarm.addListener(checkAlarm);
+backgroundInit();
