@@ -510,6 +510,10 @@ function MUComm_UpdateLists(request_details, complete_details, callback, data_li
 	callback();
 }
 
+function cleanMUComms() {
+	
+}
+
 /**
  * captures and saves the initial xhr to MU
  * @param {ReqDetails} request_details

@@ -25,6 +25,21 @@ var ListEnum = {
 }
 
 /**
+ * loads all storage
+ * @param {function(Object)} callback
+ */
+function loadStorage(callback) {
+	chrome.storage.local.get(null, function (storage) {
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError);
+			console.error("Failed to load storage");
+		} else if (!exists(storage)) {
+			callback("No Storage");
+		} else callback(storage);
+	});
+}
+
+/**
  * loads all series-related data
  * @param {function(Data)} callback
  */
