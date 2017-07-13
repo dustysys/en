@@ -496,12 +496,12 @@ function toggleElementVisibility(el, toggle) {
 }
 
 /**
- * toggles visibility of the release field elements
+ * toggles visibility of the manage series field elements
  * @param {boolean} toggle
  */
-function toggleReleaseFieldVisibility(toggle) {
-	var release_field = document.getElementById("manageSeriesField");
-	toggleElementVisibility(release_field, toggle);q
+function toggleManageFieldVisibility(toggle) {
+	var manage_field = document.getElementById("manageSeriesField");
+	toggleElementVisibility(manage_field, !toggle);
 }
 
 /**
@@ -509,6 +509,7 @@ function toggleReleaseFieldVisibility(toggle) {
  * @param {boolean} toggle
  */
 function toggleManageModeVisibility(toggle) {
+	toggleManageFieldVisibility(toggle);
 	toggleSeriesSelectVisibility(toggle);
 	toggleEditLinkVisibility(toggle);
 }

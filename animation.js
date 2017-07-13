@@ -138,7 +138,7 @@ function animateToggleManageField(toggle) {
 		var manage_anim = manage_field.animate([
 			{ transform: `translateY(${-y1}px)` },
 			{ transform: `translateY(${-y0}px)` }
-		], { duration: time_anim, fill: 'forwards', easing: 'linear' });
+		], { duration: time_anim, easing: 'linear' });
 
 		manage_anim.onfinish = (function () { global_block_manage_mode = false; });
 	});
