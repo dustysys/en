@@ -1,3 +1,5 @@
+var global_alarm_timestamp = Date.now();
+
 function bgSync() {
 	pullUserSessionInfo(function (current_user_id, logged_in_user_id) {
 		isFirstSession(function (first_session) {
@@ -19,26 +21,38 @@ function bgUpdateReleases() {
 }
 
 function checkAlarm(alarm) {
-	if (alarm && alarm.name === "update_all") {
-		scheduleNextSync();
-		bgSync();
-	} else if (alarm && alarm.name === "update_releases") {
-		scheduleNextReleaseUpdate();
-		bgUpdateReleases();
+	if (alarm && alarm.name) {
+		var alarm_desc = alarm.name.substring(0, alarm.name.indexOf(":"));
+		var alarm_id = alarm.name.substring(alarm.name.indexOf(":") + 1);
+		if (alarm_id === global_alarm_timestamp.toString()) {
+			if (alarm_desc === "update_all") {
+				console.log("Syncing");
+				bgSync();
+			} else if (alarm_desc === "update_releases") {
+				console.log("Updating releases");
+				bgUpdateReleases();
+			}
+		}
+		else {
+			console.log("Clearing old alarm " + alarm.name);
+			chrome.alarms.clear(alarm.name);
+		}
 	}
 }
 
-function scheduleNextReleaseUpdate() {
-	chrome.alarms.create("update_releases", { periodInMinutes: 1 });
+function scheduleReleaseUpdates() {
+	var alarm_name = "update_releases:" + global_alarm_timestamp;
+	chrome.alarms.create(alarm_name, { periodInMinutes: 1 });
 }
 
-function scheduleNextSync() {
-	chrome.alarms.create("update_all", { periodInMinutes: 10 });
+function scheduleSyncs() {
+	var alarm_name = "update_all:" + global_alarm_timestamp;
+	chrome.alarms.create(alarm_name, { periodInMinutes: 10 });
 }
 
 function backgroundInit() {
-	scheduleNextReleaseUpdate();
-	scheduleNextSync();
+	scheduleReleaseUpdates();
+	scheduleSyncs();
 	beginListeningMUComm();
 	chrome.runtime.onInstalled.addListener(backgroundInit);
 	chrome.alarms.onAlarm.addListener(checkAlarm);

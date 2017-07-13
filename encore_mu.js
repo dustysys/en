@@ -1256,15 +1256,15 @@ function scanNewReleases(callback) {
 							if (latest_release_update && latest_release_update !== "No Release") {
 								if (releasesAreSame(latest_release_update, release)) {
 									console.log("Checked up to latest release!");
-									callback(series_id_release_pairs);
+									// break out of the loops:
+									i = elm_date_list.length;
+									j = release_root.length;
 								}
-							}
-
-							if (i === 0 && j === 0 && exists(release)) {
+							} else if (i === 0 && j === 0 && exists(release)) {
 								saveLatestReleaseUpdate(release);
+							} else {
+								series_id_release_pairs.push([series_id, release]);
 							}
-
-							series_id_release_pairs.push([series_id, release]);
 						}
 					}
 				}
