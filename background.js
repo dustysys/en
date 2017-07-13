@@ -6,7 +6,9 @@ function bgSync() {
 			if (first_session) {
 				if (logged_in_user_id && logged_in_user_id !== "No User") {
 					initializeNewSession(logged_in_user_id, function () {
-						// TODO: consider adding initial checks for all series' latest release
+						finishFirstSession(function () {
+							console.log("New session initialized from background script");
+						});
 					});
 				}
 			} else {
@@ -42,20 +44,20 @@ function checkAlarm(alarm) {
 
 function scheduleReleaseUpdates() {
 	var alarm_name = "update_releases:" + global_alarm_timestamp;
-	chrome.alarms.create(alarm_name, { periodInMinutes: 1 });
+	chrome.alarms.create(alarm_name, { periodInMinutes: 15 });
 }
 
 function scheduleSyncs() {
 	var alarm_name = "update_all:" + global_alarm_timestamp;
-	chrome.alarms.create(alarm_name, { periodInMinutes: 10 });
+	chrome.alarms.create(alarm_name, { periodInMinutes: 60 });
 }
 
-function backgroundInit() {
+function bgInit() {
 	scheduleReleaseUpdates();
 	scheduleSyncs();
 	beginListeningMUComm();
-	chrome.runtime.onInstalled.addListener(backgroundInit);
+	chrome.runtime.onInstalled.addListener(bgSync);
 	chrome.alarms.onAlarm.addListener(checkAlarm);
 }
 
-backgroundInit();
+bgInit();
