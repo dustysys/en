@@ -73,18 +73,20 @@ function buildDescriptionBlock(pref_desc) {
 			break;
 		case "animations":
 			txt_title = "Animations";
-			txt_content = "Turn off to get rid of the animations that play when \
-							you switch to Manage Series mode or mark a series up-to-date.";
+			txt_content = "Play transition animations when you switch to Manage Series\
+							mode or mark a series Up-to-Date.";
 			break;
 		case "one_click_uptodate":
 			txt_title = "One-click Up-to-Date";
-			txt_content = "Update and sort series clicked Up-to-Date in one click\
+			txt_content = "Update and sort series marked Up-to-Date in one click\
 							instead of two.";
 			break;
 		case "release_update":
 			txt_title = "Track new releases";
-			txt_content = "Check series for new releases and show them in a special color.\
-								Turn off to use en purely as a manual progress tracker.";
+			txt_content = "Check series for new releases, show series with new releases in\
+							a different color on your lists and keep a count of unread releases\
+							next to en's browser icon. Turn off to use en as a manual progress\
+							tracker";
 			break;
 		case "notifications":
 			txt_title = "Get notifications";
@@ -165,6 +167,7 @@ function addReleaseUpdateOptions(opt_block) {
 	var txt2 = document.createElement('span');
 	release_update_select.className = "optionSelectButton";
 	release_update_disp.className = "optionDisplay";
+	release_edit_text.className = "optionEditText";
 	release_update_select.setAttribute("toggle", global_pref_release_update.enabled ? "on" : "off");
 	txt1.textContent = "Syncs every ";
 	release_edit_text.textContent = (global_pref_release_update.interval).toString();
@@ -186,6 +189,7 @@ function addSyncOptions(opt_block) {
 	var txt2 = document.createElement('span');
 	sync_select.className = "optionSelectButton";
 	sync_disp.className = "optionDisplay";
+	sync_edit_text.className = "optionEditText";
 	sync_select.setAttribute("toggle", global_pref_list_sync.enabled ? "on" : "off");
 	txt1.textContent = "Syncs every ";
 	sync_edit_text.textContent = (global_pref_list_sync.interval).toString();

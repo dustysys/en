@@ -618,16 +618,18 @@ button {
 .optionRow {
     background-color: var(--block-color-new);
     border-color: var(--border-color-new);
-    height: 100px;
+    height: 95px;
     color: var(--text-color-new);
     width:500px;
     display:flex;
+    flex-direction:row;
 }
 
 .descriptionBlock {
-    width:300px;
+    width:450px;
     margin: 5px;
     margin-left: 8px;
+    margin-top: 7px;
 }
 
 .descriptionTitle {
@@ -636,16 +638,23 @@ button {
 }
 
 .descriptionContent{
-    margin-top: 5px;
+    margin-top: 8px;
 }
 
 .optionBlock {
-
+    width: 0px;
 }
 
 .optionSelectButton {
+    margin-top: 7px;
+    width: 22px;
+    height: 22px;
     color: var(--button-text-color-new);
     border-color: var(--button-text-color-new);
+    flex-shrink: 0;
+    position: absolute;
+    display: inline;
+    right: 11px;
 }
 
     .optionSelectButton:hover {
@@ -659,16 +668,25 @@ button {
     .optionSelectButton[toggle=on]:hover {
     }
 
-.optionDisplay {
-
+.optionDisplay{
+    position:absolute;
+    display:inline;
+    right: 45px;
+    margin-top:10px;
 }
 
-.optionEditText {
+.optionDisplay :not(.optionEditText) {
+    opacity: .5;
+}
 
+
+.optionEditText {
+    opacity: 1;
+    cursor: auto;
 }
 
 .optionInput {
-
+    
 }
 
 .enBox {
