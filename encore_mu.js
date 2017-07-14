@@ -521,6 +521,37 @@ function removeSeriesArrayFromListById(data_lists, list_id, series_id_arr) {
 }
 
 /**
+ * gets number of lists in listset
+ * @param {List[]} data_lists
+ * @returns {Number}
+ */
+function getNumLists(data_lists){
+	return data_lists.length;
+}
+
+/**
+ * gets total number of series in entire listset
+ * @param {List[]} data_lists
+ * @returns {Number}
+ */
+function getNumTotalSeries(data_lists) {
+	var num = 0;
+	for (var i = 0; i < data_lists.length; i++) {
+		num += getNumSeriesInList(data_lists[i]);
+	}
+	return num;
+}
+
+/**
+ * gets number of series in list
+ * @param {List} data_list
+ * @returns {Number}
+ */
+function getNumSeriesInList(data_list) {
+	return data_list.series_list.length;
+}
+
+/**
  * get list by its id
  * @param {List[]} data_lists
  * @param {string} list_id
