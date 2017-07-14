@@ -168,9 +168,6 @@ function loadPref(pref_desc, callback) {
  */
 function savePref(pref_desc, pref, callback) {
 	loadAllPrefs(function (user_prefs) {
-		if (user_prefs === "No Prefs") {
-			user_prefs = {};
-		}
 		user_prefs[pref_desc] = pref;
 		saveAllPrefs(user_prefs, callback);
 	});
@@ -187,7 +184,9 @@ function loadAllPrefs(callback) {
 			console.error(console.runtime.lastError);
 			console.error("Error: failed to load user prefs");
 		} else if (!exists(user_prefs)) {
-			callback("No Prefs");
+			initializePreferences(function (new_user_prefs) {
+				callback(new_user_prefs[prefs_desc]);
+			});
 		} else {
 			callback(user_prefs[prefs_desc]);
 		}
@@ -207,8 +206,25 @@ function saveAllPrefs(prefs, callback) {
 		if (chrome.runtime.lastError) {
 			console.error(chrome.runtime.lastError);
 			console.error("Error: failed to save user prefs");
-		} else if (callback) callback();
+		} else if (callback) callback(prefs);
 	});
+}
+
+/**
+ * creates a default set of preferences. If previous preferences
+ * exist they will be overwritten.
+ * @param {Object} callback
+ */
+function initializePreferences(callback) {
+	var user_prefs = {};
+	user_prefs["animations_on"] = true;
+	user_prefs["release_update_on"] = true;
+	user_prefs["release_update_interval"] = 15;
+	user_prefs["list_sync_on"] = true;
+	user_prefs["list_sync_interval"] = 60;
+	user_prefs["notifications_on"] = true;
+	user_prefs["one_click_uptodate"] = true;
+	saveAllPrefs(user_prefs, callback);
 }
 
 /**
