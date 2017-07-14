@@ -179,7 +179,7 @@ select {
     margin-top: calc(var(--navbar-height) + var(--row-margin-vert) + 1px);
 }
 
-.seriesRow {
+.seriesRow, .optionRow {
     border-radius: var(--block-border-radius);
     border-width: var(--std-border-width);
     border-style: dotted;
@@ -574,7 +574,7 @@ button {
     left: 5px;
 }
 
-.seriesSelectButton, #selectAllButton {
+.seriesSelectButton, #selectAllButton, .optionSelectButton {
     border-radius: 50%;
     border: 1px solid rgba(0,0,0,.5);
     position: relative;
@@ -584,7 +584,7 @@ button {
     margin-right: 3px;
     display: inline-block;
 }
-    .seriesSelectButton:hover, #selectAllButton:hover {
+    .seriesSelectButton:hover, #selectAllButton:hover, .optionSelectButton:hover {
         cursor: pointer;
     }
 
@@ -608,32 +608,56 @@ button {
 }
 
 .optionTable {
-
+    display: flex;
+    transform: translateY(calc(var(--navbar-height) + var(--row-margin-vert) + 1px));
+    justify-content: center;
+    align-items: center;
+    flex-direction:column;
 }
 
 .optionRow {
-
+    background-color: var(--block-color-new);
+    border-color: var(--border-color-new);
+    height: 100px;
+    color: var(--text-color-new);
+    width:500px;
+    display:flex;
 }
 
 .descriptionBlock {
-
+    width:300px;
+    margin: 5px;
+    margin-left: 8px;
 }
 
 .descriptionTitle {
-
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .descriptionContent{
-
+    margin-top: 5px;
 }
 
 .optionBlock {
 
 }
 
-.optionSelect {
-
+.optionSelectButton {
+    color: var(--button-text-color-new);
+    border-color: var(--button-text-color-new);
 }
+
+    .optionSelectButton:hover {
+        background-color:var(--button-color-hover-new);
+    }
+
+    .optionSelectButton[toggle=on] {
+        background-color: var(--button-text-color-new);
+    }
+
+    .optionSelectButton[toggle=on]:hover {
+    }
 
 .optionDisplay {
 
