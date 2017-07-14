@@ -460,6 +460,16 @@ function setMUChapter(chapter, series) {
 	series.mu_user_chapter = chapter;
 }
 
+function setBadge(data_lists) {
+	
+}
+
+function updateBadge(callback) {
+	loadData(function (data) {
+		setBadge(data.lists);
+	});
+}
+
 /**
  * sets local series' latest release
  * @param {Series} series
@@ -549,6 +559,71 @@ function getNumTotalSeries(data_lists) {
  */
 function getNumSeriesInList(data_list) {
 	return data_list.series_list.length;
+}
+
+/**
+ * gets total number of new releases for all series in listset
+ * @param {List[]} data_lists
+ * @returns {Number}
+ */
+function getTotalNumNewReleases(data_lists) {
+	var num = 0;
+	for (var i = 0; i < data_lists.length; i++) {
+		num += getNumNewReleasesInList(data_lists[i]);
+	}
+	return num;
+}
+
+/**
+ * gets total number of new releases for all series in a list
+ * @param {List} data_list
+ * @returns {Number}
+ */
+function getNumNewReleasesInList(data_list) {
+	var num = 0;
+	for (var i = 0; i < data_list.length; i++) {
+		if (exists(data_list.series_list[i].unread_releases)) {
+			num += data_list.series_list[i].unread_releases.length;
+		}
+	}
+	return num;
+}
+
+/**
+ * gets number of series in entire listset with at least 1 new release
+ * @param {List[]} data_lists
+ * @returns {Number}
+ */
+function getTotalNumSeriesWithNewReleases(data_lists) {
+	var num = 0;
+	for (var i = 0; i < data_lists.length; i++) {
+		num += getNumSeriesWithNewReleasesInList(data_list[i]);
+	}
+	return num;
+}
+
+/**
+ * gets number of series in list which have at least 1 new release
+ * @param {List} data_list
+ * @returns {Number}
+ */
+function getNumSeriesWithNewReleasesInList(data_list) {
+	var num = 0;
+	for (var i = 0; i < data_list.length; i++) {
+		if (exists(data_list.series_list[i].latest_unread_release)) {
+			num++;
+		}
+	}
+	return num;
+}
+
+/**
+ * gets total new releases for series
+ * @param {Series} series
+ * @returns {Number}
+ */
+function getNumNewReleasesForSeries(series) {
+	return series.unread_releases.length;
 }
 
 /**
