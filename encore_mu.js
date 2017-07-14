@@ -461,7 +461,9 @@ function setMUChapter(chapter, series) {
 }
 
 function setBadge(data_lists) {
-	
+	var num_releases = getTotalNumNewReleases(data_lists);
+	chrome.browserAction.setBadgeText({ text: num_releases.toString() });
+	chrome.browserAction.setBadgeBackgroundColor({ color:"#f4c2bf"});
 }
 
 function updateBadge(callback) {
@@ -581,7 +583,7 @@ function getTotalNumNewReleases(data_lists) {
  */
 function getNumNewReleasesInList(data_list) {
 	var num = 0;
-	for (var i = 0; i < data_list.length; i++) {
+	for (var i = 0; i < data_list.series_list.length; i++) {
 		if (exists(data_list.series_list[i].unread_releases)) {
 			num += data_list.series_list[i].unread_releases.length;
 		}
@@ -609,7 +611,7 @@ function getTotalNumSeriesWithNewReleases(data_lists) {
  */
 function getNumSeriesWithNewReleasesInList(data_list) {
 	var num = 0;
-	for (var i = 0; i < data_list.length; i++) {
+	for (var i = 0; i < data_list.series_list.length; i++) {
 		if (exists(data_list.series_list[i].latest_unread_release)) {
 			num++;
 		}
@@ -1561,6 +1563,7 @@ function pullNewReleases(data_lists, callback) {
 				notifyOfRelease(release, series);
 			}
 		}
+		setBadge(data_lists);
 		callback();
 	});
 }
