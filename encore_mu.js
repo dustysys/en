@@ -463,12 +463,14 @@ function setMUChapter(chapter, series) {
 function setBadge(data_lists) {
 	var num_releases = getTotalNumNewReleases(data_lists);
 	chrome.browserAction.setBadgeText({ text: num_releases.toString() });
-	chrome.browserAction.setBadgeBackgroundColor({ color:"#f4c2bf"});
+	chrome.browserAction.setBadgeBackgroundColor({ color:"#85020e"});
 }
 
 function updateBadge(callback) {
 	loadData(function (data) {
+		if (data !== "No Data") {
 		setBadge(data.lists);
+		}
 	});
 }
 
@@ -962,6 +964,7 @@ function userMarkSeriesUpToDate(series_id, callback) {
 				setMUVolumeChapter(release.volume, release.chapter, series);
 				pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
 				series.last_update_was_manual = false;
+				setBadge(data.lists);
 			} else series.no_published_releases = true;
 			saveData(data, callback);
 		});
@@ -1010,6 +1013,7 @@ function userDeleteSeries(list_src_id, delete_series_id_arr, callback) {
 	loadData(function (data) {
 		removeSeriesArrayFromListById(data.lists, list_src_id, delete_series_id_arr);
 		pushMUSeriesDelete(list_src_id, delete_series_id_arr);
+		setBadge(data.lists);
 		saveData(data, callback);
 	});
 }

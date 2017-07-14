@@ -8,11 +8,13 @@ function bgSync() {
 					initializeNewSession(logged_in_user_id, function () {
 						finishFirstSession(function () {
 							console.log("New session initialized from background script");
+							updateBadge();
 						});
 					});
 				}
 			} else {
 				pullAllData();
+				updateBadge();
 			}
 		});
 	});
@@ -60,11 +62,18 @@ function listenNotifications() {
 	});
 }
 
+function listenStartup() {
+	chrome.runtime.onStartup.addListener(function () {
+		updateBadge();
+	});
+}
+
 function bgInit() {
 	scheduleReleaseUpdates();
 	scheduleSyncs();
-	beginListeningMUComm();
+	listenMUComm();
 	listenNotifications();
+	listenStartup();
 	chrome.runtime.onInstalled.addListener(bgSync);
 	chrome.alarms.onAlarm.addListener(checkAlarm);
 }
