@@ -150,6 +150,68 @@ function loadCurrentUserId(callback) {
 }
 
 /**
+ * loads a single user preference by name
+ * @param {string} pref_desc
+ * @param {function} callback
+ */
+function loadPref(pref_desc, callback) {
+	loadAllPrefs(function (user_prefs) {
+		callback(user_prefs[pref_desc]);
+	});
+}
+
+/**
+ * saves a single user preference by name
+ * @param {string} pref_desc
+ * @param {any} pref
+ * @param {function} callback
+ */
+function savePref(pref_desc, pref, callback) {
+	loadAllPrefs(function (user_prefs) {
+		if (user_prefs === "No Prefs") {
+			user_prefs = {};
+		}
+		user_prefs[pref_desc] = pref;
+		saveAllPrefs(user_prefs, callback);
+	});
+}
+
+/**
+ * loads all user preferences
+ * @param {function(Object)} callback
+ */
+function loadAllPrefs(callback) {
+	var prefs_desc = "user_prefs";
+	chrome.storage.local.get(prefs_desc, function (user_prefs) {
+		if (chrome.runtime.lastError) {
+			console.error(console.runtime.lastError);
+			console.error("Error: failed to load user prefs");
+		} else if (!exists(user_prefs)) {
+			callback("No Prefs");
+		} else {
+			callback(user_prefs[prefs_desc]);
+		}
+	});
+}
+
+/**
+ * saves all user preferences
+ * @param {any} prefs
+ * @param {function} callback
+ */
+function saveAllPrefs(prefs, callback) {
+	var prefs_desc = "user_prefs";
+	var prefs_obj = {};
+	prefs_obj[prefs_desc] = prefs;
+	chrome.storage.local.set(prefs_obj, function () {
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError);
+			console.error("Error: failed to save user prefs");
+		} else if (callback) callback();
+	});
+}
+
+/**
  * reads storage to determine if en has been previously run
  * @param {function(boolean)} callback
  */
