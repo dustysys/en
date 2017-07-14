@@ -607,6 +607,46 @@ button {
     align-items:center;
 }
 
+.optionTable {
+
+}
+
+.optionRow {
+
+}
+
+.descriptionBlock {
+
+}
+
+.descriptionTitle {
+
+}
+
+.descriptionContent{
+
+}
+
+.optionBlock {
+
+}
+
+.optionSelect {
+
+}
+
+.optionDisplay {
+
+}
+
+.optionEditText {
+
+}
+
+.optionInput {
+
+}
+
 .enBox {
     border-radius: var(--block-border-radius);
     border-style: dotted;

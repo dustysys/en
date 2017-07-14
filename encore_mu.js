@@ -217,13 +217,12 @@ function saveAllPrefs(prefs, callback) {
  */
 function initializePreferences(callback) {
 	var user_prefs = {};
-	user_prefs["animations_on"] = true;
-	user_prefs["one_click_uptodate"] = true;
-	user_prefs["release_update_on"] = true;
-	user_prefs["release_update_interval"] = 15;
-	user_prefs["list_sync_on"] = true;
-	user_prefs["list_sync_interval"] = 60;
-	user_prefs["notifications_on"] = true;
+	user_prefs["scrollbar"] = { enabled: false };
+	user_prefs["animations"] = { enabled: true };
+	user_prefs["one_click_uptodate"] = { enabled: true };
+	user_prefs["release_update"] = { enabled: true, interval: 15 };
+	user_prefs["list_sync"] = { enabled: true, interval: 60 };
+	user_prefs["notifications"] = { enabled: true };
 	saveAllPrefs(user_prefs, callback);
 }
 

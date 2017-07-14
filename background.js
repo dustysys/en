@@ -1,9 +1,7 @@
 var global_alarm_timestamp = Date.now();
-var global_release_update_on = true;
-var global_release_update_interval = 15;
-var global_list_sync_on = true;
-var global_list_sync_interval = 60;
-var global_notifications_on = true;
+var global_pref_release_update = { enabled: true, interval: 15 };
+var global_pref_list_sync = { enabled: true, interval: 60 };
+var global_pref_notifications = { enabled: true };
 
 
 // TODO: clean up this unnecessary callback spaghetti
@@ -53,12 +51,12 @@ function checkAlarm(alarm) {
 
 function scheduleReleaseUpdates() {
 	var alarm_name = "update_releases:" + global_alarm_timestamp;
-	chrome.alarms.create(alarm_name, { periodInMinutes: global_release_update_interval });
+	chrome.alarms.create(alarm_name, { periodInMinutes: global_pref_release_update.interval });
 }
 
 function scheduleSyncs() {
 	var alarm_name = "update_all:" + global_alarm_timestamp;
-	chrome.alarms.create(alarm_name, { periodInMinutes: global_list_sync_interval });
+	chrome.alarms.create(alarm_name, { periodInMinutes: global_pref_list_sync.interval });
 }
 
 // listens for notification click events 
@@ -77,11 +75,9 @@ function listenStartup() {
 
 function bgLoadPrefs(callback) {
 	loadAllPrefs(function (prefs) {
-		var global_release_update_on = prefs["release_update_on"];
-		var global_release_update_interval = prefs["release_update_interval"];
-		var global_list_sync_on = prefs["list_sync_on"];
-		var global_list_sync_interval = prefs["list_sync_interval"];
-		var global_notifications_on = prefs["notifications_on"];
+		global_pref_release_update = prefs["release_update"];
+		global_pref_list_sync = prefs["list_sync"];
+		global_pref_notifications = prefs["notifications"];
 		callback();
 	});
 }
@@ -92,13 +88,13 @@ function bgInit() {
 	chrome.runtime.onInstalled.addListener(bgSync);
 	chrome.alarms.onAlarm.addListener(checkAlarm);
 	bgLoadPrefs(function () {
-		if (global_release_update_on) {
+		if (global_pref_release_update.enabled) {
 			scheduleReleaseUpdates();
 		}
-		if (global_list_sync_on) {
+		if (global_pref_list_sync.enabled) {
 			scheduleSyncs();
 		}
-		if (global_notifications_on) {
+		if (global_pref_notifications.enabled) {
 			listenNotifications();
 		}
 	});

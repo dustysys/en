@@ -7,9 +7,13 @@ Handlers call encore_mu functions
 #############################################################################*/
 
 var global_last_clicked_el;
-var global_animations_on = false;
-var global_one_click_uptodate = true;
 var global_block_manage_mode = false;
+var global_pref_scrollbar = { enabled: false };
+var global_pref_animations = { enabled: true }; 
+var global_pref_one_click_uptodate = { enabled: true };
+var global_pref_release_update = { enabled: true, interval: 15 };
+var global_pref_list_sync = { enabled: true, interval: 60 };
+var global_pref_notifications = { enabled: true };
 
 /**
  * DOM HELPER FUNCTIONS
@@ -521,7 +525,7 @@ function toggleManageModeVisibility(toggle) {
  */
 function handleManageSeries(event) {
 	//event may be button or its description
-	if (!global_block_manage_mode || global_animations_on) {
+	if (!global_block_manage_mode || global_pref_animations.enabled) {
 		global_block_manage_mode = true;
 		var manage_button = document.getElementById("manageSeriesButton");
 		var toggle = toggleElement(manage_button);
@@ -953,7 +957,8 @@ function buildPopup(data) {
 	document.body.appendChild(nav_bar);
 	var s_list = data.lists[0];
 	var list_table = buildListTable(s_list);
-	document.body.appendChild(list_table);
+	//document.body.appendChild(list_table);
+	document.body.appendChild(buildOptionTable());
 	
 }
 
@@ -1036,8 +1041,13 @@ function hookListeners() {
  */
 function popupLoadPrefs(callback) {
 	loadAllPrefs(function (prefs) {
-		global_animations_on = prefs["animations_on"];
-		global_one_click_uptodate = prefs["one_click_uptodate"];
+		global_pref_scrollbar = prefs["scrollbar"];
+		global_pref_animations = prefs["animations"];
+		global_pref_one_click_uptodate = prefs["one_click_uptodate"];
+		global_pref_release_update = prefs["release_update"];
+		global_pref_list_sync = prefs["list_sync"];
+		global_pref_notifications = prefs["notifications"];
+		
 		callback();
 	});
 }
