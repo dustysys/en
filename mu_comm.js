@@ -603,7 +603,7 @@ function handleErrorMUComm(error_details){
 /**
  * Starts listening for requests to/from MU
  */
-function beginListeningMUComm(){
+function listenMUComm(){
 	chrome.webRequest.onBeforeRequest.addListener(handleMURequestComm, {urls: [ "*://www.mangaupdates.com/*" ]}, ["requestBody"]);
 	chrome.webRequest.onCompleted.addListener(handleMUCompleteComm,{urls: [ "*://www.mangaupdates.com/*" ]});
 	chrome.webRequest.onErrorOccurred.addListener(handleErrorMUComm,{urls: [ "*://www.mangaupdates.com/*" ]});

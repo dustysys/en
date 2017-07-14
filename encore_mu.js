@@ -460,6 +460,24 @@ function setMUChapter(chapter, series) {
 	series.mu_user_chapter = chapter;
 }
 
+function setBadge(data_lists) {
+	var num_releases = getTotalNumNewReleases(data_lists);
+	if (num_releases > 0) {
+		chrome.browserAction.setBadgeText({ text: num_releases.toString() });
+		chrome.browserAction.setBadgeBackgroundColor({ color: "#85020e" });
+	} else {
+		chrome.browserAction.setBadgeText({ text: "" });
+	}
+}
+
+function updateBadge(callback) {
+	loadData(function (data) {
+		if (data !== "No Data") {
+		setBadge(data.lists);
+		}
+	});
+}
+
 /**
  * sets local series' latest release
  * @param {Series} series
@@ -518,6 +536,102 @@ function removeSeriesArrayFromListById(data_lists, list_id, series_id_arr) {
 	for (var i = 0; i < series_id_arr.length; i++) {
 		removeSeriesFromListsById([list_to_remove_from], series_id_arr[i]);
 	}
+}
+
+/**
+ * gets number of lists in listset
+ * @param {List[]} data_lists
+ * @returns {Number}
+ */
+function getNumLists(data_lists){
+	return data_lists.length;
+}
+
+/**
+ * gets total number of series in entire listset
+ * @param {List[]} data_lists
+ * @returns {Number}
+ */
+function getNumTotalSeries(data_lists) {
+	var num = 0;
+	for (var i = 0; i < data_lists.length; i++) {
+		num += getNumSeriesInList(data_lists[i]);
+	}
+	return num;
+}
+
+/**
+ * gets number of series in list
+ * @param {List} data_list
+ * @returns {Number}
+ */
+function getNumSeriesInList(data_list) {
+	return data_list.series_list.length;
+}
+
+/**
+ * gets total number of new releases for all series in listset
+ * @param {List[]} data_lists
+ * @returns {Number}
+ */
+function getTotalNumNewReleases(data_lists) {
+	var num = 0;
+	for (var i = 0; i < data_lists.length; i++) {
+		num += getNumNewReleasesInList(data_lists[i]);
+	}
+	return num;
+}
+
+/**
+ * gets total number of new releases for all series in a list
+ * @param {List} data_list
+ * @returns {Number}
+ */
+function getNumNewReleasesInList(data_list) {
+	var num = 0;
+	for (var i = 0; i < data_list.series_list.length; i++) {
+		if (exists(data_list.series_list[i].unread_releases)) {
+			num += data_list.series_list[i].unread_releases.length;
+		}
+	}
+	return num;
+}
+
+/**
+ * gets number of series in entire listset with at least 1 new release
+ * @param {List[]} data_lists
+ * @returns {Number}
+ */
+function getTotalNumSeriesWithNewReleases(data_lists) {
+	var num = 0;
+	for (var i = 0; i < data_lists.length; i++) {
+		num += getNumSeriesWithNewReleasesInList(data_list[i]);
+	}
+	return num;
+}
+
+/**
+ * gets number of series in list which have at least 1 new release
+ * @param {List} data_list
+ * @returns {Number}
+ */
+function getNumSeriesWithNewReleasesInList(data_list) {
+	var num = 0;
+	for (var i = 0; i < data_list.series_list.length; i++) {
+		if (exists(data_list.series_list[i].latest_unread_release)) {
+			num++;
+		}
+	}
+	return num;
+}
+
+/**
+ * gets total new releases for series
+ * @param {Series} series
+ * @returns {Number}
+ */
+function getNumNewReleasesForSeries(series) {
+	return series.unread_releases.length;
 }
 
 /**
@@ -854,6 +968,7 @@ function userMarkSeriesUpToDate(series_id, callback) {
 				setMUVolumeChapter(release.volume, release.chapter, series);
 				pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
 				series.last_update_was_manual = false;
+				setBadge(data.lists);
 			} else series.no_published_releases = true;
 			saveData(data, callback);
 		});
@@ -902,6 +1017,7 @@ function userDeleteSeries(list_src_id, delete_series_id_arr, callback) {
 	loadData(function (data) {
 		removeSeriesArrayFromListById(data.lists, list_src_id, delete_series_id_arr);
 		pushMUSeriesDelete(list_src_id, delete_series_id_arr);
+		setBadge(data.lists);
 		saveData(data, callback);
 	});
 }
@@ -1455,6 +1571,7 @@ function pullNewReleases(data_lists, callback) {
 				notifyOfRelease(release, series);
 			}
 		}
+		setBadge(data_lists);
 		callback();
 	});
 }
