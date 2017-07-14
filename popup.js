@@ -7,7 +7,8 @@ Handlers call encore_mu functions
 #############################################################################*/
 
 var global_last_clicked_el;
-var global_no_animation = false;
+var global_animations_on = false;
+var global_one_click_uptodate = true;
 var global_block_manage_mode = false;
 
 /**
@@ -520,13 +521,12 @@ function toggleManageModeVisibility(toggle) {
  */
 function handleManageSeries(event) {
 	//event may be button or its description
-	if (!global_block_manage_mode || global_no_animation) {
+	if (!global_block_manage_mode || global_animations_on) {
 		global_block_manage_mode = true;
 		var manage_button = document.getElementById("manageSeriesButton");
 		var toggle = toggleElement(manage_button);
 		animateToggleManageMode(toggle, toggleManageModeVisibility);
 	}
-	
 }
 
 /**
@@ -1031,22 +1031,35 @@ function hookListeners() {
 }
 
 /**
+ * loads user preferences relevant to popup into global
+ * @param {function} callback
+ */
+function popupLoadPrefs(callback) {
+	loadAllPrefs(function (prefs) {
+		global_animations_on = prefs["animations_on"];
+		global_one_click_uptodate = prefs["one_click_uptodate"];
+		callback();
+	});
+}
+
+/**
  * initialization that runs on popup startup
  * defers session validation to async while popup loads
- * to give general case user better performance
+ * to give general case user quicker startup
  */
 function popupInit() {
+	popupLoadPrefs(function () {
+		loadData(function (data) {
 
-	loadData(function (data) {
+			if (data === "No Data") {
+				console.log("No data to display.");
 
-		if (data === "No Data") {
-			console.log("No data to display.");
-
-		} else {
-			buildPopup(data);
-		}
-		hookListeners();
-		validateSession(data);
+			} else {
+				buildPopup(data);
+			}
+			hookListeners();
+			validateSession(data);
+		});
 	});
 	
 	return;

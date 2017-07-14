@@ -1,4 +1,10 @@
 var global_alarm_timestamp = Date.now();
+var global_release_update_on = true;
+var global_release_update_interval = 15;
+var global_list_sync_on = true;
+var global_list_sync_interval = 60;
+var global_notifications_on = true;
+
 
 function bgSync() {
 	pullUserSessionInfo(function (current_user_id, logged_in_user_id) {
@@ -66,16 +72,35 @@ function listenStartup() {
 	chrome.runtime.onStartup.addListener(function () {
 		updateBadge();
 	});
+} 
+
+function bgLoadPrefs(callback) {
+	loadAllPrefs(function (prefs) {
+		var global_release_update_on = prefs["release_update_on"];
+		var global_release_update_interval = prefs["release_update_interval"];
+		var global_list_sync_on = prefs["list_sync_on"];
+		var global_list_sync_interval = prefs["list_sync_interval"];
+		var global_notifications_on = prefs["notifications_on"];
+		callback();
+	});
 }
 
 function bgInit() {
-	scheduleReleaseUpdates();
-	scheduleSyncs();
 	listenMUComm();
-	listenNotifications();
 	listenStartup();
 	chrome.runtime.onInstalled.addListener(bgSync);
 	chrome.alarms.onAlarm.addListener(checkAlarm);
+	bgLoadPrefs(function () {
+		if (global_release_update_on) {
+			scheduleReleaseUpdates();
+		}
+		if (global_list_sync_on) {
+			scheduleSyncs();
+		}
+		if (global_notifications_on) {
+			listenNotifications();
+		}
+	});
 }
 
 bgInit();

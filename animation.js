@@ -88,7 +88,7 @@ function animateListGapClose(series_row_list, start_el_index, end_el_index, gap,
  * @param {boolean} toggle
  */
 function animateToggleManageMode(toggle, callback) {
-	if (!global_no_animation) {
+	if (!global_animations_on) {
 		fastdom.measure(function () {
 			var onscreen_rows = getOnScreenSeriesRows();
 
