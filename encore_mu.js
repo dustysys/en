@@ -462,8 +462,12 @@ function setMUChapter(chapter, series) {
 
 function setBadge(data_lists) {
 	var num_releases = getTotalNumNewReleases(data_lists);
-	chrome.browserAction.setBadgeText({ text: num_releases.toString() });
-	chrome.browserAction.setBadgeBackgroundColor({ color:"#85020e"});
+	if (num_releases > 0) {
+		chrome.browserAction.setBadgeText({ text: num_releases.toString() });
+		chrome.browserAction.setBadgeBackgroundColor({ color: "#85020e" });
+	} else {
+		chrome.browserAction.setBadgeText({ text: "" });
+	}
 }
 
 function updateBadge(callback) {
