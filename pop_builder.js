@@ -393,7 +393,7 @@ function buildListFilter() {
 	var list_filter = document.createElement("input");
 	list_filter.id = ("seriesRowListFilter");
 	list_filter.onkeyup = handleListFilter;
-	list_filter.placeholder = "Filter List";
+	list_filter.placeholder = "Filter Series";
 
 	return list_filter;
 }
