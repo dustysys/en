@@ -6,6 +6,7 @@ var global_list_sync_interval = 60;
 var global_notifications_on = true;
 
 
+// TODO: clean up this unnecessary callback spaghetti
 function bgSync() {
 	pullUserSessionInfo(function (current_user_id, logged_in_user_id) {
 		isFirstSession(function (first_session) {
@@ -44,7 +45,7 @@ function checkAlarm(alarm) {
 			}
 		}
 		else {
-			console.log("Clearing old alarm " + alarm.name);
+			console.log("Deleting old alarm: " + alarm.name);
 			chrome.alarms.clear(alarm.name);
 		}
 	}
@@ -52,12 +53,12 @@ function checkAlarm(alarm) {
 
 function scheduleReleaseUpdates() {
 	var alarm_name = "update_releases:" + global_alarm_timestamp;
-	chrome.alarms.create(alarm_name, { periodInMinutes: 15 });
+	chrome.alarms.create(alarm_name, { periodInMinutes: global_release_update_interval });
 }
 
 function scheduleSyncs() {
 	var alarm_name = "update_all:" + global_alarm_timestamp;
-	chrome.alarms.create(alarm_name, { periodInMinutes: 60 });
+	chrome.alarms.create(alarm_name, { periodInMinutes: global_list_sync_interval });
 }
 
 // listens for notification click events 
