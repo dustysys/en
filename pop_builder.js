@@ -617,10 +617,3 @@ function buildDevTools() {
 	return dev_toolbar;
 }
 
-function getDefaultLink(series_id) {
-	//TODO: add user-specified default link options, such as
-	// search google "[series.title + read online]"
-
-	var series_id = series_id;
-	return "https://www.mangaupdates.com/series.html?id=" + series_id;
-}

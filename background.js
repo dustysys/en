@@ -52,10 +52,19 @@ function scheduleSyncs() {
 	chrome.alarms.create(alarm_name, { periodInMinutes: 60 });
 }
 
+// listens for notification click events 
+// on click creates a new tab using ID of notification as URL.
+function listenNotifications() {
+	chrome.notifications.onClicked.addListener(function (notif_id) {
+		chrome.tabs.create({ active: true, url: notif_id });
+	});
+}
+
 function bgInit() {
 	scheduleReleaseUpdates();
 	scheduleSyncs();
 	beginListeningMUComm();
+	listenNotifications();
 	chrome.runtime.onInstalled.addListener(bgSync);
 	chrome.alarms.onAlarm.addListener(checkAlarm);
 }

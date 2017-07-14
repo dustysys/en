@@ -637,6 +637,18 @@ function getSeriesById(data_lists, series_id) {
 }
 
 /**
+ * gets the default url associated with series
+ * @param {string} series_id
+ * @returns {string}
+ */
+function getDefaultLink(series_id) {
+	//TODO: add user-specified default link options
+
+	var series_id = series_id;
+	return "https://www.mangaupdates.com/series.html?id=" + series_id;
+}
+
+/**
  * gets latest published release within series. assumes 'latest' read/unread
  * are valid and therefore should not be used on incoming parsed releases
  * @param {Series} data_series
@@ -769,9 +781,11 @@ function releaseIsNew(data_series, release) {
 
 /**
  * Sends the user a browser notification with release
+ * Clicking it sends them to the series' designated url 
  * @param {Release} release
+ * @param {Series} series
  */
-function notifyOfRelease(release) {
+function notifyOfRelease(release, series) {
 	var exists_volume = (release.volume !== "");
 	var exists_chapter = (release.chapter !== "");
 	var chap_vol = "n/a";
@@ -798,15 +812,23 @@ function notifyOfRelease(release) {
 		iconUrl: "img/icon128.png",
 		items: messages
 	};
-
+	var url;
+	if (exists(series.user_link)) {
+		url = series.user_link;
+	} else {
+		url = getDefaultLink(series.series_id);
+	}
 
 	// TODO: give sufficient delay for firefox or figure out
 	// why it isn't working otherwise
-	chrome.notifications.create(opt, function (notif_id) {
+	chrome.notifications.create(url, opt, function (notif_id) {
 		if (chrome.runtime.lastError) {
 			console.error(chrome.runtime.lastError);
-		} else console.log("Notification successful!");
+		} else {
+			console.log("Notification successful!");
+		}
 	});
+
 }
 
 /**
@@ -1430,7 +1452,7 @@ function pullNewReleases(data_lists, callback) {
 
 			if (exists(series) && releaseIsNew(series, release)) {
 				addNewRelease(release, series);
-				notifyOfRelease(release);
+				notifyOfRelease(release, series);
 			}
 		}
 		callback();

@@ -9,7 +9,7 @@
     --text-color-new: #85020e;
     --bg-color: #E0F1FF;
     --bg-color-new: #FFFFEE;
-    --border-color: #a9b6c0;
+    --border-color: #8ea3b4;
     --border-color-new: #f3a29e;
     --block-color: #d4e2f9;
     --block-color-new: #f5e2e1;
@@ -115,7 +115,10 @@ select {
     }
     [new_releases=true] .editLinkInput {
         background-color: var(--input-color-bg-new);
-    } 
+    }
+    [new_releases=true] .seriesTitleBlock {
+        border-right-color: var(--border-color-new);
+    }
 
 .seriesRow[new_releases=false] ,
 [new_releases=false] * {
@@ -166,6 +169,9 @@ select {
     [new_releases=false] .editLinkInput::-webkit-input-placeholder {
     color: var(--text-color);
     }
+    [new_releases=false] .seriesTitleBlock {
+        border-right-color: var(--border-color);
+    }
 
 .listTable {
     margin-left: var(--table-margin-horiz);
@@ -193,7 +199,8 @@ select {
     font-weight: bold;
     padding-right: var(--std-margin-width);
     padding-left: var(--std-margin-width);
-    border-right: 1px #a9b6c0 dotted;
+    border-right-style: dotted;
+    border-right-width: var(--std-border-width);
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     overflow:hidden;
