@@ -86,12 +86,64 @@ function handleToggleNotifications(event) {
 	global_pref_notifications = notif_pref;
 }
 
-function enableEditReleaseUpdateInterval(event) {
-
+function handleCompleteReleaseUpdateIntervalEdit(event) {
+	var edit_input = event.target;
+	var edit_text = edit_input.nextElementSibling;
+	var edit_input_val = parseInt(validateDigits(edit_input.value));
+	if (!exists(edit_input_val) || edit_input_val < 1) {
+		edit_input_val = 1;
+	}
+	edit_text.textContent = edit_input_val.toString();
+	var opt_select = getEditTextsOptionSelect(edit_text);
+	var opt_select_on = opt_select.getAttribute("toggle") === "on";
+	var release_update_pref = { enabled: opt_select_on, interval: edit_input_val };
+	savePref("release_update", release_update_pref);
+	global_pref_release_update = release_update_pref;
+	edit_input.parentElement.removeChild(edit_input);
+	edit_text.style.display = "";
 }
 
-function enableEditSyncInterval(event) {
+function handleCompleteSyncIntervalEdit(event) {
+	var edit_input = event.target;
+	var edit_text = edit_input.nextElementSibling;
+	var edit_input_val = parseInt(validateDigits(edit_input.value));
+	if (!exists(edit_input_val) || edit_input_val < 1) {
+		edit_input_val = 1;
+	}
+	edit_text.textContent = edit_input_val.toString();
+	var opt_select = getEditTextsOptionSelect(edit_text);
+	var opt_select_on = opt_select.getAttribute("toggle") === "on";
+	var sync_pref = { enabled: opt_select_on, interval: edit_input_val };
+	savePref("list_sync", sync_pref);
+	global_pref_list_sync = sync_pref;
+	edit_input.parentElement.removeChild(edit_input);
+	edit_text.style.display = "";
+}
 
+function handleEnableReleaseUpdateIntervalEdit(event) {
+	var edit_text = event.target;
+	var edit_input = document.createElement('input');
+	edit_input.className = "optionInput";
+	edit_input.type = "text";
+	edit_input.maxLength = 4;
+	edit_text.style.display = "none";
+	edit_text.parentElement.insertBefore(edit_input, edit_text);
+	edit_input.value = edit_text.textContent;
+	edit_input.focus();
+	edit_input.onblur = handleCompleteReleaseUpdateIntervalEdit;
+}
+
+function handleEnableSyncIntervalEdit(event) {
+	var edit_text = event.target;
+	var edit_input = document.createElement('input');
+	edit_input.className = "optionInput";
+	edit_input.type = "text";
+	edit_input.maxLength = 4;
+	edit_text.style.display = "none";
+	edit_text.parentElement.insertBefore(edit_input, edit_text);
+	edit_input.value = edit_text.textContent;
+	edit_input.focus();
+	edit_input.onblur = handleCompleteSyncIntervalEdit;
 }
 
 function buildOptionTable() {
@@ -234,7 +286,7 @@ function addReleaseUpdateOptions(opt_block) {
 	release_edit_text.textContent = (global_pref_release_update.interval).toString();
 	txt2.textContent = " minutes.";
 	release_update_select.onclick = handleToggleReleaseUpdates;
-	release_edit_text.onclick = enableEditReleaseUpdateInterval;
+	release_edit_text.onclick = handleEnableReleaseUpdateIntervalEdit;
 	release_update_disp.appendChild(txt1);
 	release_update_disp.appendChild(release_edit_text);
 	release_update_disp.appendChild(txt2);
@@ -256,7 +308,7 @@ function addSyncOptions(opt_block) {
 	sync_edit_text.textContent = (global_pref_list_sync.interval).toString();
 	txt2.textContent = " minutes.";
 	sync_select.onclick = handleToggleSync;
-	sync_edit_text.onclick = enableEditSyncInterval;
+	sync_edit_text.onclick = handleEnableSyncIntervalEdit;
 	sync_disp.appendChild(txt1);
 	sync_disp.appendChild(sync_edit_text);
 	sync_disp.appendChild(txt2);

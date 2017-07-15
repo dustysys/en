@@ -340,7 +340,7 @@ a {
     cursor: auto;
 }
 
-.readVolumeInput, .readVolumeInput:focus {
+.readVolumeInput, .optionInput, .readVolumeInput:focus {
     font-size: 12px;
     width: 15px;
     height: 12px;
@@ -677,7 +677,7 @@ button {
     margin-top:10px;
 }
 
-.optionDisplay :not(.optionEditText) {
+.optionDisplay span:not(.optionEditText) {
     opacity: .5;
 }
 
@@ -688,7 +688,8 @@ button {
 }
 
 .optionInput {
-    
+    background-color: var(--input-color-bg-new);
+    border-color: var(--border-color-new);
 }
 
 .enBox {

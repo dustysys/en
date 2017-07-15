@@ -525,7 +525,7 @@ function toggleManageModeVisibility(toggle) {
  */
 function handleManageSeries(event) {
 	//event may be button or its description
-	if (!global_block_manage_mode || global_pref_animations.enabled) {
+	if (!global_block_manage_mode || !global_pref_animations.enabled) {
 		global_block_manage_mode = true;
 		var manage_button = document.getElementById("manageSeriesButton");
 		var toggle = toggleElement(manage_button);
@@ -957,8 +957,8 @@ function buildPopup(data) {
 	document.body.appendChild(nav_bar);
 	var s_list = data.lists[0];
 	var list_table = buildListTable(s_list);
-	//document.body.appendChild(list_table);
-	document.body.appendChild(buildOptionTable());
+	document.body.appendChild(list_table);
+	//document.body.appendChild(buildOptionTable());
 	
 }
 
