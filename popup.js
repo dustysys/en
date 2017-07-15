@@ -141,15 +141,15 @@ function getEditLinkIconsTitleBlock(edit_link_icon) {
  * @returns {Element}
  */
 function getReleaseFieldsSeriesRow(field) {
-	var line = getReleaseFieldsReleaseLine(field);
-	return line.parentElement.parentElement;
+	var display = getReleaseFieldsReleaseDisplay(field);
+	return display.parentElement.parentElement.parentElement;
 }
 /**
  * 
  * @param {Element} field
  * @returns {Element}
  */
-function getReleaseFieldsReleaseLine(field) {
+function getReleaseFieldsReleaseDisplay(field) {
 	return field.parentElement;
 }
 
@@ -760,9 +760,9 @@ function handleUserMUReadUpdate(series_row, vol_input, chap_input, callback) {
  * @param {Event} event
  */
 function handleCompleteReadReleaseEdit(event) {
-	var root = getReleaseFieldsReleaseLine(event.target);
-	var vol_input = root.children[2];
-	var chap_input = root.children[5];
+	var root = getReleaseFieldsReleaseDisplay(event.target);
+	var vol_input = root.children[1];
+	var chap_input = root.children[4];
 
 	// tiny delay to let user switch between volume/chapter input without losing context
 	setTimeout(function () {
@@ -791,12 +791,12 @@ function handleEnableReadReleaseEdit(event) {
 		vol_focus = true;
 	}
 
-	var root = getReleaseFieldsReleaseLine(clicked);
-	var volume_desc = root.children[1];
-	var volume = root.children[2];
-	var chapter_desc = root.children[3];
-	var chapter = root.children[4];
-	var not_applic = root.children[5];
+	var root = getReleaseFieldsReleaseDisplay(clicked);
+	var volume_desc = root.children[0];
+	var volume = root.children[1];
+	var chapter_desc = root.children[2];
+	var chapter = root.children[3];
+	var not_applic = root.children[4];
 	
 	volume_desc.style.display = "";
 	volume.style.display = "none";
