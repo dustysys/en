@@ -506,7 +506,9 @@ function toggleElementVisibility(el, toggle) {
  */
 function toggleManageFieldVisibility(toggle) {
 	var manage_field = document.getElementById("manageSeriesField");
+	var options_button = document.getElementById("optionsButton");
 	toggleElementVisibility(manage_field, toggle);
+	toggleElementVisibility(options_button, !toggle);
 	global_block_transitions = false;
 }
 

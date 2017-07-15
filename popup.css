@@ -422,6 +422,7 @@ button {
     border-bottom: dotted 1px var(--border-color);
     border-bottom-left-radius: var(--block-border-radius);
     border-bottom-right-radius: var(--block-border-radius);
+    overflow:hidden;
 }
 
     .navBar select {

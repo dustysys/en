@@ -129,6 +129,7 @@ function animateToggleEditLink(toggle, onscreen_rows) {
  */
 function animateToggleManageField(toggle) {
 	var manage_field = document.getElementById("manageSeriesField");
+	var options_button = document.getElementById("optionsButton");
 	var d_y = 100;
 	var y0 = toggle ? 0 : d_y;
 	var y1 = toggle ? d_y : 0;
@@ -140,6 +141,11 @@ function animateToggleManageField(toggle) {
 			{ transform: `translateY(${-y0}px)` }
 		], { duration: time_anim, easing: 'linear' });
 
+		options_button.style.display = "";
+		var options_anim = options_button.animate([
+			{ transform: `translateY(${y0}px)` },
+			{ transform: `translateY(${y1}px)` },
+		], { duration: time_anim, easing: 'linear' });
 	});
 }
 
