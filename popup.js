@@ -538,14 +538,16 @@ function handleToggleOptions(event) {
 	var opt_tables = document.getElementsByClassName("optionTable");
 	if (toggle) {
 		hideAllLists();
-		if (isEmpty(opt_tables)) {
+		if (opt_tables.length === 0) {
 			document.body.appendChild(buildOptionTable());
 		} else {
-			toggleElementVisibility(opt_tables[0], !toggle);
+			toggleElementVisibility(opt_tables[0], toggle);
 		}
 	} else {
-		toggleElementVisibility(opt_tables[0]);
-		changeToSelectedCurrentList();
+		if (opt_tables.length > 0) {
+			toggleElementVisibility(opt_tables[0], toggle);
+			changeToSelectedCurrentList();
+		}
 	}
 }
 

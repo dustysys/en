@@ -152,6 +152,7 @@ function buildOptionsButton() {
 	opt_button.className = "enButton";
 	opt_button.onclick = handleToggleOptions;
 	opt_button.textContent = "Options";
+	opt_button.setAttribute("toggle", "off");
 
 	return opt_button;
 }
