@@ -101,6 +101,69 @@ function animateToggleManageMode(toggle, callback) {
 	}
 }
 
+function animateToggleOptionPage(toggle) {
+	var nav_bar = document.getElementById("navBar");
+
+	fastdom.measure(function(){
+		var cs = window.getComputedStyle(document.documentElement);
+		var nav_color = cs.getPropertyValue('--block-color');
+		var nav_color_new = cs.getPropertyValue('--block-color-new');
+		var body_color = cs.getPropertyValue('--bg-color');
+		var body_color_new = cs.getPropertyValue('--bg-color-new');
+
+		var nav_color0 = toggle ? nav_color : nav_color_new;
+		var nav_color1 = toggle ? nav_color_new : nav_color;
+		var body_color0 = toggle ? body_color : body_color_new;
+		var body_color1 = toggle ? body_color_new : body_color;
+
+		animateElementColorChange(nav_bar, nav_color0, nav_color1);
+		animateElementColorChange(document.body, body_color0, body_color1);
+	});
+}
+
+function animateToggleOptionMode(toggle, callback) {
+	var opt_button = document.getElementById("optionsButton");
+	var other_buttons = document.querySelectorAll('#navBar > :not(#optionsButton)');
+
+	
+	for (var i = 0; i < other_buttons.length; i++) {
+		var d_y = 100;
+		var y1 = toggle ? 0 : d_y;
+		var y0 = toggle ? d_y : 0;
+		var time_anim = 200;
+		//other_buttons[i].style.display = "";
+		var link_anim = other_buttons[i].animate([
+			{ transform: `translateY(${y1}px)` },
+			{ transform: `translateY(${y0}px)` }
+		], { duration: time_anim, fill: 'forwards', easing: 'linear' });
+	}
+	
+	fastdom.measure(function () {
+		var cs = window.getComputedStyle(document.documentElement);
+
+		var border_color = toggle ? cs.getPropertyValue('--button-text-color-new') : cs.getPropertyValue('--button-text-color');
+		changeElementStyle(opt_button, "border-color", border_color, 100);
+		changeElementStyle(opt_button, "color", border_color, 100);
+	});
+}
+
+function changeElementStyle(element, property, value, delay) {
+	setTimeout(function () {
+		fastdom.mutate(function () {
+			element.style[property] = value;
+		});
+	}, delay);
+}
+
+function animateElementColorChange(element, color_old, color_new, callback) {
+	var color_anim = element.animate([
+		{ background: color_old },
+		{ background: color_new }
+	], { duration: 300, fill:'forwards' });
+
+	color_anim.onfinish = callback;
+}
+
 /**
  * plays animation for series link button moving from/to its title block position
  * @param {boolean} toggle

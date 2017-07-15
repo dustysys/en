@@ -37,6 +37,7 @@ html {
     overflow-y: scroll;
     margin-left: 0px !important;
     margin-right: 0px !important;
+    font-family:Arial !important;
 }
 
 .noScroll::-webkit-scrollbar {
@@ -411,7 +412,7 @@ button {
     font-size: 12px;
 }
 
-.navBar {
+#navBar {
     position: fixed;
     top: 0px;
     background-color: var(--block-color);
@@ -425,10 +426,10 @@ button {
     overflow:hidden;
 }
 
-    .navBar select {
+    #navBar select {
         background-color: var(--button-color-hover);
     }
-    .navBar input {
+    #navBar input {
         background-color: var(--button-color-hover);
         box-shadow: none;
         outline: none;
@@ -574,7 +575,7 @@ button {
     border-color: var(--text-color);
     border-radius: var(--button-border-radius);
 }
-    #manageSeriesButton:hover, #optionsButton:hover {
+    #manageSeriesButton:hover{
         background-color: var(--button-color-hover);
         cursor: pointer;
     }
@@ -604,9 +605,11 @@ button {
     border-color: var(--button-text-color);
     color: var(--button-text-color);
 }
-
+    #optionsButton:hover {
+        background-color: rgba(255, 255, 255, 0.8)
+    }
     #optionsButton:active {
-        transform:translateY(1px);
+        transform: translateY(1px);
     }
     
 .seriesSelectButton, #selectAllButton, .optionSelectButton {

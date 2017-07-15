@@ -14,7 +14,7 @@ with that model.
  */
 function buildNavBar(data_lists) {
 	var nav_bar = document.createElement("div");
-	nav_bar.className = "navBar";
+	nav_bar.id = "navBar";
 
 	//nav_bar.appendChild(buildDevTools());
 	nav_bar.appendChild(buildCurrentListField(data_lists));

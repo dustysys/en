@@ -536,8 +536,7 @@ function handleManageSeries(event) {
 	}
 }
 
-function handleToggleOptions(event) {
-	var toggle = toggleElement(event.target);
+function toggleOptionPageVisibility(toggle) {
 	var opt_tables = document.getElementsByClassName("optionTable");
 	if (toggle) {
 		hideAllLists();
@@ -552,6 +551,18 @@ function handleToggleOptions(event) {
 			changeToSelectedCurrentList();
 		}
 	}
+}
+
+function toggleOptionModeVisibility(toggle) {
+
+}
+
+function handleToggleOptions(event) {
+	var toggle = toggleElement(event.target);
+	// load page before animation
+	toggleOptionPageVisibility(toggle);
+	animateToggleOptionPage(toggle);
+	animateToggleOptionMode(toggle, toggleOptionModeVisibility);
 }
 
 /**
