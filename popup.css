@@ -425,10 +425,6 @@ button {
     overflow: hidden;
     text-align:center;
 }
-    #deleteSeriesButton:hover {
-        background-color: var(--color-brighten);
-        cursor: pointer;
-    }
     #deleteSeriesButton:active{
         top: 1px;
     }
@@ -440,6 +436,13 @@ button {
     position: absolute;
     right: 6px;
     bottom: 0px;
+}
+
+#deleteSeriesButton:hover {
+    background-color: var(--text-color-new);
+    border-color: var(--text-color-new);
+    color: var(--block-color-new);
+    cursor: pointer;
 }
 
 #moveSeriesButton {
