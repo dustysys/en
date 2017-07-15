@@ -90,7 +90,7 @@ function handleCompleteReleaseUpdateIntervalEdit(event) {
 	var edit_input = event.target;
 	var edit_text = edit_input.nextElementSibling;
 	var edit_input_val = parseInt(validateDigits(edit_input.value));
-	if (!exists(edit_input_val) || edit_input_val < 1) {
+	if (isNaN(edit_input_val) || edit_input_val < 1) {
 		edit_input_val = 1;
 	}
 	edit_text.textContent = edit_input_val.toString();
@@ -107,7 +107,7 @@ function handleCompleteSyncIntervalEdit(event) {
 	var edit_input = event.target;
 	var edit_text = edit_input.nextElementSibling;
 	var edit_input_val = parseInt(validateDigits(edit_input.value));
-	if (!exists(edit_input_val) || edit_input_val < 1) {
+	if (isNaN(edit_input_val) || edit_input_val < 1) {
 		edit_input_val = 1;
 	}
 	edit_text.textContent = edit_input_val.toString();
@@ -144,6 +144,16 @@ function handleEnableSyncIntervalEdit(event) {
 	edit_input.value = edit_text.textContent;
 	edit_input.focus();
 	edit_input.onblur = handleCompleteSyncIntervalEdit;
+}
+
+function buildOptionsButton() {
+	var opt_button = document.createElement('div');
+	opt_button.id = "optionsButton";
+	opt_button.className = "enButton";
+	opt_button.onclick = handleToggleOptions;
+	opt_button.textContent = "Options";
+
+	return opt_button;
 }
 
 function buildOptionTable() {

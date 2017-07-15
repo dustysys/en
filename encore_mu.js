@@ -425,7 +425,9 @@ function isEmpty(value){
 }
 
 /**
- * returns whether variable has substance
+ * this is supposed to be a lazy typechecker but it fails for things
+ * such as numbers or DOM elements.
+ * TODO: replace all instances used to check type with a logical alternative
  * @param {any} value
  * @returns {boolean}
  */

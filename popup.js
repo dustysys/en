@@ -524,12 +524,28 @@ function toggleManageModeVisibility(toggle) {
  * @param {Event} event
  */
 function handleManageSeries(event) {
-	//event may be button or its description
 	if (!global_block_manage_mode || !global_pref_animations.enabled) {
 		global_block_manage_mode = true;
+		//event may be button or its description
 		var manage_button = document.getElementById("manageSeriesButton");
 		var toggle = toggleElement(manage_button);
 		animateToggleManageMode(toggle, toggleManageModeVisibility);
+	}
+}
+
+function handleToggleOptions(event) {
+	var toggle = toggleElement(event.target);
+	var opt_tables = document.getElementsByClassName("optionTable");
+	if (toggle) {
+		toggleElementVisibility(opt_tables[0]);
+		changeToSelectedCurrentList();
+	} else {
+		hideAllLists();
+		if (isEmpty(opt_tables)) {
+			document.body.appendChild(buildOptionTable());
+		} else {
+			toggleElementVisibility(opt_tables[0], !toggle);
+		}
 	}
 }
 
@@ -637,31 +653,43 @@ function handleCurrentListChange(event) {
 	document.getElementById("seriesRowListFilter").value = "";
 	var filter = "";
 	filterList(filter);
-
-	var list_select = event.target;
-	var list_id = list_select.value;
 	resetAllSelectSeriesButtons();
+	changeToSelectedCurrentList();
+}
+
+function changeToSelectedCurrentList() {
+	var list_id = getCurrentListId();
 	var list_tables = document.getElementsByClassName("listTable");
 	var found = false;
-	for (var i = 0; i < list_tables.length; i++) {
-		if (list_tables[i].getAttribute("list_id") === list_id) {
-			list_tables[i].style.display = "";
-			found = true;
+	fastdom.mutate(function () {
+		for (var i = 0; i < list_tables.length; i++) {
+			if (list_tables[i].getAttribute("list_id") === list_id) {
+				list_tables[i].style.display = "";
+				found = true;
+			}
+			else {
+				list_tables[i].style.display = "none";
+			}
 		}
-		else {
+
+		if (!found) {
+			loadData(function (data) {
+				var data_list = getList(data.lists, list_id);
+				var new_table = buildListTable(data_list);
+				document.body.appendChild(new_table);
+			});
+		}
+	});
+}
+
+function hideAllLists(callback) {
+	fastdom.mutate(function (){
+		var list_tables = document.getElementsByClassName("listTable");
+		for (var i = 0; i < list_tables.length; i++) {
 			list_tables[i].style.display = "none";
 		}
-	}
-
-	if (!found) {
-		loadData(function (data) {
-			var data_list = getList(data.lists, list_id);
-			var new_table = buildListTable(data_list);
-			document.body.appendChild(new_table);
-		});
-	}
-
-	
+		if (callback) callback();
+	});
 }
 
 /**

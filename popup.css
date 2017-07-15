@@ -68,11 +68,25 @@ input {
 
 }
 
-
-
 select {
     color: inherit;
     background-color: inherit;
+}
+
+.enBox {
+    border-radius: var(--block-border-radius);
+    border-style: dotted;
+    border-width: var(--std-border-width);
+}
+
+.enButton {
+    border-radius: 4px;
+    border: 1px solid;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 12px 12px;
+    margin-top: 4px;
 }
 
 .seriesRow[new_releases=true],
@@ -559,7 +573,7 @@ button {
     border-color: var(--text-color);
     border-radius: var(--button-border-radius);
 }
-    #manageSeriesButton:hover {
+    #manageSeriesButton:hover, #optionsButton:hover {
         background-color: var(--button-color-hover);
         cursor: pointer;
     }
@@ -576,6 +590,24 @@ button {
     left: 5px;
 }
 
+#optionsButton {
+    position: absolute;
+    width: 71px;
+    height: 19px;
+    top: 1px;
+    left: 221px;
+    padding: 0px;
+    text-align: center;
+    padding-top: 5px;
+    font: 13.3333px Arial;
+    border-color: var(--button-text-color);
+    color: var(--button-text-color);
+}
+
+    #optionsButton:active {
+        transform:translateY(1px);
+    }
+    
 .seriesSelectButton, #selectAllButton, .optionSelectButton {
     border-radius: 50%;
     border: 1px solid rgba(0,0,0,.5);
@@ -690,22 +722,6 @@ button {
 .optionInput {
     background-color: var(--input-color-bg-new);
     border-color: var(--border-color-new);
-}
-
-.enBox {
-    border-radius: var(--block-border-radius);
-    border-style: dotted;
-    border-width: var(--std-border-width);
-}
-
-.enButton {
-    border-radius: 4px;
-    border: 1px solid;
-    display: inline-block;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 12px 12px;
-    margin-top: 4px;
 }
 
 #redirectBox {

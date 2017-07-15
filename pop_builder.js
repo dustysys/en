@@ -18,6 +18,7 @@ function buildNavBar(data_lists) {
 
 	//nav_bar.appendChild(buildDevTools());
 	nav_bar.appendChild(buildCurrentListField(data_lists));
+	nav_bar.appendChild(buildOptionsButton());
 	nav_bar.appendChild(buildManageSeriesField(data_lists));
 	nav_bar.appendChild(buildManageSeriesButton());
 	return nav_bar;
