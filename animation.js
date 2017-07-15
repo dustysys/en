@@ -108,8 +108,8 @@ function animateToggleManageMode(toggle, callback) {
  */
 function animateToggleEditLink(toggle, onscreen_rows) {
 	var d_y = 100;
-	var y1 = toggle ? 0 : d_y;
-	var y0 = toggle ? d_y : 0;
+	var y0 = toggle ? 0 : d_y;
+	var y1 = toggle ? d_y : 0;
 	var time_anim = 200;
 	fastdom.mutate(function () {
 		for (var i = 0; i < onscreen_rows.length; i++) {
@@ -130,8 +130,8 @@ function animateToggleEditLink(toggle, onscreen_rows) {
 function animateToggleManageField(toggle) {
 	var manage_field = document.getElementById("manageSeriesField");
 	var d_y = 100;
-	var y1 = toggle ? 0 : d_y;
-	var y0 = toggle ? d_y : 0;
+	var y0 = toggle ? 0 : d_y;
+	var y1 = toggle ? d_y : 0;
 	var time_anim = 200;
 	fastdom.mutate(function () {
 		manage_field.style.display = "";
@@ -152,8 +152,8 @@ function animateToggleManageField(toggle) {
  */
 function animateToggleUpToDateSelect(toggle, onscreen_rows, callback) {
 	var d_y = 100;
-	var y1 = toggle ? 0 : d_y;
-	var y0 = toggle ? d_y : 0;
+	var y0 = toggle ? 0 : d_y;
+	var y1 = toggle ? d_y : 0;
 	var time_anim = 200;
 
 	fastdom.mutate(function () {

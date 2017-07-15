@@ -11,7 +11,7 @@ function getEditTextsOptionSelect(edit_text) {
 function handleToggleScrollbar(event) {
 	var toggle = toggleElement(event.target);
 	var scroll_pref;
-	if (!toggle) {
+	if (toggle) {
 		document.body.classList.remove("noScroll");
 		scroll_pref = { enabled: true };
 	} else {
@@ -25,7 +25,7 @@ function handleToggleScrollbar(event) {
 function handleToggleAnimations(event) {
 	var toggle = toggleElement(event.target);
 	var anim_pref;
-	if (!toggle) {
+	if (toggle) {
 		anim_pref = { enabled: true};
 	} else {
 		anim_pref = { enabled: false };
@@ -37,7 +37,7 @@ function handleToggleAnimations(event) {
 function handleToggleOneClick(event) {
 	var toggle = toggleElement(event.target);
 	var oneclick_pref;
-	if (!toggle) {
+	if (toggle) {
 		oneclick_pref = { enabled: true };
 	} else {
 		oneclick_pref = { enabled: false };
@@ -51,7 +51,7 @@ function handleToggleReleaseUpdates(event) {
 	var toggle = toggleElement(event.target);
 	var release_update_pref;
 	var edit_text_val = parseInt(edit_text.textContent);
-	if (!toggle) {
+	if (toggle) {
 		release_update_pref = { enabled: true, interval: edit_text_val };
 	} else {
 		release_update_pref = { enabled: false, interval: edit_text_val  };
@@ -65,7 +65,7 @@ function handleToggleSync(event) {
 	var toggle = toggleElement(event.target);
 	var list_sync_pref;
 	var edit_text_val = parseInt(edit_text.textContent);
-	if (!toggle) {
+	if (toggle) {
 		list_sync_pref = { enabled: true, interval: edit_text_val };
 	} else {
 		list_sync_pref = { enabled: false, interval: edit_text_val };
@@ -77,7 +77,7 @@ function handleToggleSync(event) {
 function handleToggleNotifications(event) {
 	var toggle = toggleElement(event.target);
 	var notif_pref;
-	if (!toggle) {
+	if (toggle) {
 		notif_pref = { enabled: true };
 	} else {
 		notif_pref = { enabled: false };

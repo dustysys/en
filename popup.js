@@ -464,19 +464,19 @@ function toggleSeriesSelectVisibility(toggle) {
 
 		for (var i = 0; i < uptodate_buttons.length; i++) {
 				if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
-					toggleElementVisibility(uptodate_buttons[i], toggle);
+					toggleElementVisibility(uptodate_buttons[i], !toggle);
 				}
 		}
 
 		for (var i = 0; i < select_buttons.length; i++) {
-			toggleElementVisibility(select_buttons[i], !toggle);
+			toggleElementVisibility(select_buttons[i], toggle);
 		}
 }
 
 function toggleEditLinkVisibility(toggle){
 	var link_wraps = document.body.getElementsByClassName("editLinkWrap");
 	for (var i = 0; i < link_wraps.length; i++) {
-		toggleElementVisibility(link_wraps[i], !toggle);
+		toggleElementVisibility(link_wraps[i], toggle);
 	}
 }
 
@@ -488,7 +488,7 @@ function toggleEditLinkVisibility(toggle){
 function toggleElement(element) {
 	var toggle = element.getAttribute("toggle") === "on";
 	element.setAttribute("toggle", toggle ? "off" : "on");
-	return toggle;
+	return !toggle;
 }
 
 /**
@@ -506,7 +506,7 @@ function toggleElementVisibility(el, toggle) {
  */
 function toggleManageFieldVisibility(toggle) {
 	var manage_field = document.getElementById("manageSeriesField");
-	toggleElementVisibility(manage_field, !toggle);
+	toggleElementVisibility(manage_field, toggle);
 }
 
 /**
@@ -537,15 +537,15 @@ function handleToggleOptions(event) {
 	var toggle = toggleElement(event.target);
 	var opt_tables = document.getElementsByClassName("optionTable");
 	if (toggle) {
-		toggleElementVisibility(opt_tables[0]);
-		changeToSelectedCurrentList();
-	} else {
 		hideAllLists();
 		if (isEmpty(opt_tables)) {
 			document.body.appendChild(buildOptionTable());
 		} else {
 			toggleElementVisibility(opt_tables[0], !toggle);
 		}
+	} else {
+		toggleElementVisibility(opt_tables[0]);
+		changeToSelectedCurrentList();
 	}
 }
 
@@ -558,7 +558,7 @@ function handleSelectAllSeries(event) {
 	var select_buttons = getVisibleElementsByClass("seriesSelectButton");
 	if (select_buttons !== null) {
 		for (var i = 0; i < select_buttons.length; i++) {
-			select_buttons[i].setAttribute("toggle", toggle ? "off" : "on");
+			select_buttons[i].setAttribute("toggle", toggle ? "on" : "off");
 		}
 	}
 }
@@ -571,7 +571,7 @@ function handleSeriesSelect(event) {
 	var last_clicked = global_last_clicked_el;
 	if (!event.shiftKey || last_clicked === event.target) {
 		var tog = toggleElement(event.target);
-		if (tog) resetSelectAllSeriesButton();
+		if (!tog) resetSelectAllSeriesButton();
 	} else if (last_clicked !== event.target && last_clicked.className === "seriesSelectButton") {
 		var vis_rows = getVisibleSeriesRows();
 		var vis_select_buttons = [];
