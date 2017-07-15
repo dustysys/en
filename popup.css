@@ -322,6 +322,7 @@ button {
     font-size: 12px;
     padding: 12px 12px;
     margin-top: 4px;
+    width: 92px;
 }
 
     .upToDateButton:hover {
