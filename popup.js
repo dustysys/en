@@ -7,7 +7,7 @@ Handlers call encore_mu functions
 #############################################################################*/
 
 var global_last_clicked_el;
-var global_block_manage_mode = false;
+var global_block_transitions = false;
 var global_pref_scrollbar = { enabled: false };
 var global_pref_animations = { enabled: true }; 
 var global_pref_one_click_uptodate = { enabled: true };
@@ -507,6 +507,7 @@ function toggleElementVisibility(el, toggle) {
 function toggleManageFieldVisibility(toggle) {
 	var manage_field = document.getElementById("manageSeriesField");
 	toggleElementVisibility(manage_field, toggle);
+	global_block_transitions = false;
 }
 
 /**
@@ -524,8 +525,8 @@ function toggleManageModeVisibility(toggle) {
  * @param {Event} event
  */
 function handleManageSeries(event) {
-	if (!global_block_manage_mode || !global_pref_animations.enabled) {
-		global_block_manage_mode = true;
+	if (!global_block_transitions || !global_pref_animations.enabled) {
+		global_block_transitions = true;
 		//event may be button or its description
 		var manage_button = document.getElementById("manageSeriesButton");
 		var toggle = toggleElement(manage_button);
@@ -1066,6 +1067,22 @@ function hookListeners() {
 }
 
 /**
+ * applies and refreshes effects of global preferences
+ */
+function applyPopupPrefs() {
+	if (global_pref_scrollbar.enabled) {
+		document.body.classList.remove("noScroll");
+	} else {
+		document.body.className = "noScroll";
+	}
+
+	if (global_pref_animations.enabled) {
+		//shouldn't be necessary but just in case
+		global_block_transitions = false;
+	}
+}
+
+/**
  * loads user preferences relevant to popup into global
  * @param {function} callback
  */
@@ -1077,7 +1094,8 @@ function popupLoadPrefs(callback) {
 		global_pref_release_update = prefs["release_update"];
 		global_pref_list_sync = prefs["list_sync"];
 		global_pref_notifications = prefs["notifications"];
-		
+
+		applyPopupPrefs();
 		callback();
 	});
 }

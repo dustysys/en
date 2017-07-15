@@ -20,6 +20,7 @@ function handleToggleScrollbar(event) {
 	}
 	savePref("scrollbar", scroll_pref);
 	global_pref_scrollbar = scroll_pref;
+	applyPopupPrefs();
 }
 
 function handleToggleAnimations(event) {
@@ -32,6 +33,7 @@ function handleToggleAnimations(event) {
 	}
 	savePref("animations", anim_pref);
 	global_pref_animations = anim_pref;
+	applyPopupPrefs();
 }
 
 function handleToggleOneClick(event) {
@@ -44,6 +46,7 @@ function handleToggleOneClick(event) {
 	}
 	savePref("one_click_uptodate", oneclick_pref);
 	global_pref_one_click_uptodate = oneclick_pref;
+	applyPopupPrefs();
 }
 
 function handleToggleReleaseUpdates(event) {
@@ -58,6 +61,7 @@ function handleToggleReleaseUpdates(event) {
 	}
 	savePref("release_update", release_update_pref);
 	global_pref_release_update = release_update_pref;
+	applyPopupPrefs();
 }
 
 function handleToggleSync(event) {
@@ -72,6 +76,7 @@ function handleToggleSync(event) {
 	}
 	savePref("list_sync", list_sync_pref);
 	global_pref_list_sync = list_sync_pref;
+	applyPopupPrefs();
 }
 
 function handleToggleNotifications(event) {
@@ -84,6 +89,7 @@ function handleToggleNotifications(event) {
 	}
 	savePref("notifications", notif_pref);
 	global_pref_notifications = notif_pref;
+	applyPopupPrefs();
 }
 
 function handleCompleteReleaseUpdateIntervalEdit(event) {
@@ -101,6 +107,7 @@ function handleCompleteReleaseUpdateIntervalEdit(event) {
 	global_pref_release_update = release_update_pref;
 	edit_input.parentElement.removeChild(edit_input);
 	edit_text.style.display = "";
+	applyPopupPrefs();
 }
 
 function handleCompleteSyncIntervalEdit(event) {
@@ -118,6 +125,7 @@ function handleCompleteSyncIntervalEdit(event) {
 	global_pref_list_sync = sync_pref;
 	edit_input.parentElement.removeChild(edit_input);
 	edit_text.style.display = "";
+	applyPopupPrefs();
 }
 
 function handleEnableReleaseUpdateIntervalEdit(event) {

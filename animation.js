@@ -140,7 +140,6 @@ function animateToggleManageField(toggle) {
 			{ transform: `translateY(${-y0}px)` }
 		], { duration: time_anim, easing: 'linear' });
 
-		manage_anim.onfinish = (function () { global_block_manage_mode = false; });
 	});
 }
 
