@@ -82,21 +82,27 @@ function bgLoadPrefs(callback) {
 	});
 }
 
+function bgApplyPrefs() {
+	// invalidate old preferences' alarms
+	global_alarm_timestamp = Date.now();
+	if (global_pref_release_update.enabled) {
+		scheduleReleaseUpdates();
+	}
+	if (global_pref_list_sync.enabled) {
+		scheduleSyncs();
+	}
+	if (global_pref_notifications.enabled) {
+		listenNotifications();
+	}
+}
+
 function bgInit() {
 	listenMUComm();
 	listenStartup();
 	chrome.runtime.onInstalled.addListener(bgSync);
 	chrome.alarms.onAlarm.addListener(checkAlarm);
 	bgLoadPrefs(function () {
-		if (global_pref_release_update.enabled) {
-			scheduleReleaseUpdates();
-		}
-		if (global_pref_list_sync.enabled) {
-			scheduleSyncs();
-		}
-		if (global_pref_notifications.enabled) {
-			listenNotifications();
-		}
+		bgApplyPrefs();
 	});
 }
 

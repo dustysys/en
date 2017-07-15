@@ -1071,7 +1071,7 @@ function hookListeners() {
 /**
  * applies and refreshes effects of global preferences
  */
-function applyPopupPrefs() {
+function popupApplyPrefs() {
 	if (global_pref_scrollbar.enabled) {
 		document.body.classList.remove("noScroll");
 	} else {
@@ -1097,7 +1097,7 @@ function popupLoadPrefs(callback) {
 		global_pref_list_sync = prefs["list_sync"];
 		global_pref_notifications = prefs["notifications"];
 
-		applyPopupPrefs();
+		popupApplyPrefs();
 		callback();
 	});
 }
