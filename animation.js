@@ -25,24 +25,26 @@ function interruptAllAnimations() {
  */
 function animateSeriesUpdate(series_row, start_el_index, end_el_index, start_bbox, end_bbox) {
 	// position of marked series relative to its old position
-	var marked_rel_start_pos = start_bbox.top - end_bbox.top;
-	var gap = start_bbox.height;
-	var time_marked_series_anim = -marked_rel_start_pos / 2; //linearize animation speed
-	var time_list_anim = 200;
-	
-	animateMarkedSeries(series_row, marked_rel_start_pos, time_marked_series_anim);
+	if (global_pref_animations.enabled) {
+		var marked_rel_start_pos = start_bbox.top - end_bbox.top;
+		var gap = start_bbox.height;
+		var time_marked_series_anim = -marked_rel_start_pos / 2; //linearize animation speed
+		var time_list_anim = 200;
 
-	var buffer_rows = 3;
-	var num_rows_to_anim = getNumRowsFitOnScreen() + buffer_rows;
+		animateMarkedSeries(series_row, marked_rel_start_pos, time_marked_series_anim);
 
-	if (end_el_index - start_el_index > num_rows_to_anim) {
-		end_el_index = start_el_index + num_rows_to_anim;
-	}
+		var buffer_rows = 3;
+		var num_rows_to_anim = getNumRowsFitOnScreen() + buffer_rows;
 
-	if (listFilterIsInUse()) {
-		animateListGapClose(getVisibleSeriesRows(), start_el_index, end_el_index, gap, time_list_anim);
-	} else {
-		animateListGapClose(getSeriesRowsTable(series_row).querySelectorAll('.seriesRow'), start_el_index, end_el_index, gap, time_list_anim);
+		if (end_el_index - start_el_index > num_rows_to_anim) {
+			end_el_index = start_el_index + num_rows_to_anim;
+		}
+
+		if (listFilterIsInUse()) {
+			animateListGapClose(getVisibleSeriesRows(), start_el_index, end_el_index, gap, time_list_anim);
+		} else {
+			animateListGapClose(getSeriesRowsTable(series_row).querySelectorAll('.seriesRow'), start_el_index, end_el_index, gap, time_list_anim);
+		}
 	}
 }
 
@@ -101,6 +103,16 @@ function animateToggleManageMode(toggle, callback) {
 	}
 }
 
+function animateToggleOptionMode(toggle, callback) {
+	if (global_pref_animations.enabled) {
+		animateToggleOptionPage(toggle);
+		animateToggleNonOptionButtons(toggle, callback);
+		animateToggleOptionsButton(toggle);
+	} else {
+		callback(toggle);
+	}
+}
+
 function animateToggleOptionPage(toggle) {
 	var nav_bar = document.getElementById("navBar");
 
@@ -119,13 +131,6 @@ function animateToggleOptionPage(toggle) {
 		animateElementColorChange(nav_bar, nav_color0, nav_color1);
 		animateElementColorChange(document.body, body_color0, body_color1);
 	});
-}
-
-function animateToggleOptionMode(toggle, callback) {
-
-	animateToggleOptionPage(toggle);
-	animateToggleNonOptionButtons(toggle, callback);
-	animateToggleOptionsButton(toggle);
 }
 
 function animateToggleOptionsButton(toggle) {

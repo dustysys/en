@@ -205,7 +205,8 @@ function buildDescriptionBlock(pref_desc) {
 			break;
 		case "animations":
 			txt_title = "Animations";
-			txt_content = "Play transition animations such as when you switch to Manage Series\
+			txt_content = "Play transition animations in various contexts,\
+							such as when you switch to Manage Series\
 							mode or mark a series Up-to-Date.";
 			break;
 		case "one_click_uptodate":

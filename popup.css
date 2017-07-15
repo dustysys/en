@@ -659,7 +659,7 @@ button {
     display: flex;
     transform: translateY(calc(var(--navbar-height) + var(--row-margin-vert) + 1px));
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     flex-direction:column;
 }
 
@@ -668,9 +668,10 @@ button {
     border-color: var(--border-color-new);
     height: 95px;
     color: var(--text-color-new);
-    width:502px;
-    display:flex;
-    flex-direction:row;
+    display: flex;
+    flex-direction: row;
+    margin-left: var(--std-margin-width);
+    margin-right: var(--std-margin-width);
 }
 
 .descriptionBlock {
