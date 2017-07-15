@@ -10,12 +10,9 @@
     --border-color-new: #f3a29e;
     --block-color: #d4e2f9;
     --block-color-new: #f5e2e1;
-    --button-color-hover: #edf5ff;
-    --button-color-hover-new: #fff7f3;
+    --color-brighten: rgba(255, 255, 255, 0.7);
     --button-text-color: #12367a;
     --button-text-color-new: #522731;
-    --input-color-bg: var(--button-color-hover);
-    --input-color-bg-new: var(--button-color-hover-new);
     --popup-height: 600px;
     --popup-width: 510px;
     --navbar-height: 35px;
@@ -53,10 +50,6 @@ body {
     overflow-x: hidden;
 }
 
-.doScroll{
-    
-}
-
 .noScroll::-webkit-scrollbar {
     width: 0px;
 }
@@ -81,6 +74,15 @@ select {
     color: inherit;
     background-color: inherit;
     -moz-appearance: none;
+}
+
+a {
+    cursor: pointer;
+}
+
+
+button {
+    font-size: 12px;
 }
 
 .enBox {
@@ -111,36 +113,16 @@ select {
         border-color: var(--button-text-color-new);
     }
 
-        [new_releases=true] .upToDateButton:hover {
-            background-color: var(--button-color-hover-new);
-        }
-
     [new_releases=true] .seriesSelectButton {
         color: var(--button-text-color-new);
         border-color: var(--button-text-color-new);
     }
 
-        [new_releases=true] .seriesSelectButton:hover {
-            background-color: var(--button-color-hover-new);
-        }
-
         [new_releases=true] .seriesSelectButton[toggle=on] {
             background-color: var(--button-text-color-new);
         }
-
-        [new_releases=true] .editLinkButton:hover {
-            background-color: var(--button-color-hover-new);
-        }
-
-    [new_releases=true] .readVolumeInput, [new_releases=true] .readVolumeInput:focus,
-    [new_releases=true] .readChapterInput, [new_releases=true] .readChapterInput:focus {
-        background-color: var(--input-color-bg-new);
-    }
     [new_releases=true] .editLinkInput::-webkit-input-placeholder {
         color: var(--text-color-new);
-    }
-    [new_releases=true] .editLinkInput {
-        background-color: var(--input-color-bg-new);
     }
     [new_releases=true] .seriesTitleBlock {
         border-right-color: var(--border-color-new);
@@ -157,41 +139,14 @@ select {
         color: var(--button-text-color);
         border-color: var(--button-text-color);
     }
-
-        [new_releases=false] .upToDateButton:hover {
-            background-color: var(--button-color-hover);
-        }
-
     [new_releases=false] .seriesSelectButton, #selectAllButton {
         color: var(--button-text-color);
         border-color: var(--button-text-color);
     }
-
-        [new_releases=false] .seriesSelectButton:hover,
-        [new_releases=false] #selectAllButton:hover {
-            background-color: var(--button-color-hover);
-        }
-
         [new_releases=false] .seriesSelectButton[toggle=on],
         #selectAllButton[toggle=on] {
             background-color: var(--button-text-color);
         }
-
-            [new_releases=false] .seriesSelectButton[toggle=on]:hover {
-                background-color: var(--text-color);
-            }
-
-        [new_releases=false] .editLinkButton:hover {
-            background-color: var(--button-color-hover);
-        }
-
-    [new_releases=false] .readVolumeInput, [new_releases=false] .readVolumeInput:focus,
-    [new_releases=false] .readChapterInput, [new_releases=false] .readChapterInput:focus {
-        background-color: var(--input-color-bg);
-    }
-    [new_releases=false] .editLinkInput {
-        background-color: var(--input-color-bg);
-    } 
     [new_releases=false] .editLinkInput::-webkit-input-placeholder {
     color: var(--text-color);
     }
@@ -245,10 +200,6 @@ select {
         text-align: center;
     }
 
-a {
-    cursor: pointer;
-}
-
 .editLinkWrap {
     position: relative;
     height: 0px;
@@ -270,6 +221,7 @@ a {
     opacity: .95;
 }
     .editLinkButton:hover {
+        background-color: var(--color-brighten);
         cursor:pointer;
         opacity: 1;
     }
@@ -301,6 +253,7 @@ a {
     width: calc(var(--title-block-width) + (var(--std-margin-width)*2));
     height: var(--row-height);
     opacity:.95;
+    background-color: var(--color-brighten);
 }
 
 .seriesReleaseBlock {
@@ -316,17 +269,9 @@ a {
     padding-top: 8px;
 }
 
-.releaseReadLine {
-    height: 12px;
+.releaseReadLine, .releaseLatestLine {
+    height: 14px;
 }
-
-.releaseLatestLine {
-    padding-top: 3px;
-}
-
-    .releaseLatestLine:hover {
-        padding-top: 3px;
-    }
 
 .buttonBlock {
     width: 130px;
@@ -335,32 +280,11 @@ a {
     overflow: hidden;
 }
 
-.releaseReadDescription {
-    display: inline;
-}
-
-.releaseReadDisplay {
-    display: inline;
-}
-
-.releaseLatestDescription {
-    display: inline;
-}
-
-.releaseLatestDisplay {
-    display: inline;
-}
-
 .readVolume {
-    cursor: auto;
     margin-right:4px;
 }
 
-.readChapter {
-    cursor: auto;
-}
-
-.readChapVolNA {
+.readVolume, .readChapter, .readChapVolNA {
     cursor: auto;
 }
 
@@ -371,6 +295,7 @@ a {
     box-shadow: none;
     border-width: 1px;
     border-style: dotted;
+    background-color: var(--color-brighten);
 }
 
 .readChapterInput, .readChapterInput:focus {
@@ -380,6 +305,7 @@ a {
     box-shadow: none;
     border-width: 1px;
     border-style: dotted;
+    background-color: var(--color-brighten);
 }
 
 .upToDateButtonWrap {
@@ -399,6 +325,7 @@ a {
 }
 
     .upToDateButton:hover {
+        background-color: var(--color-brighten);
         cursor: pointer;
     }
 
@@ -411,14 +338,6 @@ a {
     position: relative;
     height: 0px;
     text-align: center;
-}
-
-
-
-
-
-button {
-    font-size: 12px;
 }
 
 #navBar {
@@ -436,10 +355,10 @@ button {
 }
 
     #navBar select {
-        background-color: var(--button-color-hover);
+        background-color: var(--color-brighten);
     }
     #navBar input {
-        background-color: var(--button-color-hover);
+        background-color: var(--color-brighten);
         box-shadow: none;
         outline: none;
         border-width: 1px;
@@ -507,7 +426,7 @@ button {
     text-align:center;
 }
     #deleteSeriesButton:hover {
-        background-color: var(--button-color-hover-new);
+        background-color: var(--color-brighten);
         cursor: pointer;
     }
     #deleteSeriesButton:active{
@@ -539,7 +458,7 @@ button {
     overflow: visible;
 }
     #moveSeriesButton:hover {
-        background-color: var(--button-color-hover);
+        background-color: var(--color-brighten);
         cursor: pointer;
     }
     #moveSeriesButton:active {
@@ -587,7 +506,7 @@ button {
     bottom: 26px;
 }
     #manageSeriesButton:hover{
-        background-color: var(--button-color-hover);
+        background-color: var(--color-brighten);
         cursor: pointer;
     }
 
@@ -617,7 +536,7 @@ button {
     color: var(--button-text-color);
 }
     #optionsButton:hover {
-        background-color: rgba(255, 255, 255, 0.8)
+        background-color: var(--color-brighten);
     }
     #optionsButton:active {
         transform: translateY(1px);
@@ -634,6 +553,7 @@ button {
     display: inline-block;
 }
     .seriesSelectButton:hover, #selectAllButton:hover, .optionSelectButton:hover {
+        background-color: var(--color-brighten);
         cursor: pointer;
     }
 
@@ -707,14 +627,11 @@ button {
 }
 
     .optionSelectButton:hover {
-        background-color:var(--button-color-hover-new);
+        background-color:var(--color-brighten);
     }
 
     .optionSelectButton[toggle=on] {
         background-color: var(--button-text-color-new);
-    }
-
-    .optionSelectButton[toggle=on]:hover {
     }
 
 .optionDisplay{
@@ -735,7 +652,7 @@ button {
 }
 
 .optionInput {
-    background-color: var(--input-color-bg-new);
+    background-color: var(--color-brighten);
     border-color: var(--border-color-new);
 }
 
@@ -771,10 +688,9 @@ button {
 }
 
 #registerButton {
-    
     margin-left:8%;
 }
 
 #loginButton:hover, #registerButton:hover {
-    background-color: var(--button-color-hover-new);
+    background-color: var(--color-brighten);
 }

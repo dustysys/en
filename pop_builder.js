@@ -169,8 +169,8 @@ function buildReleaseBlock(data_series) {
  */
 function buildReleaseReadLine(data_series) {
 	var release_read_line = document.createElement('div');
-	var release_read_desc = document.createElement('div');
-	var release_read_disp = document.createElement('div');
+	var release_read_desc = document.createElement('span');
+	var release_read_disp = document.createElement('span');
 	var read_volume_desc = document.createElement('span');
 	var read_volume = document.createElement('span');
 	var read_chapter_desc = document.createElement('span');
@@ -219,12 +219,14 @@ function buildReleaseReadLine(data_series) {
 
 	release_read_desc.textContent = "Latest Read: ";
 
+	release_read_disp.appendChild(read_volume_desc);
+	release_read_disp.appendChild(read_volume);
+	release_read_disp.appendChild(read_chapter_desc);
+	release_read_disp.appendChild(read_chapter);
+	release_read_disp.appendChild(read_not_applic);
+
 	release_read_line.appendChild(release_read_desc);
-	release_read_line.appendChild(read_volume_desc);
-	release_read_line.appendChild(read_volume);
-	release_read_line.appendChild(read_chapter_desc);
-	release_read_line.appendChild(read_chapter);
-	release_read_line.appendChild(read_not_applic);
+	release_read_line.appendChild(release_read_disp);
 
 	return release_read_line;
 }
@@ -236,8 +238,8 @@ function buildReleaseReadLine(data_series) {
  */
 function buildReleaseLatestLine(data_series) {
 	var release_latest_line = document.createElement('div');
-	var release_latest_desc = document.createElement('div');
-	var release_latest_disp = document.createElement('div');
+	var release_latest_desc = document.createElement('span');
+	var release_latest_disp = document.createElement('span');
 	var latest_volume = "";
 	var latest_chapter = "";
 
