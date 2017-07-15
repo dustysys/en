@@ -1,35 +1,96 @@
 ﻿// file for options composition and handling
 
+function getOptionSelectsEditText(opt_select) {
+	return opt_select.nextElementSibling.children[1];
+}
 
-function handleToggleScrollbar() {
+function getEditTextsOptionSelect(edit_text) {
+	return edit_text.parentElement.previousElementSibling;
+}
+
+function handleToggleScrollbar(event) {
+	var toggle = toggleElement(event.target);
+	var scroll_pref;
+	if (!toggle) {
+		document.body.classList.remove("noScroll");
+		scroll_pref = { enabled: true };
+	} else {
+		document.body.className = "noScroll";
+		scroll_pref = { enabled: false };
+	}
+	savePref("scrollbar", scroll_pref);
+	global_pref_scrollbar = scroll_pref;
+}
+
+function handleToggleAnimations(event) {
+	var toggle = toggleElement(event.target);
+	var anim_pref;
+	if (!toggle) {
+		anim_pref = { enabled: true};
+	} else {
+		anim_pref = { enabled: false };
+	}
+	savePref("animations", anim_pref);
+	global_pref_animations = anim_pref;
+}
+
+function handleToggleOneClick(event) {
+	var toggle = toggleElement(event.target);
+	var oneclick_pref;
+	if (!toggle) {
+		oneclick_pref = { enabled: true };
+	} else {
+		oneclick_pref = { enabled: false };
+	}
+	savePref("one_click_uptodate", oneclick_pref);
+	global_pref_one_click_uptodate = oneclick_pref;
+}
+
+function handleToggleReleaseUpdates(event) {
+	var edit_text = getOptionSelectsEditText(event.target);
+	var toggle = toggleElement(event.target);
+	var release_update_pref;
+	var edit_text_val = parseInt(edit_text.textContent);
+	if (!toggle) {
+		release_update_pref = { enabled: true, interval: edit_text_val };
+	} else {
+		release_update_pref = { enabled: false, interval: edit_text_val  };
+	}
+	savePref("release_update", release_update_pref);
+	global_pref_release_update = release_update_pref;
+}
+
+function handleToggleSync(event) {
+	var edit_text = getOptionSelectsEditText(event.target);
+	var toggle = toggleElement(event.target);
+	var list_sync_pref;
+	var edit_text_val = parseInt(edit_text.textContent);
+	if (!toggle) {
+		list_sync_pref = { enabled: true, interval: edit_text_val };
+	} else {
+		list_sync_pref = { enabled: false, interval: edit_text_val };
+	}
+	savePref("list_sync", list_sync_pref);
+	global_pref_list_sync = list_sync_pref;
+}
+
+function handleToggleNotifications(event) {
+	var toggle = toggleElement(event.target);
+	var notif_pref;
+	if (!toggle) {
+		notif_pref = { enabled: true };
+	} else {
+		notif_pref = { enabled: false };
+	}
+	savePref("notifications", notif_pref);
+	global_pref_notifications = notif_pref;
+}
+
+function enableEditReleaseUpdateInterval(event) {
 
 }
 
-function handleToggleAnimations() {
-
-}
-
-function handleToggleOneClick() {
-
-}
-
-function handleToggleReleaseUpdates() {
-
-}
-
-function handleToggleSync() {
-
-}
-
-function handleToggleNotifications() {
-
-}
-
-function enableEditReleaseUpdateInterval() {
-
-}
-
-function enableEditSyncInterval() {
+function enableEditSyncInterval(event) {
 
 }
 
@@ -73,7 +134,7 @@ function buildDescriptionBlock(pref_desc) {
 			break;
 		case "animations":
 			txt_title = "Animations";
-			txt_content = "Play transition animations when you switch to Manage Series\
+			txt_content = "Play transition animations such as when you switch to Manage Series\
 							mode or mark a series Up-to-Date.";
 			break;
 		case "one_click_uptodate":

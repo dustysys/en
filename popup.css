@@ -1,7 +1,4 @@
 
-::-webkit-scrollbar {
-    width: 1px;
-}
 
 
 :root {
@@ -42,6 +39,10 @@ html {
     margin-right: 0px !important;
 }
 
+.noScroll::-webkit-scrollbar {
+    width: 1px;
+}
+
 body {
     background: var(--bg-color);
     width: var(--popup-width);
@@ -50,6 +51,7 @@ body {
     user-select: none;
     margin: 0;
 }
+
 
 :focus {
   outline-color: transparent;
