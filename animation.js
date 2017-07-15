@@ -25,24 +25,26 @@ function interruptAllAnimations() {
  */
 function animateSeriesUpdate(series_row, start_el_index, end_el_index, start_bbox, end_bbox) {
 	// position of marked series relative to its old position
-	var marked_rel_start_pos = start_bbox.top - end_bbox.top;
-	var gap = start_bbox.height;
-	var time_marked_series_anim = -marked_rel_start_pos / 2; //linearize animation speed
-	var time_list_anim = 200;
-	
-	animateMarkedSeries(series_row, marked_rel_start_pos, time_marked_series_anim);
+	if (global_pref_animations.enabled) {
+		var marked_rel_start_pos = start_bbox.top - end_bbox.top;
+		var gap = start_bbox.height;
+		var time_marked_series_anim = -marked_rel_start_pos / 2; //linearize animation speed
+		var time_list_anim = 200;
 
-	var buffer_rows = 3;
-	var num_rows_to_anim = getNumRowsFitOnScreen() + buffer_rows;
+		animateMarkedSeries(series_row, marked_rel_start_pos, time_marked_series_anim);
 
-	if (end_el_index - start_el_index > num_rows_to_anim) {
-		end_el_index = start_el_index + num_rows_to_anim;
-	}
+		var buffer_rows = 3;
+		var num_rows_to_anim = getNumRowsFitOnScreen() + buffer_rows;
 
-	if (listFilterIsInUse()) {
-		animateListGapClose(getVisibleSeriesRows(), start_el_index, end_el_index, gap, time_list_anim);
-	} else {
-		animateListGapClose(getSeriesRowsTable(series_row).querySelectorAll('.seriesRow'), start_el_index, end_el_index, gap, time_list_anim);
+		if (end_el_index - start_el_index > num_rows_to_anim) {
+			end_el_index = start_el_index + num_rows_to_anim;
+		}
+
+		if (listFilterIsInUse()) {
+			animateListGapClose(getVisibleSeriesRows(), start_el_index, end_el_index, gap, time_list_anim);
+		} else {
+			animateListGapClose(getSeriesRowsTable(series_row).querySelectorAll('.seriesRow'), start_el_index, end_el_index, gap, time_list_anim);
+		}
 	}
 }
 
@@ -88,7 +90,7 @@ function animateListGapClose(series_row_list, start_el_index, end_el_index, gap,
  * @param {boolean} toggle
  */
 function animateToggleManageMode(toggle, callback) {
-	if (!global_no_animation) {
+	if (global_pref_animations.enabled) {
 		fastdom.measure(function () {
 			var onscreen_rows = getOnScreenSeriesRows();
 
@@ -101,6 +103,85 @@ function animateToggleManageMode(toggle, callback) {
 	}
 }
 
+function animateToggleOptionMode(toggle, callback) {
+	if (global_pref_animations.enabled) {
+		animateToggleOptionPage(toggle);
+		animateToggleNonOptionButtons(toggle, callback);
+		animateToggleOptionsButton(toggle);
+	} else {
+		callback(toggle);
+	}
+}
+
+function animateToggleOptionPage(toggle) {
+	var nav_bar = document.getElementById("navBar");
+
+	fastdom.measure(function(){
+		var cs = window.getComputedStyle(document.documentElement);
+		var nav_color = cs.getPropertyValue('--block-color');
+		var nav_color_new = cs.getPropertyValue('--block-color-new');
+		var body_color = cs.getPropertyValue('--bg-color');
+		var body_color_new = cs.getPropertyValue('--bg-color-new');
+
+		var nav_color0 = toggle ? nav_color : nav_color_new;
+		var nav_color1 = toggle ? nav_color_new : nav_color;
+		var body_color0 = toggle ? body_color : body_color_new;
+		var body_color1 = toggle ? body_color_new : body_color;
+
+		animateElementColorChange(nav_bar, nav_color0, nav_color1);
+		animateElementColorChange(document.body, body_color0, body_color1);
+	});
+}
+
+function animateToggleOptionsButton(toggle) {
+	fastdom.measure(function () {
+		var opt_button = document.getElementById("optionsButton");
+		var cs = window.getComputedStyle(document.documentElement);
+		var border_color = toggle ? cs.getPropertyValue('--button-text-color-new') : cs.getPropertyValue('--button-text-color');
+
+		changeElementStyle(opt_button, "border-color", border_color, 100);
+		changeElementStyle(opt_button, "color", border_color, 100);
+	});
+}
+
+function animateToggleNonOptionButtons(toggle, callback) {	
+	var other_buttons = document.querySelectorAll('#manageSeriesButton, #currentListField');
+	var d_y = 100;
+	var y1 = toggle ? 0 : d_y;
+	var y0 = toggle ? d_y : 0;
+	var time_anim = 200;
+
+	for (var i = 0; i < other_buttons.length; i++) {
+		
+		other_buttons[i].style.display = "";
+		var other_anim = other_buttons[i].animate([
+			{ transform: `translateY(${y1}px)` },
+			{ transform: `translateY(${y0}px)` }
+		], { duration: time_anim, easing: 'linear' });
+
+		if (i === other_buttons.length - 1) {
+			other_anim.onfinish = (function () { callback(toggle); });
+		}
+	}
+}
+
+function changeElementStyle(element, property, value, delay) {
+	setTimeout(function () {
+		fastdom.mutate(function () {
+			element.style[property] = value;
+		});
+	}, delay);
+}
+
+function animateElementColorChange(element, color_old, color_new, callback) {
+	var color_anim = element.animate([
+		{ background: color_old },
+		{ background: color_new }
+	], { duration: 300, fill:'forwards' });
+
+	if (callback) callback();
+}
+
 /**
  * plays animation for series link button moving from/to its title block position
  * @param {boolean} toggle
@@ -108,8 +189,8 @@ function animateToggleManageMode(toggle, callback) {
  */
 function animateToggleEditLink(toggle, onscreen_rows) {
 	var d_y = 100;
-	var y1 = toggle ? 0 : d_y;
-	var y0 = toggle ? d_y : 0;
+	var y0 = toggle ? 0 : d_y;
+	var y1 = toggle ? d_y : 0;
 	var time_anim = 200;
 	fastdom.mutate(function () {
 		for (var i = 0; i < onscreen_rows.length; i++) {
@@ -129,9 +210,10 @@ function animateToggleEditLink(toggle, onscreen_rows) {
  */
 function animateToggleManageField(toggle) {
 	var manage_field = document.getElementById("manageSeriesField");
+	var options_button = document.getElementById("optionsButton");
 	var d_y = 100;
-	var y1 = toggle ? 0 : d_y;
-	var y0 = toggle ? d_y : 0;
+	var y0 = toggle ? 0 : d_y;
+	var y1 = toggle ? d_y : 0;
 	var time_anim = 200;
 	fastdom.mutate(function () {
 		manage_field.style.display = "";
@@ -140,7 +222,11 @@ function animateToggleManageField(toggle) {
 			{ transform: `translateY(${-y0}px)` }
 		], { duration: time_anim, easing: 'linear' });
 
-		manage_anim.onfinish = (function () { global_block_manage_mode = false; });
+		options_button.style.display = "";
+		var options_anim = options_button.animate([
+			{ transform: `translateY(${y0}px)` },
+			{ transform: `translateY(${y1}px)` },
+		], { duration: time_anim, easing: 'linear' });
 	});
 }
 
@@ -152,8 +238,8 @@ function animateToggleManageField(toggle) {
  */
 function animateToggleUpToDateSelect(toggle, onscreen_rows, callback) {
 	var d_y = 100;
-	var y1 = toggle ? 0 : d_y;
-	var y0 = toggle ? d_y : 0;
+	var y0 = toggle ? 0 : d_y;
+	var y1 = toggle ? d_y : 0;
 	var time_anim = 200;
 
 	fastdom.mutate(function () {

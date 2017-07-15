@@ -7,8 +7,13 @@ Handlers call encore_mu functions
 #############################################################################*/
 
 var global_last_clicked_el;
-var global_no_animation = false;
-var global_block_manage_mode = false;
+var global_block_transitions = false;
+var global_pref_scrollbar = { enabled: false };
+var global_pref_animations = { enabled: true }; 
+var global_pref_one_click_uptodate = { enabled: true };
+var global_pref_release_update = { enabled: true, interval: 15 };
+var global_pref_list_sync = { enabled: true, interval: 60 };
+var global_pref_notifications = { enabled: true };
 
 /**
  * DOM HELPER FUNCTIONS
@@ -459,19 +464,19 @@ function toggleSeriesSelectVisibility(toggle) {
 
 		for (var i = 0; i < uptodate_buttons.length; i++) {
 				if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
-					toggleElementVisibility(uptodate_buttons[i], toggle);
+					toggleElementVisibility(uptodate_buttons[i], !toggle);
 				}
 		}
 
 		for (var i = 0; i < select_buttons.length; i++) {
-			toggleElementVisibility(select_buttons[i], !toggle);
+			toggleElementVisibility(select_buttons[i], toggle);
 		}
 }
 
 function toggleEditLinkVisibility(toggle){
 	var link_wraps = document.body.getElementsByClassName("editLinkWrap");
 	for (var i = 0; i < link_wraps.length; i++) {
-		toggleElementVisibility(link_wraps[i], !toggle);
+		toggleElementVisibility(link_wraps[i], toggle);
 	}
 }
 
@@ -483,7 +488,7 @@ function toggleEditLinkVisibility(toggle){
 function toggleElement(element) {
 	var toggle = element.getAttribute("toggle") === "on";
 	element.setAttribute("toggle", toggle ? "off" : "on");
-	return toggle;
+	return !toggle;
 }
 
 /**
@@ -501,7 +506,10 @@ function toggleElementVisibility(el, toggle) {
  */
 function toggleManageFieldVisibility(toggle) {
 	var manage_field = document.getElementById("manageSeriesField");
-	toggleElementVisibility(manage_field, !toggle);
+	var options_button = document.getElementById("optionsButton");
+	toggleElementVisibility(manage_field, toggle);
+	toggleElementVisibility(options_button, !toggle);
+	global_block_transitions = false;
 }
 
 /**
@@ -519,14 +527,45 @@ function toggleManageModeVisibility(toggle) {
  * @param {Event} event
  */
 function handleManageSeries(event) {
-	//event may be button or its description
-	if (!global_block_manage_mode || global_no_animation) {
-		global_block_manage_mode = true;
+	if (!global_block_transitions || !global_pref_animations.enabled) {
+		global_block_transitions = true;
+		//event may be button or its description
 		var manage_button = document.getElementById("manageSeriesButton");
 		var toggle = toggleElement(manage_button);
 		animateToggleManageMode(toggle, toggleManageModeVisibility);
 	}
+}
+
+function toggleOptionPageVisibility(toggle) {
+	var opt_tables = document.getElementsByClassName("optionTable");
+	if (toggle) {
+		hideAllLists();
+		if (opt_tables.length === 0) {
+			document.body.appendChild(buildOptionTable());
+		} else {
+			toggleElementVisibility(opt_tables[0], toggle);
+		}
+	} else {
+		if (opt_tables.length > 0) {
+			toggleElementVisibility(opt_tables[0], toggle);
+			changeToSelectedCurrentList();
+		}
+	}
+}
+
+function toggleOptionModeVisibility(toggle) {
+	var other_buttons = document.querySelectorAll('#manageSeriesButton, #currentListField');
+	for (var i = 0; i < other_buttons.length; i++) {
+		toggleElementVisibility(other_buttons[i], !toggle);
+	}
+}
+
+function handleToggleOptions(event) {
+	var toggle = toggleElement(event.target);
+	// load page before animation
+	toggleOptionPageVisibility(toggle);
 	
+	animateToggleOptionMode(toggle, toggleOptionModeVisibility);
 }
 
 /**
@@ -538,7 +577,7 @@ function handleSelectAllSeries(event) {
 	var select_buttons = getVisibleElementsByClass("seriesSelectButton");
 	if (select_buttons !== null) {
 		for (var i = 0; i < select_buttons.length; i++) {
-			select_buttons[i].setAttribute("toggle", toggle ? "off" : "on");
+			select_buttons[i].setAttribute("toggle", toggle ? "on" : "off");
 		}
 	}
 }
@@ -551,7 +590,7 @@ function handleSeriesSelect(event) {
 	var last_clicked = global_last_clicked_el;
 	if (!event.shiftKey || last_clicked === event.target) {
 		var tog = toggleElement(event.target);
-		if (tog) resetSelectAllSeriesButton();
+		if (!tog) resetSelectAllSeriesButton();
 	} else if (last_clicked !== event.target && last_clicked.className === "seriesSelectButton") {
 		var vis_rows = getVisibleSeriesRows();
 		var vis_select_buttons = [];
@@ -633,31 +672,43 @@ function handleCurrentListChange(event) {
 	document.getElementById("seriesRowListFilter").value = "";
 	var filter = "";
 	filterList(filter);
-
-	var list_select = event.target;
-	var list_id = list_select.value;
 	resetAllSelectSeriesButtons();
+	changeToSelectedCurrentList();
+}
+
+function changeToSelectedCurrentList() {
+	var list_id = getCurrentListId();
 	var list_tables = document.getElementsByClassName("listTable");
 	var found = false;
-	for (var i = 0; i < list_tables.length; i++) {
-		if (list_tables[i].getAttribute("list_id") === list_id) {
-			list_tables[i].style.display = "";
-			found = true;
+	fastdom.mutate(function () {
+		for (var i = 0; i < list_tables.length; i++) {
+			if (list_tables[i].getAttribute("list_id") === list_id) {
+				list_tables[i].style.display = "";
+				found = true;
+			}
+			else {
+				list_tables[i].style.display = "none";
+			}
 		}
-		else {
+
+		if (!found) {
+			loadData(function (data) {
+				var data_list = getList(data.lists, list_id);
+				var new_table = buildListTable(data_list);
+				document.body.appendChild(new_table);
+			});
+		}
+	});
+}
+
+function hideAllLists(callback) {
+	fastdom.mutate(function (){
+		var list_tables = document.getElementsByClassName("listTable");
+		for (var i = 0; i < list_tables.length; i++) {
 			list_tables[i].style.display = "none";
 		}
-	}
-
-	if (!found) {
-		loadData(function (data) {
-			var data_list = getList(data.lists, list_id);
-			var new_table = buildListTable(data_list);
-			document.body.appendChild(new_table);
-		});
-	}
-
-	
+		if (callback) callback();
+	});
 }
 
 /**
@@ -954,6 +1005,7 @@ function buildPopup(data) {
 	var s_list = data.lists[0];
 	var list_table = buildListTable(s_list);
 	document.body.appendChild(list_table);
+	//document.body.appendChild(buildOptionTable());
 	
 }
 
@@ -1031,22 +1083,73 @@ function hookListeners() {
 }
 
 /**
+ * applies and refreshes effects of global preferences
+ */
+function popupApplyPrefs() {
+	if (global_pref_scrollbar.enabled) {
+		document.body.classList.remove("noScroll");
+	} else {
+		document.body.className = "noScroll";
+	}
+
+	if (global_pref_animations.enabled) {
+		//shouldn't be necessary but just in case
+		global_block_transitions = false;
+	}
+}
+
+function popupSendBgPrefUpdate() {
+	var message = {
+		src: "en_popup",
+		title: "UPDATED_PREFERENCE"
+	};
+
+	chrome.runtime.sendMessage(message, function (response) {
+		console.log(response.title);
+	});
+}
+
+function popupUpdatePrefs() {
+	popupApplyPrefs();
+	popupSendBgPrefUpdate();
+}
+
+/**
+ * loads user preferences relevant to popup into global
+ * @param {function} callback
+ */
+function popupLoadPrefs(callback) {
+	loadAllPrefs(function (prefs) {
+		global_pref_scrollbar = prefs["scrollbar"];
+		global_pref_animations = prefs["animations"];
+		global_pref_one_click_uptodate = prefs["one_click_uptodate"];
+		global_pref_release_update = prefs["release_update"];
+		global_pref_list_sync = prefs["list_sync"];
+		global_pref_notifications = prefs["notifications"];
+
+		popupApplyPrefs();
+		callback();
+	});
+}
+
+/**
  * initialization that runs on popup startup
  * defers session validation to async while popup loads
- * to give general case user better performance
+ * to give general case user quicker startup
  */
 function popupInit() {
+	popupLoadPrefs(function () {
+		loadData(function (data) {
 
-	loadData(function (data) {
+			if (data === "No Data") {
+				console.log("No data to display.");
 
-		if (data === "No Data") {
-			console.log("No data to display.");
-
-		} else {
-			buildPopup(data);
-		}
-		hookListeners();
-		validateSession(data);
+			} else {
+				buildPopup(data);
+			}
+			hookListeners();
+			validateSession(data);
+		});
 	});
 	
 	return;

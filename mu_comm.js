@@ -535,8 +535,8 @@ function cleanMUComms() {
  * @param {ReqDetails} request_details
  */
 function handleMURequestComm(request_details){
-	console.log("Request");
-	console.log(request_details.requestId);
+	//console.log("Request");
+	//console.log(request_details.requestId);
 	// filter out our own requests
 	if (request_details.tabId >= 0) {
 		loadRequest(request_details.requestId, function (req_details) {
@@ -570,8 +570,8 @@ function handleMUCompleteComm(complete_details){
 				var req_id = request_details.requestId;
 				if (complete_details.requestId === req_id) {
 					handleMUComm(request_details, complete_details);
-					console.log("Complete");
-					console.log(complete_details.requestId);
+					//console.log("Complete");
+					//console.log(complete_details.requestId);
 				} else console.log("Error: Request mismatch");
 			} else {
 				//console.warn("Warning: Failed to load request");

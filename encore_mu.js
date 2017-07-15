@@ -150,6 +150,83 @@ function loadCurrentUserId(callback) {
 }
 
 /**
+ * loads a single user preference by name
+ * @param {string} pref_desc
+ * @param {function} callback
+ */
+function loadPref(pref_desc, callback) {
+	loadAllPrefs(function (user_prefs) {
+		callback(user_prefs[pref_desc]);
+	});
+}
+
+/**
+ * saves a single user preference by name
+ * @param {string} pref_desc
+ * @param {any} pref
+ * @param {function} callback
+ */
+function savePref(pref_desc, pref, callback) {
+	loadAllPrefs(function (user_prefs) {
+		user_prefs[pref_desc] = pref;
+		saveAllPrefs(user_prefs, callback);
+	});
+}
+
+/**
+ * loads all user preferences
+ * @param {function(Object)} callback
+ */
+function loadAllPrefs(callback) {
+	var prefs_desc = "user_prefs";
+	chrome.storage.local.get(prefs_desc, function (user_prefs) {
+		if (chrome.runtime.lastError) {
+			console.error(console.runtime.lastError);
+			console.error("Error: failed to load user prefs");
+		} else if (!exists(user_prefs)) {
+			initializePreferences(function (new_user_prefs) {
+				callback(new_user_prefs[prefs_desc]);
+			});
+		} else {
+			callback(user_prefs[prefs_desc]);
+		}
+	});
+}
+
+/**
+ * saves all user preferences
+ * @param {any} prefs
+ * @param {function} callback
+ */
+function saveAllPrefs(prefs, callback) {
+	var prefs_desc = "user_prefs";
+	var prefs_obj = {};
+	prefs_obj[prefs_desc] = prefs;
+	chrome.storage.local.set(prefs_obj, function () {
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError);
+			console.error("Error: failed to save user prefs");
+		} else if (callback) callback(prefs);
+	});
+}
+
+/**
+ * creates a default set of preferences. If previous preferences
+ * exist they will be overwritten.
+ * @param {Object} callback
+ */
+function initializePreferences(callback) {
+	var user_prefs = {};
+	user_prefs["scrollbar"] = { enabled: false };
+	user_prefs["animations"] = { enabled: true };
+	user_prefs["one_click_uptodate"] = { enabled: true };
+	user_prefs["release_update"] = { enabled: true, interval: 15 };
+	user_prefs["list_sync"] = { enabled: true, interval: 60 };
+	user_prefs["notifications"] = { enabled: true };
+	saveAllPrefs(user_prefs, callback);
+}
+
+/**
  * reads storage to determine if en has been previously run
  * @param {function(boolean)} callback
  */
@@ -348,7 +425,9 @@ function isEmpty(value){
 }
 
 /**
- * returns whether variable has substance
+ * this is supposed to be a lazy typechecker but it fails for things
+ * such as numbers or DOM elements.
+ * TODO: replace all instances used to check type with a logical alternative
  * @param {any} value
  * @returns {boolean}
  */
