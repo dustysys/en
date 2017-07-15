@@ -30,27 +30,35 @@
 }
 
 html {
+    height:100%;
     width: var(--popup-width);
     min-width: var(--popup-width);
     max-width: var(--popup-width);
     height: var(--popup-height);
-    overflow-y: scroll;
+    overflow-y: hidden;
     margin-left: 0px !important;
     margin-right: 0px !important;
-    font-family:Arial !important;
-}
-
-.noScroll::-webkit-scrollbar {
-    width: 1px;
+    font-family: Arial !important;
 }
 
 body {
     background: var(--bg-color);
     width: var(--popup-width);
+    height: 100%;
     /*linear-gradient(var(--bg-color-new), var(--bg-color));*/
     cursor: default;
     user-select: none;
     margin: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.doScroll{
+    
+}
+
+.noScroll::-webkit-scrollbar {
+    width: 0px;
 }
 
 
@@ -72,6 +80,7 @@ input {
 select {
     color: inherit;
     background-color: inherit;
+    -moz-appearance: none;
 }
 
 .enBox {
@@ -440,13 +449,13 @@ button {
 
 #currentListField{
     display: inline-block;
-    float: left;
+    position:relative;
     margin-top: 5px;
-    transform:translateX(7px);
+    
 }
 
 #seriesRowListFilter {
-    width: 85px;
+    width: 87px;
     height: 24px;
     margin-left: var(--std-margin-width);
     text-indent: var(--std-margin-width);
@@ -477,18 +486,15 @@ button {
 #manageSeriesField {
     display: inline-block;
     position: absolute;
-    width: 200px;
     height: var(--navbar-height);
     top: 5px;
-    left: 216px;
+    left: 127px;
     text-align: center;
 }
 
 #deleteSeriesButton {
     width: 24px;
     height: 24px;
-    font-size: 20px;
-    font-weight: bolder;
     background-color: var(--block-color-new);
     color: var(--text-color-new);
     display: inline-block;
@@ -498,6 +504,7 @@ button {
     padding-left:5px;
     padding-right: 5px;
     overflow: hidden;
+    text-align:center;
 }
     #deleteSeriesButton:hover {
         background-color: var(--button-color-hover-new);
@@ -507,14 +514,17 @@ button {
         top: 1px;
     }
 
-#deleteButtonDescription{
-   position:absolute;
-   right:6px;
-   bottom:0px;
+#deleteButtonDescription {
+    position: absolute;
+    font-size: 20px;
+    font-weight: bolder;
+    position: absolute;
+    right: 6px;
+    bottom: 0px;
 }
 
 #moveSeriesButton {
-    width: 50px;
+    width: 52px;
     height: 24px;
     background-color: var(--block-color);
     border: solid 1px;
@@ -545,10 +555,11 @@ button {
     right:0px;
     top:3px;
     color:var(--button-text-color);
+    font-size: 12px;
 }
 
 #manageSeriesListSelect {
-    width: 100px;
+    width: 105px;
     height: 26px;
     border-bottom-right-radius: var(--button-border-radius);
     border-top-right-radius: var(--button-border-radius);
@@ -564,16 +575,16 @@ button {
 
 
 #manageSeriesButton {
-    width: 30px;
+    width: 34px;
     height: 24px;
-    left: 470px;
-    margin-top: 5px;
-    margin-right: 5px;
+    left: 467px;
+    margin-right: 0px;
     position: relative;
     background-color: var(--block-color);
     border: 1px solid;
-    border-color: var(--text-color);
+    border-color: var(--button-text-color);
     border-radius: var(--button-border-radius);
+    bottom: 26px;
 }
     #manageSeriesButton:hover{
         background-color: var(--button-color-hover);
@@ -581,15 +592,15 @@ button {
     }
 
     #manageSeriesButton:active {
-        top: 1px;
+        transform: translateY(1px);
     }
 
 #manageButtonDescription {
     position:absolute;
     font-size: 27px;
     transform:translateY(-7px);
-    color:var(--text-color);
-    left: 5px;
+    color:var(--button-text-color);
+    left: 8px;
 }
 
 #optionsButton {
@@ -629,11 +640,10 @@ button {
 #selectAllButton {
     transform: translateY(-45px);
     border-color:var(--button-text-color);
-    margin-left: 216px;
-    margin-right:0px;
+    margin-left: 245px;
     margin-top: 14px;
-    width: 16px;
-    height: 16px;
+    width: 17px;
+    height: 17px;
 }
 
 #redirectPage {
@@ -658,7 +668,7 @@ button {
     border-color: var(--border-color-new);
     height: 95px;
     color: var(--text-color-new);
-    width:500px;
+    width:502px;
     display:flex;
     flex-direction:row;
 }

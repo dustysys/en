@@ -122,29 +122,42 @@ function animateToggleOptionPage(toggle) {
 }
 
 function animateToggleOptionMode(toggle, callback) {
-	var opt_button = document.getElementById("optionsButton");
-	var other_buttons = document.querySelectorAll('#navBar > :not(#optionsButton)');
 
-	
-	for (var i = 0; i < other_buttons.length; i++) {
-		var d_y = 100;
-		var y1 = toggle ? 0 : d_y;
-		var y0 = toggle ? d_y : 0;
-		var time_anim = 200;
-		//other_buttons[i].style.display = "";
-		var link_anim = other_buttons[i].animate([
-			{ transform: `translateY(${y1}px)` },
-			{ transform: `translateY(${y0}px)` }
-		], { duration: time_anim, fill: 'forwards', easing: 'linear' });
-	}
-	
+	animateToggleOptionPage(toggle);
+	animateToggleNonOptionButtons(toggle, callback);
+	animateToggleOptionsButton(toggle);
+}
+
+function animateToggleOptionsButton(toggle) {
 	fastdom.measure(function () {
+		var opt_button = document.getElementById("optionsButton");
 		var cs = window.getComputedStyle(document.documentElement);
-
 		var border_color = toggle ? cs.getPropertyValue('--button-text-color-new') : cs.getPropertyValue('--button-text-color');
+
 		changeElementStyle(opt_button, "border-color", border_color, 100);
 		changeElementStyle(opt_button, "color", border_color, 100);
 	});
+}
+
+function animateToggleNonOptionButtons(toggle, callback) {	
+	var other_buttons = document.querySelectorAll('#manageSeriesButton, #currentListField');
+	var d_y = 100;
+	var y1 = toggle ? 0 : d_y;
+	var y0 = toggle ? d_y : 0;
+	var time_anim = 200;
+
+	for (var i = 0; i < other_buttons.length; i++) {
+		
+		other_buttons[i].style.display = "";
+		var other_anim = other_buttons[i].animate([
+			{ transform: `translateY(${y1}px)` },
+			{ transform: `translateY(${y0}px)` }
+		], { duration: time_anim, easing: 'linear' });
+
+		if (i === other_buttons.length - 1) {
+			other_anim.onfinish = (function () { callback(toggle); });
+		}
+	}
 }
 
 function changeElementStyle(element, property, value, delay) {
@@ -161,7 +174,7 @@ function animateElementColorChange(element, color_old, color_new, callback) {
 		{ background: color_new }
 	], { duration: 300, fill:'forwards' });
 
-	color_anim.onfinish = callback;
+	if (callback) callback();
 }
 
 /**

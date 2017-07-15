@@ -554,14 +554,17 @@ function toggleOptionPageVisibility(toggle) {
 }
 
 function toggleOptionModeVisibility(toggle) {
-
+	var other_buttons = document.querySelectorAll('#manageSeriesButton, #currentListField');
+	for (var i = 0; i < other_buttons.length; i++) {
+		toggleElementVisibility(other_buttons[i], !toggle);
+	}
 }
 
 function handleToggleOptions(event) {
 	var toggle = toggleElement(event.target);
 	// load page before animation
 	toggleOptionPageVisibility(toggle);
-	animateToggleOptionPage(toggle);
+	
 	animateToggleOptionMode(toggle, toggleOptionModeVisibility);
 }
 
