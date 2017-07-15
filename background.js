@@ -49,6 +49,25 @@ function checkAlarm(alarm) {
 	}
 }
 
+function checkMessage(message, sender, sendResponse) {
+	if (message) {
+		if (message.hasOwnProperty("src") && message.src === "en_popup") {
+			if (message.title === "UPDATED_PREFERENCE") {
+				bgUpdatePrefs();
+				var response = {
+					src: "en_bg",
+					title: "ACK"
+				}
+				sendResponse(response);
+			}
+		}
+	}
+}
+
+// TODO: send popup messages about new updates
+function sendMessage() {
+}
+
 function scheduleReleaseUpdates() {
 	var alarm_name = "update_releases:" + global_alarm_timestamp;
 	chrome.alarms.create(alarm_name, { periodInMinutes: global_pref_release_update.interval });
@@ -71,7 +90,11 @@ function listenStartup() {
 	chrome.runtime.onStartup.addListener(function () {
 		updateBadge();
 	});
-} 
+}
+
+function listenMessages() {
+	chrome.runtime.onMessage.addListener(checkMessage);
+}
 
 function bgLoadPrefs(callback) {
 	loadAllPrefs(function (prefs) {
@@ -83,8 +106,6 @@ function bgLoadPrefs(callback) {
 }
 
 function bgApplyPrefs() {
-	// invalidate old preferences' alarms
-	global_alarm_timestamp = Date.now();
 	if (global_pref_release_update.enabled) {
 		scheduleReleaseUpdates();
 	}
@@ -96,9 +117,18 @@ function bgApplyPrefs() {
 	}
 }
 
+function bgUpdatePrefs() {
+	// invalidate old preferences' alarms
+	global_alarm_timestamp = Date.now();
+	bgLoadPrefs(function () {
+		bgApplyPrefs();
+	});
+}
+
 function bgInit() {
 	listenMUComm();
 	listenStartup();
+	listenMessages();
 	chrome.runtime.onInstalled.addListener(bgSync);
 	chrome.alarms.onAlarm.addListener(checkAlarm);
 	bgLoadPrefs(function () {

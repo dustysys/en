@@ -1084,6 +1084,22 @@ function popupApplyPrefs() {
 	}
 }
 
+function popupSendBgPrefUpdate() {
+	var message = {
+		src: "en_popup",
+		title: "UPDATED_PREFERENCE"
+	};
+
+	chrome.runtime.sendMessage(message, function (response) {
+		console.log(response.title);
+	});
+}
+
+function popupUpdatePrefs() {
+	popupApplyPrefs();
+	popupSendBgPrefUpdate();
+}
+
 /**
  * loads user preferences relevant to popup into global
  * @param {function} callback
