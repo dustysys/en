@@ -580,10 +580,11 @@ function handleManageSeries(event) {
 
 function toggleOptionPageVisibility(toggle) {
 	var opt_tables = document.getElementsByClassName("optionTable");
+	var popup = document.getElementById("popup");
 	if (toggle) {
 		hideAllLists();
 		if (opt_tables.length === 0) {
-			document.body.appendChild(buildOptionTable());
+			popup.appendChild(buildOptionTable());
 		} else {
 			toggleElementVisibility(opt_tables[0], toggle);
 		}
@@ -735,9 +736,10 @@ function changeToSelectedCurrentList() {
 
 		if (!found) {
 			loadData(function (data) {
+				var popup = document.getElementById("popup");
 				var data_list = getList(data.lists, list_id);
 				var new_table = buildListTable(data_list);
-				document.body.appendChild(new_table);
+				popup.appendChild(new_table);
 			});
 		}
 	});
@@ -1042,13 +1044,14 @@ function clearPopup() {
  * @param {Data} data
  */
 function buildPopup(data) {
+	var popup = document.createElement("div");
+	popup.id = "popup";
+	document.body.appendChild(popup);
 	var nav_bar = buildNavBar(data.lists);
-	document.body.appendChild(nav_bar);
+	popup.appendChild(nav_bar);
 	var s_list = data.lists[0];
 	var list_table = buildListTable(s_list);
-	document.body.appendChild(list_table);
-	//document.body.appendChild(buildOptionTable());
-	
+	popup.appendChild(list_table);
 }
 
 /**

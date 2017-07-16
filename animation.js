@@ -115,6 +115,7 @@ function animateToggleOptionMode(toggle, callback) {
 
 function animateToggleOptionPage(toggle) {
 	var nav_bar = document.getElementById("navBar");
+	var popup = document.getElementById("popup");
 
 	fastdom.measure(function(){
 		var cs = window.getComputedStyle(document.documentElement);
@@ -129,7 +130,7 @@ function animateToggleOptionPage(toggle) {
 		var body_color1 = toggle ? body_color_new : body_color;
 
 		animateElementColorChange(nav_bar, nav_color0, nav_color1);
-		animateElementColorChange(document.body, body_color0, body_color1);
+		animateElementColorChange(popup, body_color0, body_color1);
 	});
 }
 
