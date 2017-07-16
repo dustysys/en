@@ -176,25 +176,65 @@ function getUpToDateButtonsSeriesRow(button) {
  * the data is saved, an updated series row built and the updated chapter pushed to MU
  * @param {Event} event
  */
-function setSeriesUpToDate(event) {
-	var series_row = getUpToDateButtonsSeriesRow(event.target);
+function pullSeriesRowUpToDate(series_row) {
 	var table = getSeriesRowsTable(series_row);
 	var series_id = getSeriesRowsId(series_row);
-	event.target.style.display = "none";
-	userMarkSeriesUpToDate(series_id, function (data) {
+	userPullThenPushSeriesUpToDate(series_id, function (data) {
 		// in case sync thread changed parent element
 		var async_series_row = table.querySelectorAll(".seriesRow[series_id=s" + series_id + "]")[0];
 		var list = getList(data.lists, async_series_row.getAttribute("list_id"));
 		var series = getSeriesById([list], series_id);
 		var updated_row = updateSeriesRow(async_series_row, list, series);
+		var uptodate_button = getSeriesRowsUpToDateButton(updated_row);
+		uptodate_button.style.display = "none";
 	});
-	
-	var start_el_index = listFilterIsInUse() ?  getIndexOfVisibleSeriesRow(series_row) : getIndexOfSeriesRowInDOM(series_row);
+
+	finalizeMarkSeriesRowUpToDate(series_row);
+}
+
+
+
+function pullSeriesRowsLatestRelease(event) {
+
+}
+
+function finalizeMarkSeriesRowUpToDate(series_row) {
+	var start_el_index = listFilterIsInUse() ? getIndexOfVisibleSeriesRow(series_row) : getIndexOfSeriesRowInDOM(series_row);
 	var start_bbox = series_row.getBoundingClientRect();
 	var end_el_index = sortInsertMarkedReadSeriesRow(series_row);
 	if (listFilterIsInUse()) end_el_index = getIndexOfVisibleSeriesRow(series_row);
 	var end_bbox = series_row.getBoundingClientRect();
 	animateSeriesUpdate(series_row, start_el_index, end_el_index, start_bbox, end_bbox);
+}
+
+function executeMarkSeriesRowUpToDate(series_row) {
+	var series_id = getSeriesRowsId(series_row);
+	userPushSeriesUpToDate(series_id, function (data) {
+		var list = getList(data.lists, series_row.getAttribute("list_id"));
+		var series = getSeriesById([list], series_id);
+		var updated_row = updateSeriesRow(series_row, list, series);
+		var updated_uptodate_button = getSeriesRowsUpToDateButton(updated_row);
+		updated_uptodate_button.textContent = "\u2b07";
+		updated_uptodate_button.style.display = "";
+		updated_row.setAttribute("unsorted", "true");
+		updated_uptodate_button.onclick = (function () { finalizeMarkSeriesRowUpToDate(updated_row); });
+	});
+}
+
+function handleUpToDate(event) {
+	var series_row = getUpToDateButtonsSeriesRow(event.target);
+	if (global_pref_one_click_uptodate.enabled) {
+		pullSeriesRowUpToDate(series_row);
+	} else {
+		var uptodate_button = event.target;
+		var uptodate_status = uptodate_button.getAttribute("up_to_date");
+		
+		if (uptodate_status === "unknown") {
+			updateSeriesRowsLatestRelease(event);
+		} else {
+			executeMarkSeriesRowUpToDate(series_row);
+		}
+	}
 }
 
 /**
@@ -307,9 +347,9 @@ function seriesRowsAreSame(series_row1, series_row2) {
  */
 function updateSeriesRow(series_row, data_list, data_series) {
 	var series_row_wrap = getSeriesRowsWrap(series_row);
-	var updated_row = buildSeriesRow(data_list, data_series);
-	replaceElementInPlace(updated_row, series_row_wrap);
-	return updated_row;
+	var updated_row_wrap = buildSeriesRow(data_list, data_series);
+	replaceElementInPlace(updated_row_wrap, series_row_wrap);
+	return updated_row_wrap.firstChild;
 }
 
 /**
@@ -327,7 +367,8 @@ function sortInsertMarkedReadSeriesRow(series_row) {
 	while (index < row_titles.length) {
 		var row = getTitleLinksSeriesRow(row_titles[index]);
 		var has_new_releases = row.getAttribute("new_releases") === "true";
-		if (!has_new_releases) {
+		var is_sorted = !(row.hasAttribute("unsorted"));
+		if (!has_new_releases && is_sorted) {
 			if (title.toUpperCase() < row_titles[index].innerHTML.toUpperCase()) {
 				break;
 			}
@@ -462,15 +503,16 @@ function toggleSeriesSelectVisibility(toggle) {
 	var uptodate_buttons = document.body.getElementsByClassName("upToDateButton");
 	var select_buttons = document.body.getElementsByClassName("seriesSelectWrap");
 
-		for (var i = 0; i < uptodate_buttons.length; i++) {
-				if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
-					toggleElementVisibility(uptodate_buttons[i], !toggle);
-				}
+	for (var i = 0; i < uptodate_buttons.length; i++) {
+		var uptodate_status = uptodate_buttons[i].getAttribute("up_to_date");
+		if (uptodate_status === "false" || uptodate_status === "unknown") {
+			toggleElementVisibility(uptodate_buttons[i], !toggle);
 		}
+	}
 
-		for (var i = 0; i < select_buttons.length; i++) {
-			toggleElementVisibility(select_buttons[i], toggle);
-		}
+	for (var i = 0; i < select_buttons.length; i++) {
+		toggleElementVisibility(select_buttons[i], toggle);
+	}
 }
 
 function toggleEditLinkVisibility(toggle){

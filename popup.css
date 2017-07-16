@@ -267,6 +267,7 @@ button {
 
 .releaseLineDisplay {
     padding-top: 8px;
+    overflow:visible;
 }
 
 .releaseReadLine, .releaseLatestLine {
@@ -320,9 +321,9 @@ button {
     display: inline-block;
     cursor: pointer;
     font-size: 12px;
-    padding: 12px 12px;
+    padding: 12px 0px;
     margin-top: 4px;
-    width: 92px;
+    width: 118px;
 }
 
     .upToDateButton:hover {

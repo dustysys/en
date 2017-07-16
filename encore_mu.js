@@ -1025,32 +1025,59 @@ function notifyOfRelease(release, series) {
 }
 
 /**
- * mark a series up-to-date and pushes the change to MU
+ * pulls the latest release for a series, marks it read, and
+ * pushes the change to MU
  * @param {string} series_id
  * @param {function(Data)} callback
  */
-function userMarkSeriesUpToDate(series_id, callback) {
+function userPullThenPushSeriesUpToDate(series_id, callback) {
 	scanSeriesLatestRelease(series_id, function (release) {
 		loadData(function (data) {
 			var series = getSeriesById(data.lists, series_id);
-			series.last_update_was_manual = false;
-
-			if (exists(release)) {
-				series.latest_read_release = release;
-				if (!isEmpty(series.unread_releases)) {
-					series.unread_releases = [];
-				}
-
-				if (!isEmpty(series.latest_unread_release)) {
-					series.latest_unread_release = {};
-				}
-				setMUVolumeChapter(release.volume, release.chapter, series);
-				pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
-				series.last_update_was_manual = false;
-				setBadge(data.lists);
-			} else series.no_published_releases = true;
+			setSeriesUpToDate(series, release);
+			if (!exists(release)) {
+				series.no_published_releases = true;
+			}
+			pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
+			setBadge(data.lists);
 			saveData(data, callback);
 		});
+	});
+}
+
+/**
+ * sets the series as being up to date with the latest release as provided
+ * @param {Series} series
+ * @param {Release} latest_release
+ */
+function setSeriesUpToDate(series, latest_release) {
+	series.last_update_was_manual = false;
+	if (exists(latest_release)) {
+		series.latest_read_release = latest_release;
+		if (!isEmpty(series.unread_releases)) {
+			series.unread_releases = [];
+		}
+
+		if (!isEmpty(series.latest_unread_release)) {
+			series.latest_unread_release = {};
+		}
+		setMUVolumeChapter(latest_release.volume, latest_release.chapter, series);
+	}
+}
+
+/**
+ * sets the series up to date with the local release and pushes to MU.
+ * @param {string} series_id
+ * @param {function(Data)} callback
+ */
+function userPushSeriesUpToDate(series_id, callback) {
+	loadData(function (data) {
+		var series = getSeriesById(data.lists, series_id);
+		var release = getLatestRelease(series);
+		setSeriesUpToDate(series, release);
+		pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
+		setBadge(data.lists);
+		saveData(data, callback);
 	});
 }
 

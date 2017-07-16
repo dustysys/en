@@ -245,7 +245,8 @@ function animateToggleUpToDateSelect(toggle, onscreen_rows, callback) {
 	fastdom.mutate(function () {
 		for (var i = 0; i < onscreen_rows.length; i++) {
 			var uptodate_button = getSeriesRowsUpToDateButton(onscreen_rows[i]);
-			if (uptodate_button.getAttribute("up_to_date") === "false") {
+			var uptodate_status = uptodate_button.getAttribute("up_to_date");
+			if (uptodate_status === "false" || uptodate_status === "unknown") {
 				uptodate_button.style.display = "";
 				var uptodate_anim = uptodate_button.animate([
 					{ transform: `translateY(${y0}px)` },
