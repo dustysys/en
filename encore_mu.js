@@ -1629,11 +1629,36 @@ function pullListTypes(data_lists, callback) {
 				lists_typed_count++;
 
 				if (lists_typed_count === array.length) {
-					callback(typed_lists);
+					correctCustomListsTypes(typed_lists, callback);
 				}
 			});
 		});
 	} else callback(data_lists);
+}
+
+/**
+ * fixes lists whose icons do not describe their types
+ * @param {List[]} data_lists
+ * @param {function(List[])} callback
+ */
+function correctCustomListsTypes(data_lists, callback) {
+	getEditListPage(function (edit_list_page) {
+		var edit_list_parser = new DOMParser();
+		var edit_list_doc = edit_list_parser.parseFromString(edit_list_page, "text/html");
+		var select_elms = edit_list_doc.getElementsByTagName('select');
+		for (var i = 0; i < select_elms.length; i++) {
+			var select_name = select_elms[i].name;
+			if (select_name.includes("][type]")) {
+				var list_num = parseInt(select_name.substring(6, select_name.indexOf("][type]")));
+				var list = getListByEnum(data_lists, list_num);
+				if (exists(list)) {
+					var selected_type = select_elms[i].querySelector('[selected="selected"]');
+					list.list_type = selected_type.value;
+				}
+			}
+		}
+		if (callback) callback(data_lists);
+	});
 }
 
 /**

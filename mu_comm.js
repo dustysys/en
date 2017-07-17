@@ -127,6 +127,15 @@ function getListPage(list_id, callback) {
 }
 
 /**
+ * gets MU list edit/management page
+ * @param callback
+ */
+function getEditListPage(callback) {
+	var url = "https://www.mangaupdates.com/mylist.html?act=edit";
+	sendGETRequest(url, callback);
+}
+
+/**
  * gets MU members page. there's not a lot of data so it's simple
  * to grab the user id from here
  * @param {function(string)} callback
