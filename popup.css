@@ -24,30 +24,29 @@
     --std-border-width: 1px;
     --std-margin-width: 5px;
     --button-border-radius: 3px;
+    --view-height: calc(var(--popup-height) - var(--navbar-height) - var(--row-margin-vert) - 1px);
 }
 
 html {
-    height:100%;
-    width: var(--popup-width);
-    min-width: var(--popup-width);
-    max-width: var(--popup-width);
-    height: var(--popup-height);
-    overflow-y: hidden;
     margin-left: 0px !important;
     margin-right: 0px !important;
     font-family: Arial !important;
+    width: var(--popup-width);
+    height: var(--view-height);
+    background-color: var(--bg-color);
 }
 
 body {
-    background: var(--bg-color);
-    width: var(--popup-width);
-    height: 100%;
-    /*linear-gradient(var(--bg-color-new), var(--bg-color));*/
     cursor: default;
     user-select: none;
     margin: 0;
-    overflow-y: scroll;
-    overflow-x: hidden;
+}
+
+#popup {
+    position: relative;
+    max-width: var(--popup-width);
+    min-height: var(--view-height);
+    background-color: var(--bg-color);
 }
 
 .noScroll::-webkit-scrollbar {
@@ -267,6 +266,7 @@ button {
 
 .releaseLineDisplay {
     padding-top: 8px;
+    overflow:visible;
 }
 
 .releaseReadLine, .releaseLatestLine {
@@ -320,8 +320,9 @@ button {
     display: inline-block;
     cursor: pointer;
     font-size: 12px;
-    padding: 12px 12px;
+    padding: 12px 0px;
     margin-top: 4px;
+    width: 118px;
 }
 
     .upToDateButton:hover {
@@ -579,8 +580,8 @@ button {
 }
 
 .optionTable {
+    margin-top: calc(var(--navbar-height) + var(--row-margin-vert) + 1px);
     display: flex;
-    transform: translateY(calc(var(--navbar-height) + var(--row-margin-vert) + 1px));
     justify-content: center;
     align-items: stretch;
     flex-direction:column;

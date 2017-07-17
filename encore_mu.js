@@ -565,6 +565,7 @@ function updateBadge(callback) {
 function insertNewLatestUnreadRelease(series, release) {
 	series.unread_releases.push(release);
 	series.latest_unread_release = release;
+	series.no_published_releases = false;
 }
 
 /**
@@ -1025,32 +1026,77 @@ function notifyOfRelease(release, series) {
 }
 
 /**
- * mark a series up-to-date and pushes the change to MU
+ * pulls the latest release for a series, marks it read, and
+ * pushes the change to MU
  * @param {string} series_id
  * @param {function(Data)} callback
  */
-function userMarkSeriesUpToDate(series_id, callback) {
+function userPullThenPushSeriesUpToDate(series_id, callback) {
 	scanSeriesLatestRelease(series_id, function (release) {
 		loadData(function (data) {
 			var series = getSeriesById(data.lists, series_id);
-			series.last_update_was_manual = false;
+			setSeriesUpToDate(series, release);
+			if (!exists(release)) {
+				series.no_published_releases = true;
+			}
+			pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
+			setBadge(data.lists);
+			saveData(data, callback);
+		});
+	});
+}
 
+/**
+ * pulls the latest release for series and adds it to it
+ * @param {string} series_id
+ * @param {function(data)} callback
+ */
+function userPullSeriesLatestRelease(series_id, callback){
+	scanSeriesLatestRelease(series_id, function (release) {
+		loadData(function (data) {
+			var series = getSeriesById(data.lists, series_id);
 			if (exists(release)) {
-				series.latest_read_release = release;
-				if (!isEmpty(series.unread_releases)) {
-					series.unread_releases = [];
-				}
-
-				if (!isEmpty(series.latest_unread_release)) {
-					series.latest_unread_release = {};
-				}
-				setMUVolumeChapter(release.volume, release.chapter, series);
-				pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
-				series.last_update_was_manual = false;
+				addNewRelease(release, series);
 				setBadge(data.lists);
 			} else series.no_published_releases = true;
 			saveData(data, callback);
 		});
+	});
+}
+
+/**
+ * sets the series latest release as the one provided and clears unread
+ * releases
+ * @param {Series} series
+ * @param {Release} latest_release
+ */
+function setSeriesUpToDate(series, latest_release) {
+	series.last_update_was_manual = false;
+	if (exists(latest_release)) {
+		series.latest_read_release = latest_release;
+		if (!isEmpty(series.unread_releases)) {
+			series.unread_releases = [];
+		}
+
+		if (!isEmpty(series.latest_unread_release)) {
+			series.latest_unread_release = {};
+		}
+	}
+}
+
+/**
+ * sets the series up to date with the local release and pushes to MU.
+ * @param {string} series_id
+ * @param {function(Data)} callback
+ */
+function userPushSeriesUpToDate(series_id, callback) {
+	loadData(function (data) {
+		var series = getSeriesById(data.lists, series_id);
+		var release = getLatestRelease(series);
+		setSeriesUpToDate(series, release);
+		pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
+		setBadge(data.lists);
+		saveData(data, callback);
 	});
 }
 
@@ -1342,8 +1388,12 @@ function scanSeriesLatestRelease(series_id, callback) {
 			var elm_chapter = elm_volume.nextElementSibling;
 			var elm_groups = elm_chapter.nextElementSibling;
 
-			var date_obj = new Date(elm_date.innerHTML);
-			var r_date = date_obj.toISOString();
+			var default_date = new Date(1970, 1, 1);
+			var r_date = default_date.toISOString();
+			if (validateDigits(elm_date.innerHTML) !== "") {
+				var actual_date = new Date(elm_date.innerHTML);
+				r_date = actual_date.toISOString();
+			}
 			var r_title = elm_title.innerHTML;
 			var r_volume = elm_volume.innerHTML;
 			var r_chapter = elm_chapter.innerHTML;
@@ -1389,8 +1439,12 @@ function scanSeriesLatestReleases(series_id) {
 				var elm_chapter = elm_volume.nextElementSibling;
 				var elm_groups = elm_chapter.nextElementSibling;
 				
-				var date_obj = new Date(elm_date.innerHTML);
-				var r_date = date_obj.toISOString();
+				var default_date = new Date(1970, 1, 1);
+				var r_date = default_date.toISOString();
+				if (validateDigits(elm_date.innerHTML) !== "") {
+					var actual_date = new Date(elm_date.innerHTML);
+					r_date = actual_date.toISOString();
+				}
 				var r_title = elm_title.innerHTML;
 				var r_volume = elm_volume.innerHTML;
 				var r_chapter = elm_chapter.innerHTML;

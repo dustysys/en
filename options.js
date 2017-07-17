@@ -46,6 +46,7 @@ function handleToggleOneClick(event) {
 	}
 	savePref("one_click_uptodate", oneclick_pref);
 	global_pref_one_click_uptodate = oneclick_pref;
+	unloadAllLists();
 	popupUpdatePrefs();
 }
 
@@ -211,14 +212,16 @@ function buildDescriptionBlock(pref_desc) {
 			break;
 		case "one_click_uptodate":
 			txt_title = "One-click Up-to-Date";
-			txt_content = "Update and sort series marked Up-to-Date in one click\
-							instead of two.";
+			txt_content = "By default en gives you a chance to review your\
+			change after clicking the Up\u2011to\u2011Date button. Turn this on to\
+			instead always update and sort series in one click instead of two\
+			or three.";
 			break;
 		case "release_update":
 			txt_title = "Track new releases";
 			txt_content = "Check series for new releases, show series with new releases in\
 							a different color on your lists and keep a count of unread releases\
-							next to en's browser icon. Turn off to use en as a manual progress\
+							next to en's browser icon. Turn off to use en purely as a manual progress\
 							tracker";
 			break;
 		case "notifications":

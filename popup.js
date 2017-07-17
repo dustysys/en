@@ -73,11 +73,13 @@ function getInputLinksSeriesRow(input_link) {
  * @returns {Element}
  */
 function getSeriesRowsUpToDateButton(series_row) {
-	return series_row.children[1].firstChild.firstChild;
+	var uptodate_button = series_row.querySelector('.upToDateButton');
+	return uptodate_button;
 }
 
 function getSeriesRowsSeriesSelectWrap(series_row) {
-	return getSeriesRowsSeriesSelectButton(series_row).parentElement;
+	var select_wrap = series_row.querySelector('.seriesSelectWrap');
+	return select_wrap;
 }
 /**
  * 
@@ -176,25 +178,94 @@ function getUpToDateButtonsSeriesRow(button) {
  * the data is saved, an updated series row built and the updated chapter pushed to MU
  * @param {Event} event
  */
-function setSeriesUpToDate(event) {
-	var series_row = getUpToDateButtonsSeriesRow(event.target);
+function pullSeriesRowUpToDate(series_row) {
 	var table = getSeriesRowsTable(series_row);
 	var series_id = getSeriesRowsId(series_row);
-	event.target.style.display = "none";
-	userMarkSeriesUpToDate(series_id, function (data) {
+	userPullThenPushSeriesUpToDate(series_id, function (data) {
 		// in case sync thread changed parent element
 		var async_series_row = table.querySelectorAll(".seriesRow[series_id=s" + series_id + "]")[0];
 		var list = getList(data.lists, async_series_row.getAttribute("list_id"));
 		var series = getSeriesById([list], series_id);
 		var updated_row = updateSeriesRow(async_series_row, list, series);
+		var uptodate_button = getSeriesRowsUpToDateButton(updated_row);
+		uptodate_button.style.display = "none";
 	});
-	
-	var start_el_index = listFilterIsInUse() ?  getIndexOfVisibleSeriesRow(series_row) : getIndexOfSeriesRowInDOM(series_row);
+
+	finalizeMarkSeriesRowUpToDate(series_row);
+}
+
+
+
+function updateSeriesRowsLatestRelease(series_row) {
+	var series_id = getSeriesRowsId(series_row);
+	userPullSeriesLatestRelease(series_id, function (data) {
+		var list = getList(data.lists, series_row.getAttribute("list_id"));
+		var series = getSeriesById([list], series_id);
+		var updated_row = updateSeriesRow(series_row, list, series);
+		var updated_uptodate_button = getSeriesRowsUpToDateButton(updated_row);
+		updated_uptodate_button.onclick = (function () {
+			executeMarkSeriesRowUpToDate(updated_row);
+		});
+	});
+}
+
+function finalizeMarkSeriesRowUpToDate(series_row) {
+	var uptodate_button = getSeriesRowsUpToDateButton(series_row)
+	hideElement(uptodate_button);
+	var start_el_index = listFilterIsInUse() ? getIndexOfVisibleSeriesRow(series_row) : getIndexOfSeriesRowInDOM(series_row);
 	var start_bbox = series_row.getBoundingClientRect();
 	var end_el_index = sortInsertMarkedReadSeriesRow(series_row);
 	if (listFilterIsInUse()) end_el_index = getIndexOfVisibleSeriesRow(series_row);
 	var end_bbox = series_row.getBoundingClientRect();
 	animateSeriesUpdate(series_row, start_el_index, end_el_index, start_bbox, end_bbox);
+}
+
+function executeMarkSeriesRowUpToDate(series_row, callback) {
+	var series_id = getSeriesRowsId(series_row);
+	userPushSeriesUpToDate(series_id, function (data) {
+		var list = getList(data.lists, series_row.getAttribute("list_id"));
+		var series = getSeriesById([list], series_id);
+		var updated_row = updateSeriesRow(series_row, list, series);
+		if (callback) callback(updated_row);
+	});
+}
+
+function giveUpToDateButtonSortPrompt(series_row) {
+	var uptodate_button = getSeriesRowsUpToDateButton(series_row);
+	uptodate_button.textContent = "\u2b07";
+	uptodate_button.style.display = "";
+	series_row.setAttribute("unsorted", "true");
+	uptodate_button.onclick = (function () {
+		finalizeMarkSeriesRowUpToDate(series_row);
+	});
+}
+
+function handleUpToDate(event) {
+	var series_row = getUpToDateButtonsSeriesRow(event.target);
+	if (global_pref_one_click_uptodate.enabled) {
+		pullSeriesRowUpToDate(series_row);
+	} else {
+		var uptodate_button = event.target;
+		var uptodate_status = uptodate_button.getAttribute("up_to_date");
+		
+		if (uptodate_status === "unknown") {
+			updateSeriesRowsLatestRelease(series_row);
+		} else {
+			executeMarkSeriesRowUpToDate(series_row, function (updated_row) {
+				if (!isLastVisibleSeriesRow(updated_row)) {
+					giveUpToDateButtonSortPrompt(updated_row);
+				}
+			});
+		}
+	}
+}
+ 
+function isLastVisibleSeriesRow(series_row) {
+	var is_last = false;
+	var vis_rows = getVisibleSeriesRows();
+	var vis_index = getIndexOfVisibleSeriesRow(series_row);
+	if (vis_index === vis_rows.length - 1) return true;
+	else return false;
 }
 
 /**
@@ -307,9 +378,9 @@ function seriesRowsAreSame(series_row1, series_row2) {
  */
 function updateSeriesRow(series_row, data_list, data_series) {
 	var series_row_wrap = getSeriesRowsWrap(series_row);
-	var updated_row = buildSeriesRow(data_list, data_series);
-	replaceElementInPlace(updated_row, series_row_wrap);
-	return updated_row;
+	var updated_row_wrap = buildSeriesRow(data_list, data_series);
+	replaceElementInPlace(updated_row_wrap, series_row_wrap);
+	return updated_row_wrap.firstChild;
 }
 
 /**
@@ -327,7 +398,8 @@ function sortInsertMarkedReadSeriesRow(series_row) {
 	while (index < row_titles.length) {
 		var row = getTitleLinksSeriesRow(row_titles[index]);
 		var has_new_releases = row.getAttribute("new_releases") === "true";
-		if (!has_new_releases) {
+		var is_sorted = !(row.hasAttribute("unsorted"));
+		if (!has_new_releases && is_sorted) {
 			if (title.toUpperCase() < row_titles[index].innerHTML.toUpperCase()) {
 				break;
 			}
@@ -335,6 +407,7 @@ function sortInsertMarkedReadSeriesRow(series_row) {
 		index++;
 	}
 
+	if (series_row.hasAttribute("unsorted")) series_row.removeAttribute("unsorted");
 	var series_row_wrap = getSeriesRowsWrap(series_row);
 	table.insertBefore(series_row_wrap, table.children[index]);
 	return index - 1;
@@ -370,7 +443,7 @@ function getManageListId() {
  * @returns {Element}
  */
 function getListTableById(list_id) {
-	return document.body.querySelector(".listTable[list_id=" + list_id + "]");
+	return document.querySelector(".listTable[list_id=" + list_id + "]");
 }
 
 /**
@@ -462,15 +535,16 @@ function toggleSeriesSelectVisibility(toggle) {
 	var uptodate_buttons = document.body.getElementsByClassName("upToDateButton");
 	var select_buttons = document.body.getElementsByClassName("seriesSelectWrap");
 
-		for (var i = 0; i < uptodate_buttons.length; i++) {
-				if (uptodate_buttons[i].getAttribute("up_to_date") === "false") {
-					toggleElementVisibility(uptodate_buttons[i], !toggle);
-				}
+	for (var i = 0; i < uptodate_buttons.length; i++) {
+		var uptodate_status = uptodate_buttons[i].getAttribute("up_to_date");
+		if (uptodate_status === "false" || uptodate_status === "unknown") {
+			toggleElementVisibility(uptodate_buttons[i], !toggle);
 		}
+	}
 
-		for (var i = 0; i < select_buttons.length; i++) {
-			toggleElementVisibility(select_buttons[i], toggle);
-		}
+	for (var i = 0; i < select_buttons.length; i++) {
+		toggleElementVisibility(select_buttons[i], toggle);
+	}
 }
 
 function toggleEditLinkVisibility(toggle){
@@ -497,9 +571,19 @@ function toggleElement(element) {
  * @param {boolean} toggle
  */
 function toggleElementVisibility(el, toggle) {
-	fastdom.mutate(function () { el.style.display = toggle ? "" : "none"; });
+	if (typeof toggle === "boolean") {
+		toggle ? showElement(el) : hideElement(el);
+	} else console.error("Error: toggleElement requires toggle");
+}
+ 
+function hideElement(el) {
+	fastdom.mutate(function () { el.style.display = "none"; });
 }
 
+function showElement(el) {
+	fastdom.mutate(function () { el.style.display = ""; });
+}
+ 
 /**
  * toggles visibility of the manage series field elements
  * @param {boolean} toggle
@@ -538,10 +622,11 @@ function handleManageSeries(event) {
 
 function toggleOptionPageVisibility(toggle) {
 	var opt_tables = document.getElementsByClassName("optionTable");
+	var popup = document.getElementById("popup");
 	if (toggle) {
 		hideAllLists();
 		if (opt_tables.length === 0) {
-			document.body.appendChild(buildOptionTable());
+			popup.appendChild(buildOptionTable());
 		} else {
 			toggleElementVisibility(opt_tables[0], toggle);
 		}
@@ -693,19 +778,40 @@ function changeToSelectedCurrentList() {
 
 		if (!found) {
 			loadData(function (data) {
+				var popup = document.getElementById("popup");
 				var data_list = getList(data.lists, list_id);
 				var new_table = buildListTable(data_list);
-				document.body.appendChild(new_table);
+				popup.appendChild(new_table);
 			});
 		}
 	});
 }
 
 function hideAllLists(callback) {
-	fastdom.mutate(function (){
-		var list_tables = document.getElementsByClassName("listTable");
+	var list_tables = document.getElementsByClassName("listTable");
+	fastdom.mutate(function () {
 		for (var i = 0; i < list_tables.length; i++) {
 			list_tables[i].style.display = "none";
+		}
+		if (callback) callback();
+	});
+}
+
+function unloadList(list_id, callback) {
+	var list_table = getListTableById(list_id);
+	fastdom.mutate(function () {
+		list_table.parentElement.removeChild(list_table);
+		if (callback) callback();
+	});
+}
+
+function unloadAllLists(callback) {
+	var list_tables = document.getElementsByClassName("listTable");
+	fastdom.mutate(function () {
+		var i = list_tables.length - 1;
+		while (i>=0) {
+			list_tables[i].parentElement.removeChild(list_tables[i]);
+			i--;
 		}
 		if (callback) callback();
 	});
@@ -1000,13 +1106,14 @@ function clearPopup() {
  * @param {Data} data
  */
 function buildPopup(data) {
+	var popup = document.createElement("div");
+	popup.id = "popup";
+	document.body.appendChild(popup);
 	var nav_bar = buildNavBar(data.lists);
-	document.body.appendChild(nav_bar);
+	popup.appendChild(nav_bar);
 	var s_list = data.lists[0];
 	var list_table = buildListTable(s_list);
-	document.body.appendChild(list_table);
-	//document.body.appendChild(buildOptionTable());
-	
+	popup.appendChild(list_table);
 }
 
 /**

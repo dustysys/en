@@ -62,12 +62,15 @@ function buildSeriesRow(data_list, data_series) {
 	} else series_row.setAttribute("new_releases", "false");
 
 	var title_block = buildTitleBlock(data_series);
-	var release_block = buildReleaseBlock(data_series);
-	var button_block = buildButtonBlock(data_series);
 
+	
+	var button_block = buildButtonBlock(data_list, data_series);
 	series_row.appendChild(title_block);
 	series_row.appendChild(button_block);
-	series_row.appendChild(release_block);
+	if (data_list.list_type === "read") {
+		var release_block = buildReleaseBlock(data_series);
+		series_row.appendChild(release_block);
+	}
 	series_row_wrap.appendChild(series_row);
 
 	return series_row_wrap;
@@ -249,12 +252,12 @@ function buildReleaseLatestLine(data_series) {
 
 	release_latest_desc.textContent = "Latest Release: ";
 	var latest_release_str = "n/a";
-	var latest_release = getLatestRelease(data_series)
+	var latest_release = getLatestRelease(data_series);
 
 	if (!isEmpty(latest_release)) {
 		var latest_volume_desc = "";
 		var latest_chapter_desc = "";
-		if (latest_release.volume !== "" && latest_release.chap !== "") {
+		if (latest_release.volume !== "" && latest_release.chapter !== "") {
 			latest_volume_desc = "v. ";
 			latest_chapter_desc = " c. ";
 		}
@@ -279,15 +282,18 @@ function buildReleaseLatestLine(data_series) {
 /**
  * builds DOM element container for up-to-date and series select buttons,
  * the buttons which will be used most frequently by user
+ * @param {List} data_list
  * @param {Series} data_series
  * @returns {Element}
  */
-function buildButtonBlock(data_series) {
+function buildButtonBlock(data_list, data_series) {
 	var button_block = document.createElement('div');
 	button_block.className = "buttonBlock";
-	var uptodate_button_wrap = buildUpToDateButton(data_series);
+	if (data_list.list_type === "read") {
+		var uptodate_button_wrap = buildUpToDateButton(data_series);
+		button_block.appendChild(uptodate_button_wrap);
+	}
 	var series_select_button_wrap = buildSeriesSelectButton();
-	button_block.appendChild(uptodate_button_wrap);
 	button_block.appendChild(series_select_button_wrap);
 	var latest_read = data_series.latest_read_release;
 
@@ -305,16 +311,26 @@ function buildUpToDateButton(data_series) {
 	var uptodate_button_wrap = document.createElement('div');
 	uptodate_button_wrap.className = "upToDateButtonWrap";
 	uptodate_button.className = 'upToDateButton';
-	uptodate_button.onclick = setSeriesUpToDate;
+	uptodate_button.onclick = handleUpToDate;
 	uptodate_button.textContent = "Mark\u00A0Up\u2011to\u2011Date";
-	if (!data_series.last_update_was_manual && isEmpty(data_series.latest_unread_release)) {
+
+	var latest_release = getLatestRelease(data_series);
+	if (data_series.no_published_releases) {
+		uptodate_button.setAttribute("up_to_date", "true");
+		hideElement(uptodate_button);
+	} else if (!data_series.last_update_was_manual && isEmpty(data_series.latest_unread_release)) {
 		uptodate_button.style.display = "none";
 		uptodate_button.setAttribute("up_to_date", "true");
+	} else if (isEmpty(latest_release)) {
+		uptodate_button.setAttribute("up_to_date", "unknown");
+		if (!global_pref_one_click_uptodate.enabled) {
+			uptodate_button.textContent = "Get\u00A0Latest\u00A0Release";
+		}
 	} else {
 		uptodate_button.setAttribute("up_to_date", "false");
 	}
 	if (manageModeOn()) {
-		uptodate_button.style.display = "none";
+		hideElement(uptodate_button);
 	}
 
 	uptodate_button_wrap.appendChild(uptodate_button);

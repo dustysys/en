@@ -115,6 +115,7 @@ function animateToggleOptionMode(toggle, callback) {
 
 function animateToggleOptionPage(toggle) {
 	var nav_bar = document.getElementById("navBar");
+	var popup = document.getElementById("popup");
 
 	fastdom.measure(function(){
 		var cs = window.getComputedStyle(document.documentElement);
@@ -129,7 +130,7 @@ function animateToggleOptionPage(toggle) {
 		var body_color1 = toggle ? body_color_new : body_color;
 
 		animateElementColorChange(nav_bar, nav_color0, nav_color1);
-		animateElementColorChange(document.body, body_color0, body_color1);
+		animateElementColorChange(popup, body_color0, body_color1);
 	});
 }
 
@@ -243,15 +244,20 @@ function animateToggleUpToDateSelect(toggle, onscreen_rows, callback) {
 	var time_anim = 200;
 
 	fastdom.mutate(function () {
-		for (var i = 0; i < onscreen_rows.length; i++) {
-			var uptodate_button = getSeriesRowsUpToDateButton(onscreen_rows[i]);
-			if (uptodate_button.getAttribute("up_to_date") === "false") {
-				uptodate_button.style.display = "";
-				var uptodate_anim = uptodate_button.animate([
-					{ transform: `translateY(${y0}px)` },
-					{ transform: `translateY(${y1}px)` },
-				], { duration: time_anim, easing: 'linear' });
+		if (getCurrentListId() === "read") {
+			for (var i = 0; i < onscreen_rows.length; i++) {
+				var uptodate_button = getSeriesRowsUpToDateButton(onscreen_rows[i]);
+				var uptodate_status = uptodate_button.getAttribute("up_to_date");
+				if (uptodate_status === "false" || uptodate_status === "unknown") {
+					uptodate_button.style.display = "";
+					var uptodate_anim = uptodate_button.animate([
+						{ transform: `translateY(${y0}px)` },
+						{ transform: `translateY(${y1}px)` },
+					], { duration: time_anim, easing: 'linear' });
+				}
 			}
+		}
+		for (var i = 0; i < onscreen_rows.length; i++) {
 			var select_button_wrap = getSeriesRowsSeriesSelectWrap(onscreen_rows[i]);
 			select_button_wrap.style.display = "";
 			var select_anim = select_button_wrap.animate([
