@@ -11,6 +11,7 @@
     --block-color: #d4e2f9;
     --block-color-new: #f5e2e1;
     --color-brighten: rgba(255, 255, 255, 0.7);
+    --color-brighten-more: rgba(255, 255, 255, 0.95);
     --button-text-color: #12367a;
     --button-text-color-new: #522731;
     --popup-height: 600px;
@@ -123,6 +124,9 @@ button {
     [new_releases=true] .editLinkInput::-webkit-input-placeholder {
         color: var(--text-color-new);
     }
+    [new_releases=true] .editLinkButton{
+        border-color: var(--border-color-new);
+    }
     [new_releases=true] .seriesTitleBlock {
         border-right-color: var(--border-color-new);
     }
@@ -148,6 +152,9 @@ button {
         }
     [new_releases=false] .editLinkInput::-webkit-input-placeholder {
     color: var(--text-color);
+    }
+    [new_releases=false] .editLinkButton {
+        border-color: var(--border-color);
     }
     [new_releases=false] .seriesTitleBlock {
         border-right-color: var(--border-color);
@@ -250,8 +257,7 @@ button {
     text-align: center;
     width: calc(var(--title-block-width) + (var(--std-margin-width)*2));
     height: var(--row-height);
-    opacity:.95;
-    background-color: var(--color-brighten);
+    background-color: var(--color-brighten-more);
 }
 
 .seriesReleaseBlock {
@@ -380,7 +386,7 @@ button {
     text-indent: var(--std-margin-width);
     box-shadow: none !important;
     border-style: solid;
-    border-color: var(--button-text-color);
+    border-color: var(--border-color);
     border-radius: var(--button-border-radius);
     color: var(--text-color);
 }
@@ -395,7 +401,7 @@ button {
     margin-left: 5px;
     height: 26px;
     width: 112px;
-    border-color: var(--button-text-color);
+    border-color: var(--border-color);
     color: var(--button-text-color);
     border-radius: var(--button-border-radius);
     /* makes font not blur during animations*/
@@ -487,7 +493,8 @@ button {
     border-top-right-radius: var(--button-border-radius);
     display: inline-block;
     transform: translate(-1px, -9px);
-    border-color: var(--button-text-color);
+    border-color: var(--border-color);
+    border-left-color: var(--button-text-color);
     color: var(--button-text-color);
     text-shadow: none;
     /* makes font not blur during animations*/
@@ -551,9 +558,11 @@ button {
     position: relative;
     width: 25px;
     height: 25px;
-    margin-top: 11px;
-    margin-right: 3px;
     display: inline-block;
+}
+.seriesSelectButton {
+    margin-top: 11px;
+    transform: translateX(1px);
 }
     .seriesSelectButton:hover, #selectAllButton:hover, .optionSelectButton:hover {
         background-color: var(--color-brighten);

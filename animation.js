@@ -137,9 +137,12 @@ function animateToggleOptionPage(toggle) {
 function animateToggleOptionsButton(toggle) {
 	fastdom.measure(function () {
 		var opt_button = document.getElementById("optionsButton");
+		var nav_bar = document.getElementById("navBar");
 		var cs = window.getComputedStyle(document.documentElement);
 		var border_color = toggle ? cs.getPropertyValue('--button-text-color-new') : cs.getPropertyValue('--button-text-color');
+		var nav_border_color = toggle ? cs.getPropertyValue('--border-color-new') : cs.getPropertyValue('--border-color');
 
+		changeElementStyle(nav_bar, "border-color", nav_border_color, 100);
 		changeElementStyle(opt_button, "border-color", border_color, 100);
 		changeElementStyle(opt_button, "color", border_color, 100);
 	});
