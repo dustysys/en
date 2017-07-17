@@ -565,6 +565,7 @@ function updateBadge(callback) {
 function insertNewLatestUnreadRelease(series, release) {
 	series.unread_releases.push(release);
 	series.latest_unread_release = release;
+	series.no_published_releases = false;
 }
 
 /**
@@ -1046,7 +1047,26 @@ function userPullThenPushSeriesUpToDate(series_id, callback) {
 }
 
 /**
- * sets the series as being up to date with the latest release as provided
+ * pulls the latest release for series and adds it to it
+ * @param {string} series_id
+ * @param {function(data)} callback
+ */
+function userPullSeriesLatestRelease(series_id, callback){
+	scanSeriesLatestRelease(series_id, function (release) {
+		loadData(function (data) {
+			var series = getSeriesById(data.lists, series_id);
+			if (exists(release)) {
+				addNewRelease(release, series);
+				setBadge(data.lists);
+			} else series.no_published_releases = true;
+			saveData(data, callback);
+		});
+	});
+}
+
+/**
+ * sets the series latest release as the one provided and clears unread
+ * releases
  * @param {Series} series
  * @param {Release} latest_release
  */
@@ -1061,7 +1081,6 @@ function setSeriesUpToDate(series, latest_release) {
 		if (!isEmpty(series.latest_unread_release)) {
 			series.latest_unread_release = {};
 		}
-		setMUVolumeChapter(latest_release.volume, latest_release.chapter, series);
 	}
 }
 
@@ -1369,8 +1388,12 @@ function scanSeriesLatestRelease(series_id, callback) {
 			var elm_chapter = elm_volume.nextElementSibling;
 			var elm_groups = elm_chapter.nextElementSibling;
 
-			var date_obj = new Date(elm_date.innerHTML);
-			var r_date = date_obj.toISOString();
+			var default_date = new Date(1970, 1, 1);
+			var r_date = default_date.toISOString();
+			if (validateDigits(elm_date.innerHTML) !== "") {
+				var actual_date = new Date(elm_date.innerHTML);
+				r_date = actual_date.toISOString();
+			}
 			var r_title = elm_title.innerHTML;
 			var r_volume = elm_volume.innerHTML;
 			var r_chapter = elm_chapter.innerHTML;
@@ -1416,8 +1439,12 @@ function scanSeriesLatestReleases(series_id) {
 				var elm_chapter = elm_volume.nextElementSibling;
 				var elm_groups = elm_chapter.nextElementSibling;
 				
-				var date_obj = new Date(elm_date.innerHTML);
-				var r_date = date_obj.toISOString();
+				var default_date = new Date(1970, 1, 1);
+				var r_date = default_date.toISOString();
+				if (validateDigits(elm_date.innerHTML) !== "") {
+					var actual_date = new Date(elm_date.innerHTML);
+					r_date = actual_date.toISOString();
+				}
 				var r_title = elm_title.innerHTML;
 				var r_volume = elm_volume.innerHTML;
 				var r_chapter = elm_chapter.innerHTML;

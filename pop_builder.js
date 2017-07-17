@@ -254,7 +254,7 @@ function buildReleaseLatestLine(data_series) {
 	if (!isEmpty(latest_release)) {
 		var latest_volume_desc = "";
 		var latest_chapter_desc = "";
-		if (latest_release.volume !== "" && latest_release.chap !== "") {
+		if (latest_release.volume !== "" && latest_release.chapter !== "") {
 			latest_volume_desc = "v. ";
 			latest_chapter_desc = " c. ";
 		}
@@ -309,10 +309,13 @@ function buildUpToDateButton(data_series) {
 	uptodate_button.textContent = "Mark\u00A0Up\u2011to\u2011Date";
 
 	var latest_release = getLatestRelease(data_series);
-	if (!data_series.last_update_was_manual && isEmpty(data_series.latest_unread_release)) {
+	if (data_series.no_published_releases) {
+		uptodate_button.setAttribute("up_to_date", "true");
+		hideElement(uptodate_button);
+	} else if (!data_series.last_update_was_manual && isEmpty(data_series.latest_unread_release)) {
 		uptodate_button.style.display = "none";
 		uptodate_button.setAttribute("up_to_date", "true");
-	} else if (isEmpty(latest_release) && !data_series.no_published_releases) {
+	} else if (isEmpty(latest_release)) {
 		uptodate_button.setAttribute("up_to_date", "unknown");
 		if (!global_pref_one_click_uptodate.enabled) {
 			uptodate_button.textContent = "Get\u00A0Latest\u00A0Release";
@@ -321,7 +324,7 @@ function buildUpToDateButton(data_series) {
 		uptodate_button.setAttribute("up_to_date", "false");
 	}
 	if (manageModeOn()) {
-		uptodate_button.style.display = "none";
+		hideElement(uptodate_button);
 	}
 
 	uptodate_button_wrap.appendChild(uptodate_button);

@@ -194,11 +194,22 @@ function pullSeriesRowUpToDate(series_row) {
 
 
 
-function pullSeriesRowsLatestRelease(event) {
-
+function updateSeriesRowsLatestRelease(series_row) {
+	var series_id = getSeriesRowsId(series_row);
+	userPullSeriesLatestRelease(series_id, function (data) {
+		var list = getList(data.lists, series_row.getAttribute("list_id"));
+		var series = getSeriesById([list], series_id);
+		var updated_row = updateSeriesRow(series_row, list, series);
+		var updated_uptodate_button = getSeriesRowsUpToDateButton(updated_row);
+		updated_uptodate_button.onclick = (function () {
+			executeMarkSeriesRowUpToDate(updated_row);
+		});
+	});
 }
 
 function finalizeMarkSeriesRowUpToDate(series_row) {
+	var uptodate_button = getSeriesRowsUpToDateButton(series_row)
+	hideElement(uptodate_button);
 	var start_el_index = listFilterIsInUse() ? getIndexOfVisibleSeriesRow(series_row) : getIndexOfSeriesRowInDOM(series_row);
 	var start_bbox = series_row.getBoundingClientRect();
 	var end_el_index = sortInsertMarkedReadSeriesRow(series_row);
@@ -207,17 +218,23 @@ function finalizeMarkSeriesRowUpToDate(series_row) {
 	animateSeriesUpdate(series_row, start_el_index, end_el_index, start_bbox, end_bbox);
 }
 
-function executeMarkSeriesRowUpToDate(series_row) {
+function executeMarkSeriesRowUpToDate(series_row, callback) {
 	var series_id = getSeriesRowsId(series_row);
 	userPushSeriesUpToDate(series_id, function (data) {
 		var list = getList(data.lists, series_row.getAttribute("list_id"));
 		var series = getSeriesById([list], series_id);
 		var updated_row = updateSeriesRow(series_row, list, series);
-		var updated_uptodate_button = getSeriesRowsUpToDateButton(updated_row);
-		updated_uptodate_button.textContent = "\u2b07";
-		updated_uptodate_button.style.display = "";
-		updated_row.setAttribute("unsorted", "true");
-		updated_uptodate_button.onclick = (function () { finalizeMarkSeriesRowUpToDate(updated_row); });
+		if (callback) callback(updated_row);
+	});
+}
+
+function giveUpToDateButtonSortPrompt(series_row) {
+	var uptodate_button = getSeriesRowsUpToDateButton(series_row);
+	uptodate_button.textContent = "\u2b07";
+	uptodate_button.style.display = "";
+	series_row.setAttribute("unsorted", "true");
+	uptodate_button.onclick = (function () {
+		finalizeMarkSeriesRowUpToDate(series_row);
 	});
 }
 
@@ -230,11 +247,23 @@ function handleUpToDate(event) {
 		var uptodate_status = uptodate_button.getAttribute("up_to_date");
 		
 		if (uptodate_status === "unknown") {
-			updateSeriesRowsLatestRelease(event);
+			updateSeriesRowsLatestRelease(series_row);
 		} else {
-			executeMarkSeriesRowUpToDate(series_row);
+			executeMarkSeriesRowUpToDate(series_row, function (updated_row) {
+				if (!isLastVisibleSeriesRow(updated_row)) {
+					giveUpToDateButtonSortPrompt(updated_row);
+				}
+			});
 		}
 	}
+}
+ 
+function isLastVisibleSeriesRow(series_row) {
+	var is_last = false;
+	var vis_rows = getVisibleSeriesRows();
+	var vis_index = getIndexOfVisibleSeriesRow(series_row);
+	if (vis_index === vis_rows.length - 1) return true;
+	else return false;
 }
 
 /**
@@ -376,6 +405,7 @@ function sortInsertMarkedReadSeriesRow(series_row) {
 		index++;
 	}
 
+	if (series_row.hasAttribute("unsorted")) series_row.removeAttribute("unsorted");
 	var series_row_wrap = getSeriesRowsWrap(series_row);
 	table.insertBefore(series_row_wrap, table.children[index]);
 	return index - 1;
@@ -539,9 +569,19 @@ function toggleElement(element) {
  * @param {boolean} toggle
  */
 function toggleElementVisibility(el, toggle) {
-	fastdom.mutate(function () { el.style.display = toggle ? "" : "none"; });
+	if (typeof toggle === "boolean") {
+		toggle ? showElement(el) : hideElement(el);
+	} else console.error("Error: toggleElement requires toggle");
+}
+ 
+function hideElement(el) {
+	fastdom.mutate(function () { el.style.display = "none"; });
 }
 
+function showElement(el) {
+	fastdom.mutate(function () { el.style.display = ""; });
+}
+ 
 /**
  * toggles visibility of the manage series field elements
  * @param {boolean} toggle
