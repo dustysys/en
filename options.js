@@ -46,6 +46,7 @@ function handleToggleOneClick(event) {
 	}
 	savePref("one_click_uptodate", oneclick_pref);
 	global_pref_one_click_uptodate = oneclick_pref;
+	unloadAllLists();
 	popupUpdatePrefs();
 }
 

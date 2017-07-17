@@ -441,7 +441,7 @@ function getManageListId() {
  * @returns {Element}
  */
 function getListTableById(list_id) {
-	return document.body.querySelector(".listTable[list_id=" + list_id + "]");
+	return document.querySelector(".listTable[list_id=" + list_id + "]");
 }
 
 /**
@@ -786,10 +786,30 @@ function changeToSelectedCurrentList() {
 }
 
 function hideAllLists(callback) {
-	fastdom.mutate(function (){
-		var list_tables = document.getElementsByClassName("listTable");
+	var list_tables = document.getElementsByClassName("listTable");
+	fastdom.mutate(function () {
 		for (var i = 0; i < list_tables.length; i++) {
 			list_tables[i].style.display = "none";
+		}
+		if (callback) callback();
+	});
+}
+
+function unloadList(list_id, callback) {
+	var list_table = getListTableById(list_id);
+	fastdom.mutate(function () {
+		list_table.parentElement.removeChild(list_table);
+		if (callback) callback();
+	});
+}
+
+function unloadAllLists(callback) {
+	var list_tables = document.getElementsByClassName("listTable");
+	fastdom.mutate(function () {
+		var i = list_tables.length - 1;
+		while (i>=0) {
+			list_tables[i].parentElement.removeChild(list_tables[i]);
+			i--;
 		}
 		if (callback) callback();
 	});
