@@ -185,7 +185,7 @@ function loadAllPrefs(callback) {
 			console.error("Error: failed to load user prefs");
 		} else if (!exists(user_prefs)) {
 			initializePreferences(function (new_user_prefs) {
-				callback(new_user_prefs[prefs_desc]);
+				callback(new_user_prefs);
 			});
 		} else {
 			callback(user_prefs[prefs_desc]);
