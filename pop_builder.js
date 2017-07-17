@@ -33,6 +33,7 @@ function buildListTable(data_list) {
 	var list_table = document.createElement("div");
 	list_table.className = "listTable";
 	list_table.setAttribute("list_id", data_list.list_id);
+	list_table.setAttribute("list_type", data_list.list_type);
 	var s_list = data_list.series_list;
 	s_list.sort(cmpReleaseAlphabetical);
 	for (var i = 0; i < s_list.length; i++) {
