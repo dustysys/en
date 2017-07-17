@@ -377,9 +377,13 @@ function cmpReleaseAlphabetical(a, b) {
  * @returns {boolean}
  */
 function cmpAlphabetical(a, b) {
-	if (a.toUpperCase() > b.toUpperCase()) return -1;
-	else if (a.toUpperCase() < b.toUpperCase()) return 1;
+	if (a.toUpperCase() > b.toUpperCase()) return 1;
+	else if (a.toUpperCase() < b.toUpperCase()) return -1;
 	else return 0;
+}
+
+function cmpListAlphabetical(a, b) {
+	return cmpAlphabetical(a.list_name, b.list_name);
 }
 
 /**
@@ -798,6 +802,14 @@ function getListsByType(data_lists, list_type) {
 	return lists_of_type;
 }
 
+function getIndexOfListInLists(data_lists, list_id) {
+	for (var index = 0; index < data_lists.length; index++) {
+		if (data_lists[index].list_id === list_id) {
+			return index;
+		}
+	}
+}
+
 /**
  * gets position of a series within a data list
  * @param {List} data_list
@@ -806,7 +818,7 @@ function getListsByType(data_lists, list_type) {
  */
 function getIndexOfSeriesInList(data_list, series_id) {
 	var s_list = data_list.series_list;
-	for (var index = 0; j < s_list.length; index++) {
+	for (var index = 0; index < s_list.length; index++) {
 		if (s_list[index].series_id === series_id) {
 			return index;
 		}

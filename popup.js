@@ -1102,18 +1102,23 @@ function clearPopup() {
 }
 
 /**
- * builds the navbar, listtables etc composing the default popup view
+ * builds the navbar, listtable etc composing the default popup view
  * @param {Data} data
  */
 function buildPopup(data) {
+	data.lists.sort(cmpListAlphabetical);
+	
 	var popup = document.createElement("div");
 	popup.id = "popup";
 	document.body.appendChild(popup);
 	var nav_bar = buildNavBar(data.lists);
 	popup.appendChild(nav_bar);
-	var s_list = data.lists[0];
-	var list_table = buildListTable(s_list);
+	var list = getListById(data.lists, "read");
+	var list_table = buildListTable(list);
 	popup.appendChild(list_table);
+
+	var current_list_select = document.getElementById("currentListSelect");
+	current_list_select.selectedIndex = getIndexOfListInLists(data.lists, "read");
 }
 
 /**
