@@ -73,11 +73,13 @@ function getInputLinksSeriesRow(input_link) {
  * @returns {Element}
  */
 function getSeriesRowsUpToDateButton(series_row) {
-	return series_row.children[1].firstChild.firstChild;
+	var uptodate_button = series_row.querySelector('.upToDateButton');
+	return uptodate_button;
 }
 
 function getSeriesRowsSeriesSelectWrap(series_row) {
-	return getSeriesRowsSeriesSelectButton(series_row).parentElement;
+	var select_wrap = series_row.querySelector('.seriesSelectWrap');
+	return select_wrap;
 }
 /**
  * 

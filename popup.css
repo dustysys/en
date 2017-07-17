@@ -580,8 +580,8 @@ button {
 }
 
 .optionTable {
+    margin-top: calc(var(--navbar-height) + var(--row-margin-vert) + 1px);
     display: flex;
-    transform: translateY(calc(var(--navbar-height) + var(--row-margin-vert) + 1px));
     justify-content: center;
     align-items: stretch;
     flex-direction:column;
