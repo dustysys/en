@@ -621,6 +621,7 @@ function handleManageSeries(event) {
 }
 
 function toggleOptionPageVisibility(toggle) {
+	window.scrollTo(0, 0);
 	var opt_tables = document.getElementsByClassName("optionTable");
 	var popup = document.getElementById("popup");
 	if (toggle) {
@@ -762,6 +763,7 @@ function handleCurrentListChange(event) {
 }
 
 function changeToSelectedCurrentList() {
+	window.scrollTo(0, 0);
 	var list_id = getCurrentListId();
 	var list_tables = document.getElementsByClassName("listTable");
 	var found = false;

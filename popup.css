@@ -45,7 +45,7 @@ body {
 #popup {
     position: relative;
     max-width: var(--popup-width);
-    min-height: var(--view-height);
+    min-height: var(--popup-height);
     background-color: var(--bg-color);
 }
 
@@ -156,7 +156,6 @@ button {
 .listTable {
     margin-left: var(--table-margin-horiz);
     margin-right: var(--table-margin-horiz);
-    margin-top: calc(var(--navbar-height) + var(--row-margin-vert) + 1px);
 }
 
 .seriesRow, .optionRow {
@@ -342,7 +341,7 @@ button {
 }
 
 #navBar {
-    position: fixed;
+    position:sticky;
     top: 0px;
     background-color: var(--block-color);
     z-index: 5;
@@ -580,7 +579,6 @@ button {
 }
 
 .optionTable {
-    margin-top: calc(var(--navbar-height) + var(--row-margin-vert) + 1px);
     display: flex;
     justify-content: center;
     align-items: stretch;
