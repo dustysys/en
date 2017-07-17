@@ -61,16 +61,12 @@ function buildSeriesRow(data_list, data_series) {
 		series_row.setAttribute("new_releases", "true");
 	} else series_row.setAttribute("new_releases", "false");
 
-	var title_block = buildTitleBlock(data_series);
-
-	
+	var title_block = buildTitleBlock(data_list, data_series);
+	var release_block = buildReleaseBlock(data_list, data_series);
 	var button_block = buildButtonBlock(data_list, data_series);
 	series_row.appendChild(title_block);
 	series_row.appendChild(button_block);
-	if (data_list.list_type === "read") {
-		var release_block = buildReleaseBlock(data_series);
-		series_row.appendChild(release_block);
-	}
+	series_row.appendChild(release_block);
 	series_row_wrap.appendChild(series_row);
 
 	return series_row_wrap;
@@ -78,10 +74,11 @@ function buildSeriesRow(data_list, data_series) {
 
 /**
  * builds DOM element holding title, link and link button
+ * @param {List} data_list
  * @param {Series} data_series
  * @returns {Element}
  */
-function buildTitleBlock(data_series) {
+function buildTitleBlock(data_list, data_series) {
 	var title_block = document.createElement('div');
 	var title_disp = document.createElement('div');
 	var title_cont = document.createElement('p');
@@ -145,10 +142,11 @@ function buildEditLinkButton(data_series) {
 
 /**
  * builds DOM element with latest read/published release info for series
+ * @param {List} data_list
  * @param {Series} data_series
  * @returns {Element}
  */
-function buildReleaseBlock(data_series) {
+function buildReleaseBlock(data_list, data_series) {
 	var release_block = document.createElement('div');
 
 	var release_line_disp = document.createElement('div');
@@ -156,10 +154,15 @@ function buildReleaseBlock(data_series) {
 	release_line_disp.className = "releaseLineDisplay";
 
 	var release_read_line = buildReleaseReadLine(data_series);
-	var release_latest_line = buildReleaseLatestLine(data_series);
-
 	release_line_disp.appendChild(release_read_line);
-	release_line_disp.appendChild(release_latest_line);
+	if (data_list.list_type === "read") {
+		var release_latest_line = buildReleaseLatestLine(data_series);
+		release_line_disp.appendChild(release_latest_line);
+	} else if (data_list.list_type === "complete") {
+		var date_line = document.createElement('div');
+		date_line.textContent = "Date completed: " + data_series.date_added;
+		release_line_disp.appendChild(date_line);
+	}		
 	release_block.appendChild(release_line_disp);
 
 	return release_block;
