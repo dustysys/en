@@ -44,8 +44,8 @@ body {
 
 #popup {
     position: relative;
-    width: var(--popup-width);
-    height: var(--view-height);
+    max-width: var(--popup-width);
+    min-height: var(--view-height);
     background-color: var(--bg-color);
 }
 
