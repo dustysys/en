@@ -82,7 +82,7 @@ function pushMUSeriesMove(src_list_id, dst_list_id, series_id_arr) {
  * pulling list/series data
  * @param {string} list_id
  */
-function pushMUListPullOptions(list_id) {
+function pushMUListPullOptions(list_id, callback) {
 	var url = "https://www.mangaupdates.com/mylist.html";
 	var form_data = new FormData();
 
@@ -97,7 +97,7 @@ function pushMUListPullOptions(list_id) {
 	form_data.append("sort", "alpha");
 	form_data.append("update_options", "Update");
 
-	sendPOSTRequest(url, form_data);
+	sendPOSTRequest(url, form_data, callback);
 }
 
 /**

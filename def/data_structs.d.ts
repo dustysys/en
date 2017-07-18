@@ -28,6 +28,7 @@ interface Series {
 	last_update_was_manual: boolean;
 	no_published_releases: boolean;
 	user_link: string;
+	entime_updated: string;
 }
 
 interface List {
