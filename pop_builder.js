@@ -371,7 +371,7 @@ function buildListSelect(data_lists) {
 		var list_option = document.createElement('option');
 		list_option.className = 'listOption';
 		list_option.value = data_lists[i].list_id;
-		list_option.textContent = data_lists[i].list_name.replace(/&nbsp;/g, ' ');
+		list_option.textContent = data_lists[i].list_name;
 		list_option.setAttribute("list_id", data_lists[i].list_id);
 		list_select.appendChild(list_option);
 	}

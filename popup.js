@@ -399,7 +399,7 @@ function updateSeriesRow(series_row, data_list, data_series) {
  * @return {Number} new index of series row 
  */
 function sortInsertMarkedReadSeriesRow(series_row) {
-	var title = series_row.querySelectorAll(".titleLink")[0].innerHTML;
+	var title = series_row.querySelectorAll(".titleLink")[0].textContent;
 	var table = getSeriesRowsTable(series_row);
 	var row_titles = table.querySelectorAll(".titleLink");
 
@@ -410,7 +410,7 @@ function sortInsertMarkedReadSeriesRow(series_row) {
 		var has_new_releases = row.getAttribute("new_releases") === "true";
 		var is_sorted = !(row.hasAttribute("unsorted"));
 		if (!has_new_releases && is_sorted) {
-			if (title.toUpperCase() < row_titles[index].innerHTML.toUpperCase()) {
+			if (title.toUpperCase() < row_titles[index].textContent.toUpperCase()) {
 				break;
 			}
 		}
@@ -942,8 +942,8 @@ function handleEnableReadReleaseEdit(event) {
 		vol_input.focus();
 	} else chap_input.focus();
 	
-	vol_input.value = volume.innerHTML;
-	chap_input.value = chapter.innerHTML;
+	vol_input.value = volume.textContent;
+	chap_input.value = chapter.textContent;
 }
 
 /**
@@ -1063,7 +1063,7 @@ function filterList(filter) {
 	interruptAllAnimations();
 	for (var i = 0; i < titles.length; i++) {
 		var series_row = getTitleLinksSeriesRow(titles[i]);
-		if (titles[i].innerHTML.toUpperCase().includes(filter)) {
+		if (titles[i].textContent.toUpperCase().includes(filter)) {
 			series_row.style.display = "";
 		} else {
 			series_row.style.display = "none";

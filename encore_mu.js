@@ -448,7 +448,7 @@ function exists(value){
 function createReadingList() {
 	var reading_list = {
 		list_id: "read",
-		list_name: "Reading&nbsp;List",
+		list_name: "Reading List",
 		list_type: "read",
 		series_list: []
 	};
@@ -1281,7 +1281,7 @@ function scanForNewLists(existing_lists, callback) {
 			var list_elm = root.children[i];
 			var link = list_elm.getAttribute("href");
 			var list_id = link.substring(link.indexOf("=") + 1);
-			var list_name = list_elm.firstElementChild.innerHTML;
+			var list_name = list_elm.firstElementChild.textContent;
 			var new_list = {
 				list_id: list_id,
 				list_name: list_name,
@@ -1315,21 +1315,21 @@ function scanListForNewSeries(existing_list, callback) {
 			var id = s_url.substring(s_url.indexOf("=") + 1);
 
 			if (!hasSeries(existing_list, id)) {
-				var s_title = rows.item(i).children[1].children[0].children[0].innerHTML;
+				var s_title = rows.item(i).children[1].children[0].children[0].textContent;
 				var vol_digit = "";
 				var chap_digit = "";
 				var date = "";
 				if (existing_list.list_type === "read") {
-					var volume = rows.item(i).children[2].children[1].children[0].children[0].innerHTML;
-					var chapter = rows.item(i).children[2].children[2].children[0].children[0].innerHTML;
+					var volume = rows.item(i).children[2].children[1].children[0].children[0].textContent;
+					var chapter = rows.item(i).children[2].children[2].children[0].children[0].textContent;
 					vol_digit = validateDigits(volume);
 					chap_digit = validateDigits(chapter);
 				}
 				else if (existing_list.list_type === "wish" || existing_list.list_type === "complete") {
-					date = rows.item(i).children[2].innerHTML;
+					date = rows.item(i).children[2].textContent;
 				}
 				else if (existing_list.list_type === "unfinished" || existing_list.list_type === "hold") {
-					var vol_chap = rows.item(i).children[2].innerHTML;
+					var vol_chap = rows.item(i).children[2].textContent;
 					vol_digit = vol_chap.substring(2, vol_chap.indexOf('c.') - 1);
 					chap_digit = vol_chap.substring(vol_chap.indexOf('c.') + 2);
 				}
@@ -1364,7 +1364,7 @@ function scanSeries(series_id, callback) {
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(series_page, "text/html");
 		var title_elms = doc.getElementsByClassName("releasestitle tabletitle");
-		var title = title_elms[0].innerHTML;
+		var title = title_elms[0].textContent;
 
 		var series = {
 			series_id: series_id,
@@ -1402,19 +1402,19 @@ function scanSeriesLatestRelease(series_id, callback) {
 
 			var default_date = new Date(1970, 1, 1);
 			var r_date = default_date.toISOString();
-			if (validateDigits(elm_date.innerHTML) !== "") {
-				var actual_date = new Date(elm_date.innerHTML);
+			if (validateDigits(elm_date.textContent) !== "") {
+				var actual_date = new Date(elm_date.textContent);
 				r_date = actual_date.toISOString();
 			}
-			var r_title = elm_title.innerHTML;
-			var r_volume = elm_volume.innerHTML;
-			var r_chapter = elm_chapter.innerHTML;
+			var r_title = elm_title.textContent;
+			var r_volume = elm_volume.textContent;
+			var r_chapter = elm_chapter.textContent;
 			var r_groups = "";
 
 			for (var j = 0; j < elm_groups.children.length; j++) {
-				if (j == 0) r_groups += elm_groups.children[0].innerHTML;
+				if (j == 0) r_groups += elm_groups.children[0].textContent;
 				else {
-					r_groups += " & " + elm_groups.children[j].innerHTML;
+					r_groups += " & " + elm_groups.children[j].textContent;
 				}
 			}
 			var release = {
@@ -1453,20 +1453,20 @@ function scanSeriesLatestReleases(series_id) {
 				
 				var default_date = new Date(1970, 1, 1);
 				var r_date = default_date.toISOString();
-				if (validateDigits(elm_date.innerHTML) !== "") {
-					var actual_date = new Date(elm_date.innerHTML);
+				if (validateDigits(elm_date.textContent) !== "") {
+					var actual_date = new Date(elm_date.textContent);
 					r_date = actual_date.toISOString();
 				}
-				var r_title = elm_title.innerHTML;
-				var r_volume = elm_volume.innerHTML;
-				var r_chapter = elm_chapter.innerHTML;
+				var r_title = elm_title.textContent;
+				var r_volume = elm_volume.textContent;
+				var r_chapter = elm_chapter.textContent;
 				var r_groups = "";
 				
 				for (var j = 0; j < elm_groups.children.length; j++)
 				{
-					if (j==0) r_groups += elm_groups.children[0].innerHTML;
+					if (j==0) r_groups += elm_groups.children[0].textContent;
 					else{
-						r_groups += " & " + elm_groups.children[j].innerHTML;
+						r_groups += " & " + elm_groups.children[j].textContent;
 					}
 				}
 				
@@ -1504,7 +1504,7 @@ function scanNewReleases(callback) {
 			if (elm_date_list && elm_date_list.length > 0) {
 				for (var i = 0; i < elm_date_list.length; i++) {
 					var elm_date = elm_date_list[i].firstElementChild;
-					var str_date = elm_date.innerHTML;
+					var str_date = elm_date.textContent;
 					var str_date_sans_day = str_date.substring(str_date.indexOf(",") + 2);
 					var str_date_parsed = str_date_sans_day.replace(/(\d+)(st|nd|rd|th)/, "$1");
 					var date_obj = new Date(str_date_parsed);
@@ -1519,14 +1519,14 @@ function scanNewReleases(callback) {
 							var series_link = elm_title.getAttribute("href");
 							var series_id = series_link.substring(series_link.indexOf("=") + 1);
 
-							var r_title = elm_title.innerHTML;
-							var r_vol_chap = elm_vol_chap.innerHTML;
+							var r_title = elm_title.textContent;
+							var r_vol_chap = elm_vol_chap.textContent;
 							var r_volume = "";
 							var r_chapter = "";
 							var r_groups = "";
 
-							var vol_indicators = instancesOf(elm_vol_chap.innerHTML, "v.", true);
-							var chap_indicators = instancesOf(elm_vol_chap.innerHTML, "c.", true);
+							var vol_indicators = instancesOf(elm_vol_chap.textContent, "v.", true);
+							var chap_indicators = instancesOf(elm_vol_chap.textContent, "c.", true);
 							if (vol_indicators == 1 && chap_indicators == 0) {
 								r_volume = r_vol_chap.substring(3);
 							}
@@ -1539,9 +1539,9 @@ function scanNewReleases(callback) {
 							}
 
 							for (var k = 0; k < elm_groups.children.length; k++) {
-								if (k == 0) r_groups += elm_groups.children[0].innerHTML;
+								if (k == 0) r_groups += elm_groups.children[0].textContent;
 								else {
-									r_groups += " & " + elm_groups.children[k].innerHTML;
+									r_groups += " & " + elm_groups.children[k].textContent;
 								}
 							}
 
