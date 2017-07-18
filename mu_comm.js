@@ -78,6 +78,29 @@ function pushMUSeriesMove(src_list_id, dst_list_id, series_id_arr) {
 }
 
 /**
+ * pushes list view options to MU which are favorable to
+ * pulling list/series data
+ * @param {string} list_id
+ */
+function pushMUListPullOptions(list_id) {
+	var url = "https://www.mangaupdates.com/mylist.html";
+	var form_data = new FormData();
+
+	form_data.append("act", "update");
+	form_data.append("list", list_id);
+	form_data.append("perpage", "All");
+	form_data.append("published", "1");
+	form_data.append("show_comment", "2");
+	form_data.append("show_latest", "1");
+	form_data.append("show_rating", "1");
+	form_data.append("show_status", "1");
+	form_data.append("sort", "alpha");
+	form_data.append("update_options", "Update");
+
+	sendPOSTRequest(url, form_data);
+}
+
+/**
  * pushes local series deletion to MU
  * @param {string} src_list_id
  * @param {string[]} series_id_arr
