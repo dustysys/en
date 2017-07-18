@@ -94,8 +94,8 @@ function animateToggleManageMode(toggle, callback) {
 		fastdom.measure(function () {
 			var onscreen_rows = getOnScreenSeriesRows();
 
-			animateToggleManageField(toggle);
-			animateToggleUpToDateSelect(toggle, onscreen_rows, callback);
+			animateToggleManageField(toggle, callback);
+			animateToggleUpToDateSelect(toggle, onscreen_rows);
 			animateToggleEditLink(toggle, onscreen_rows);
 		});
 	} else {
@@ -212,7 +212,7 @@ function animateToggleEditLink(toggle, onscreen_rows) {
  * plays animation for series management elements moving from/to their navbar position
  * @param {boolean} toggle
  */
-function animateToggleManageField(toggle) {
+function animateToggleManageField(toggle, callback) {
 	var manage_field = document.getElementById("manageSeriesField");
 	var options_button = document.getElementById("optionsButton");
 	var d_y = 100;
@@ -231,6 +231,7 @@ function animateToggleManageField(toggle) {
 			{ transform: `translateY(${y0}px)` },
 			{ transform: `translateY(${y1}px)` },
 		], { duration: time_anim, easing: 'linear' });
+		options_anim.onfinish = (function () { callback(toggle) });
 	});
 }
 
@@ -240,12 +241,12 @@ function animateToggleManageField(toggle) {
  * @param {Element[]} onscreen_rows
  * @param {function(boolean)} callback
  */
-function animateToggleUpToDateSelect(toggle, onscreen_rows, callback) {
+function animateToggleUpToDateSelect(toggle, onscreen_rows) {
 	var d_y = 100;
 	var y0 = toggle ? 0 : d_y;
 	var y1 = toggle ? d_y : 0;
 	var time_anim = 200;
-	var list_table = getSeriesRowsTable(onscreen_rows[0]);
+	var list_table = getCurrentListTable();
 
 	fastdom.mutate(function () {
 		if (list_table.getAttribute("list_type") === "read") {
@@ -268,11 +269,6 @@ function animateToggleUpToDateSelect(toggle, onscreen_rows, callback) {
 				{ transform: `translateY(${-y1}px)` },
 				{ transform: `translateY(${-y0}px)` }
 			], { duration: time_anim, easing: 'linear' });
-
-			// syncs toggling of all hiding elements by waiting for the last one engaged to finish
-			if (i === onscreen_rows.length - 1) {
-				select_anim.onfinish = (function () { callback(toggle) });
-			}
 		}
 	});
 }
