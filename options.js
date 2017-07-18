@@ -31,6 +31,7 @@ function handleToggleAnimations(event) {
 	} else {
 		anim_pref = { enabled: false };
 	}
+	animateToggleOptionPage(toggle);
 	savePref("animations", anim_pref);
 	global_pref_animations = anim_pref;
 	popupUpdatePrefs();
