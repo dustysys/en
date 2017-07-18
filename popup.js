@@ -87,7 +87,8 @@ function getSeriesRowsSeriesSelectWrap(series_row) {
  * @returns {Element}
  */
 function getSeriesRowsSeriesSelectButton(series_row) {
-	return series_row.children[1].children[1].firstChild;
+	var select_button = series_row.querySelector('.seriesSelectButton');
+	return select_button;
 }
 /**
  * 
@@ -171,6 +172,15 @@ function getReadInputsReleaseLine(input) {
  */
 function getUpToDateButtonsSeriesRow(button) {
 	return button.parentElement.parentElement.parentElement;
+}
+
+/**
+ * gets the currently displayed list table
+ * @returns {Element}
+ */
+function getCurrentListTable() {
+	var list_id = getCurrentListId();
+	return document.querySelector('.listTable[list_id=' + list_id + ']');
 }
 
 /**
