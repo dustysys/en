@@ -1,5 +1,10 @@
 ﻿// file for options composition and handling
 
+/**
+ * DOM Element Getters
+ * 
+ */
+
 function getOptionSelectsEditText(opt_select) {
 	return opt_select.nextElementSibling.children[1];
 }
@@ -8,6 +13,10 @@ function getEditTextsOptionSelect(edit_text) {
 	return edit_text.parentElement.previousElementSibling;
 }
 
+/**
+ * saves the scrollbar visibility preference on select toggle
+ * @param {Event} event
+ */
 function handleToggleScrollbar(event) {
 	var toggle = toggleElement(event.target);
 	var scroll_pref;
@@ -23,6 +32,12 @@ function handleToggleScrollbar(event) {
 	popupUpdatePrefs();
 }
 
+/**
+ * saves whether animations are enabled on select toggle
+ * also switches color to avoid bad contrast when color
+ * transitions are turned off
+ * @param {Event} event
+ */
 function handleToggleAnimations(event) {
 	var toggle = toggleElement(event.target);
 	var anim_pref;
@@ -37,6 +52,10 @@ function handleToggleAnimations(event) {
 	popupUpdatePrefs();
 }
 
+/**
+ * saves the #-click mode on select toggle
+ * @param {Event} event
+ */
 function handleToggleOneClick(event) {
 	var toggle = toggleElement(event.target);
 	var oneclick_pref;
@@ -51,6 +70,10 @@ function handleToggleOneClick(event) {
 	popupUpdatePrefs();
 }
 
+/**
+ * saves whether release updates are enabled by select toggle
+ * @param {Event} event
+ */
 function handleToggleReleaseUpdates(event) {
 	var edit_text = getOptionSelectsEditText(event.target);
 	var toggle = toggleElement(event.target);
@@ -66,6 +89,10 @@ function handleToggleReleaseUpdates(event) {
 	popupUpdatePrefs();
 }
 
+/**
+ * saves whether sync is enabled on select toggle
+ * @param {Event} event
+ */
 function handleToggleSync(event) {
 	var edit_text = getOptionSelectsEditText(event.target);
 	var toggle = toggleElement(event.target);
@@ -81,6 +108,10 @@ function handleToggleSync(event) {
 	popupUpdatePrefs();
 }
 
+/**
+ * saves notification setting on select toggle
+ * @param {Event} event
+ */
 function handleToggleNotifications(event) {
 	var toggle = toggleElement(event.target);
 	var notif_pref;
@@ -94,6 +125,10 @@ function handleToggleNotifications(event) {
 	popupUpdatePrefs();
 }
 
+/**
+ * saves the update interval when user clicks away from input
+ * @param {Event} event
+ */
 function handleCompleteReleaseUpdateIntervalEdit(event) {
 	var edit_input = event.target;
 	var edit_text = edit_input.nextElementSibling;
@@ -112,6 +147,10 @@ function handleCompleteReleaseUpdateIntervalEdit(event) {
 	popupUpdatePrefs();
 }
 
+/**
+ * saves the sync interval when user clicks away from input
+ * @param {Event} event
+ */
 function handleCompleteSyncIntervalEdit(event) {
 	var edit_input = event.target;
 	var edit_text = edit_input.nextElementSibling;
@@ -130,6 +169,11 @@ function handleCompleteSyncIntervalEdit(event) {
 	popupUpdatePrefs();
 }
 
+/**
+ * opens an input box when the user clicks the
+ * update interval text
+ * @param {Event} event
+ */
 function handleEnableReleaseUpdateIntervalEdit(event) {
 	var edit_text = event.target;
 	var edit_input = document.createElement('input');
@@ -143,6 +187,11 @@ function handleEnableReleaseUpdateIntervalEdit(event) {
 	edit_input.onblur = handleCompleteReleaseUpdateIntervalEdit;
 }
 
+/**
+ * opens an input box when the user clicks the
+ * sync interval text
+ * @param {Event} event
+ */
 function handleEnableSyncIntervalEdit(event) {
 	var edit_text = event.target;
 	var edit_input = document.createElement('input');
@@ -156,6 +205,10 @@ function handleEnableSyncIntervalEdit(event) {
 	edit_input.onblur = handleCompleteSyncIntervalEdit;
 }
 
+/**
+ * builds the button that toggles between the option page and list page
+ * @returns {Element}
+ */
 function buildOptionsButton() {
 	var opt_button = document.createElement('div');
 	opt_button.id = "optionsButton";
@@ -167,6 +220,10 @@ function buildOptionsButton() {
 	return opt_button;
 }
 
+/**
+ * builds the table with all the rows that make up the option page
+ * @returns {Element}
+ */
 function buildOptionTable() {
 	var opt_table = document.createElement('div');
 	opt_table.className = "optionTable";
@@ -180,6 +237,11 @@ function buildOptionTable() {
 	return opt_table;
 }
 
+/**
+ * builds a row on options page which contains preference choices
+ * @param {string} pref_desc
+ * @returns {Element}
+ */
 function buildOptionRow(pref_desc) {
 	var opt_row = document.createElement('div');
 	opt_row.className = "optionRow";
@@ -190,6 +252,11 @@ function buildOptionRow(pref_desc) {
 	return opt_row;
 }
 
+/**
+ * builds a block describing what the preference does
+ * @param {string} pref_desc
+ * @returns {Element}
+ */
 function buildDescriptionBlock(pref_desc) {
 	var desc_block = document.createElement('div');
 	var desc_title = document.createElement('div');
@@ -244,6 +311,11 @@ function buildDescriptionBlock(pref_desc) {
 	return desc_block;
 }
 
+/**
+ * builds a block that has the selection options the user interacts with
+ * @param {string} pref_desc
+ * @returns {Element}
+ */
 function buildOptionBlock(pref_desc) {
 	var opt_block = document.createElement('div');
 	opt_block.className = "optionBlock";
@@ -272,6 +344,10 @@ function buildOptionBlock(pref_desc) {
 	return opt_block;
 }
 
+/**
+ * adds the option which toggles the scrollbar visibility
+ * @param {Element} opt_block
+ */
 function addScrollOptions(opt_block){
 	var scroll_select = document.createElement('div');
 	scroll_select.className = "optionSelectButton";
@@ -280,6 +356,10 @@ function addScrollOptions(opt_block){
 	opt_block.appendChild(scroll_select);
 }
 
+/**
+ * adds the option which turns animations on/off
+ * @param {Element} opt_block
+ */
 function addAnimationsOptions(opt_block) {
 	var anim_select = document.createElement('div');
 	anim_select.className = "optionSelectButton";
@@ -288,6 +368,10 @@ function addAnimationsOptions(opt_block) {
 	opt_block.appendChild(anim_select);
 }
 
+/**
+ * adds the option which toggles one-click and 2-3 click modes
+ * @param {Element} opt_block
+ */
 function addOneClickUpToDateOptions(opt_block) {
 	var oneclick_select = document.createElement('div');
 	oneclick_select.className = "optionSelectButton";
@@ -296,6 +380,11 @@ function addOneClickUpToDateOptions(opt_block) {
 	opt_block.appendChild(oneclick_select);
 }
 
+/**
+ * adds the option which lets the user decide release update
+ * check frequency
+ * @param {Element} opt_block
+ */
 function addReleaseUpdateOptions(opt_block) {
 	var release_update_select = document.createElement('div');
 	var release_update_disp = document.createElement('div');
@@ -318,6 +407,11 @@ function addReleaseUpdateOptions(opt_block) {
 	opt_block.appendChild(release_update_disp);
 }
 
+/**
+ * adds the option which lets the user decide list sync
+ * frequency
+ * @param {Element} opt_block
+ */
 function addSyncOptions(opt_block) {
 	var sync_select = document.createElement('div');
 	var sync_disp = document.createElement('div');
@@ -340,6 +434,11 @@ function addSyncOptions(opt_block) {
 	opt_block.appendChild(sync_disp);
 }
 
+/**
+ * adds the option for whether or not the user wants to receive
+ * desktop notifications
+ * @param {Element} opt_block
+ */
 function addNotificationsOptions(opt_block) {
 	var notif_select = document.createElement('div');
 	notif_select.className = "optionSelectButton";
