@@ -89,9 +89,19 @@ function handleToggleReleaseUpdates(event) {
 	} else {
 		release_update_pref = { enabled: false, interval: edit_text_val  };
 	}
+	toggleReleaseUpdateTextDisplay(toggle);
 	savePref("release_update", release_update_pref);
 	global_pref_release_update = release_update_pref;
 	popupUpdatePrefs();
+}
+
+/**
+ * hides/shows release update interval text
+ * @param {boolean} toggle
+ */
+function toggleReleaseUpdateTextDisplay(toggle) {
+	var release_update_disp = document.getElementsByClassName("releaseUpdateDisplay")[0];
+	toggleElementVisibility(release_update_disp, toggle);
 }
 
 /**
@@ -108,9 +118,19 @@ function handleToggleSync(event) {
 	} else {
 		list_sync_pref = { enabled: false, interval: edit_text_val };
 	}
+	toggleSyncTextDisplay(toggle);
 	savePref("list_sync", list_sync_pref);
 	global_pref_list_sync = list_sync_pref;
 	popupUpdatePrefs();
+}
+
+/**
+ * hides/shows sync interval text
+ * @param {boolean} toggle
+ */
+function toggleSyncTextDisplay(toggle) {
+	var sync_disp = document.getElementsByClassName("syncDisplay")[0];
+	toggleElementVisibility(sync_disp, toggle);
 }
 
 /**
@@ -397,12 +417,17 @@ function addReleaseUpdateOptions(opt_block) {
 	var txt1 = document.createElement('span');
 	var txt2 = document.createElement('span');
 	release_update_select.className = "optionSelectButton";
-	release_update_disp.className = "optionDisplay";
+	release_update_disp.classList.add("optionDisplay","releaseUpdateDisplay");
 	release_edit_text.className = "optionEditText";
 	release_update_select.setAttribute("toggle", global_pref_release_update.enabled ? "on" : "off");
 	txt1.textContent = "Syncs every ";
 	release_edit_text.textContent = (global_pref_release_update.interval).toString();
 	txt2.textContent = " minutes.";
+	if (!global_pref_release_update.enabled) {
+		txt1.style.display = "none";
+		release_edit_text.style.display = "none";
+		txt2.style.display = "none";
+	}
 	release_update_select.onclick = handleToggleReleaseUpdates;
 	release_edit_text.onclick = handleEnableReleaseUpdateIntervalEdit;
 	release_update_disp.appendChild(txt1);
@@ -420,16 +445,19 @@ function addReleaseUpdateOptions(opt_block) {
 function addSyncOptions(opt_block) {
 	var sync_select = document.createElement('div');
 	var sync_disp = document.createElement('div');
-	var sync_edit_text = document.createElement('span');
 	var txt1 = document.createElement('span');
+	var sync_edit_text = document.createElement('span');
 	var txt2 = document.createElement('span');
 	sync_select.className = "optionSelectButton";
-	sync_disp.className = "optionDisplay";
+	sync_disp.classList.add ("optionDisplay", "syncDisplay");
 	sync_edit_text.className = "optionEditText";
 	sync_select.setAttribute("toggle", global_pref_list_sync.enabled ? "on" : "off");
 	txt1.textContent = "Syncs every ";
 	sync_edit_text.textContent = (global_pref_list_sync.interval).toString();
 	txt2.textContent = " minutes.";
+	if (!global_pref_list_sync.enabled) {
+		sync_disp.style.display = "none";
+	}
 	sync_select.onclick = handleToggleSync;
 	sync_edit_text.onclick = handleEnableSyncIntervalEdit;
 	sync_disp.appendChild(txt1);
