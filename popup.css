@@ -706,3 +706,41 @@ button {
 #loginButton:hover, #registerButton:hover {
     background-color: var(--color-brighten);
 }
+
+.titleBadgeWrap {
+    position:absolute;
+    height:0px;
+    width:0px;
+    left: var(--title-block-width);
+    transform: translateY(-1px);
+
+}
+
+.badge{
+    position:absolute;
+    display:inline;
+    background-color: var(--text-color-new);
+    text-align:center;
+    height: 11px;
+    min-width: 11px;
+    overflow:hidden;
+    border-radius:2px;
+}
+
+.titleBadge {
+    right: -12px;
+}
+
+.badgeText {
+    letter-spacing: 1px;
+    padding-left: 3px;
+    padding-right: 3px;
+    position: relative;
+    background-color: inherit;
+    height: 11px;
+    font-size: 8px;
+    font-weight: 600;
+    color: #ffffff;
+    bottom: 4px;
+    -webkit-font-smoothing: antialiased;
+}

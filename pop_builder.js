@@ -74,6 +74,20 @@ function buildSeriesRow(data_list, data_series) {
 }
 
 /**
+ * builds DOM elements mimicing browser badge text
+ * @param {number} num_releases
+ */
+function buildBadge(num_releases) {
+	var badge = document.createElement('span');
+	var badge_text = document.createElement('span');
+	badge.className = "badge";
+	badge_text.className = "badgeText";
+	badge_text.textContent = num_releases.toString();
+	badge.appendChild(badge_text);
+	return badge;
+}
+
+/**
  * builds DOM element holding title, link and link button
  * @param {List} data_list
  * @param {Series} data_series
@@ -100,8 +114,15 @@ function buildTitleBlock(data_list, data_series) {
 	var font_size = 14;
 	if (len > 50) font_size = 10;
 	title_cont.style.fontSize = font_size + 'px';
-
 	var edit_link_wrap = buildEditLinkButton(data_series);
+	if (!isEmpty(data_series.unread_releases)){
+		var badge = buildBadge(data_series.unread_releases.length);
+		var title_badge_wrap = document.createElement('div');
+		badge.classList.add("titleBadge");
+		title_badge_wrap.className = "titleBadgeWrap";
+		title_badge_wrap.appendChild(badge);
+		title_block.appendChild(title_badge_wrap);
+	}
 
 	title_block.appendChild(title_disp);
 	title_disp.appendChild(title_cont);
@@ -371,8 +392,16 @@ function buildListSelect(data_lists) {
 		var list_option = document.createElement('option');
 		list_option.className = 'listOption';
 		list_option.value = data_lists[i].list_id;
-		list_option.textContent = data_lists[i].list_name;
+		// add number of new releases to option
+		var releases_in_list = getNumNewReleasesInList(data_lists[i]);
+		var list_text = data_lists[i].list_name;
+		if (releases_in_list > 0) {
+			list_text = list_text.padEnd(16, "\u00a0");
+			list_text = list_text + "(" + releases_in_list + ")!";
+		}
+		list_option.textContent = list_text;
 		list_option.setAttribute("list_id", data_lists[i].list_id);
+
 		list_select.appendChild(list_option);
 	}
 	return list_select;
