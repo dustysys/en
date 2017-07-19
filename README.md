@@ -8,4 +8,4 @@ Browser extension for getting notifications and tracking progress of English-tra
 
 ## Install
 
-Primary deploy environment is Google Chrome. Go to chrome://extensions, check Developer Mode and drag and drop the project folder. You must have a wwww.mangaupdates.com account to use en.
+Primary deploy environment is Google Chrome. Go to chrome://extensions, check Developer Mode and drag and drop the project folder. You must have a www.mangaupdates.com account to use en.
