@@ -1298,6 +1298,18 @@ function scanForNewLists(existing_lists, callback) {
 }
 
 /**
+ * sets up favorable pull results on MU
+ * @param {List} data_list
+ * @param {function} callback
+ */
+function primeListForPull(data_list, callback) {
+	pushMUListPullOptions(existing_list.list_id, function () {
+		callback();
+	});
+}
+
+
+/**
  * scans all series for specific list
  * @param {List} existing_list
  * @param {function(Series[])} callback
@@ -1307,50 +1319,56 @@ function scanListForNewSeries(existing_list, callback) {
 		var s_list = [];
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(list_page, "text/html");
-		var rows = doc.getElementsByClassName("lrow");
+		var alpha_select = doc.querySelector('[value=alpha]');
+		var perpage_option = doc.querySelector('[value="All"]');
+		if (!alpha_select.hasAttribute('checked') || !perpage_option.hasAttribute('selected')) {
+			primeListForPull(data_list, function () {
+				scanListForNewSeries(existing_list, callback);
+			});
+		} else {
+			var rows = doc.getElementsByClassName("lrow");
+			for (var i = 0; i < rows.length; i++) {
 
-		for (var i = 0; i < rows.length; i++) {
+				var s_url = rows.item(i).children[1].children[0].getAttribute("href");
+				var id = s_url.substring(s_url.indexOf("=") + 1);
 
-			var s_url = rows.item(i).children[1].children[0].getAttribute("href");
-			var id = s_url.substring(s_url.indexOf("=") + 1);
+				if (!hasSeries(existing_list, id)) {
+					var s_title = rows.item(i).children[1].children[0].children[0].textContent;
+					var vol_digit = "";
+					var chap_digit = "";
+					var date = "";
+					if (existing_list.list_type === "read") {
+						var volume = rows.item(i).children[2].children[1].children[0].children[0].textContent;
+						var chapter = rows.item(i).children[2].children[2].children[0].children[0].textContent;
+						vol_digit = validateDigits(volume);
+						chap_digit = validateDigits(chapter);
+					}
+					else if (existing_list.list_type === "wish" || existing_list.list_type === "complete") {
+						date = rows.item(i).children[2].textContent;
+					}
+					else if (existing_list.list_type === "unfinished" || existing_list.list_type === "hold") {
+						var vol_chap = rows.item(i).children[2].textContent;
+						vol_digit = vol_chap.substring(2, vol_chap.indexOf('c.') - 1);
+						chap_digit = vol_chap.substring(vol_chap.indexOf('c.') + 2);
+					}
 
-			if (!hasSeries(existing_list, id)) {
-				var s_title = rows.item(i).children[1].children[0].children[0].textContent;
-				var vol_digit = "";
-				var chap_digit = "";
-				var date = "";
-				if (existing_list.list_type === "read") {
-					var volume = rows.item(i).children[2].children[1].children[0].children[0].textContent;
-					var chapter = rows.item(i).children[2].children[2].children[0].children[0].textContent;
-					vol_digit = validateDigits(volume);
-					chap_digit = validateDigits(chapter);
+					var new_series = {
+						series_id: id,
+						title: s_title,
+						mu_user_volume: vol_digit,
+						mu_user_chapter: chap_digit,
+						date_added: date,
+						tracked: true,
+						unread_releases: [],
+						last_update_was_manual: true,
+						no_published_releases: false
+					};
+
+					s_list.push(new_series);
 				}
-				else if (existing_list.list_type === "wish" || existing_list.list_type === "complete") {
-					date = rows.item(i).children[2].textContent;
-				}
-				else if (existing_list.list_type === "unfinished" || existing_list.list_type === "hold") {
-					var vol_chap = rows.item(i).children[2].textContent;
-					vol_digit = vol_chap.substring(2, vol_chap.indexOf('c.') - 1);
-					chap_digit = vol_chap.substring(vol_chap.indexOf('c.') + 2);
-				}
-
-				var new_series = {
-					series_id: id,
-					title: s_title,
-					mu_user_volume: vol_digit,
-					mu_user_chapter: chap_digit,
-					date_added: date,
-					tracked: true,
-					unread_releases: [],
-					last_update_was_manual: true,
-					no_published_releases: false
-				};
-
-				s_list.push(new_series);
 			}
+			callback(s_list);
 		}
-
-		callback(s_list);
 	});
 }
 
@@ -1671,11 +1689,6 @@ function pullLists(data_lists, callback) {
 		addLists(data_lists, new_lists);
 		callback();
 	});
-}
-
-// TODO: POST favorable pull options to MU, then POST old options
-// for example, priority mode on will break the Series[] pull
-function primeListForPull() {
 }
 
 /**
