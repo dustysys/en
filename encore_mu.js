@@ -516,6 +516,30 @@ function setMUVolumeChapter(volume, chapter, series) {
 }
 
 /**
+ * sets the MU volume and chapter while indicating it was done
+ * manually by the user
+ * @param {string} volume
+ * @param {string} chapter
+ * @param {Series} series
+ */
+function manualSetMUVolumeChapter(volume, chapter, series) {
+	setMUVolumeChapter(volume, chapter, series);
+	series.last_update_was_manual = true;
+}
+
+/**
+ * sets the MU volume and chapter while indicating it was done
+ * automatically rather than being hand entered by the user
+ * @param {string} volume
+ * @param {string} chapter
+ * @param {Series} series
+ */
+function autoSetMUVolumeChapter(volume, chapter, series) {
+	setMUVolumeChapter(volume, chapter, series);
+	series.last_update_was_manual = false;
+}
+
+/**
  * sets local MU model volume
  * @param {string} volume
  * @param {Series} series
@@ -525,7 +549,6 @@ function setMUVolume(volume, series) {
 		if (volume < 1) volume = 1;
 		volume = volume.toString();
 	}
-	series.last_update_was_manual = true;
 	series.mu_user_volume = volume;
 }
 
@@ -539,7 +562,6 @@ function setMUChapter(chapter, series) {
 		if (chapter < 1) chapter = 1;
 		chapter = chapter.toString();
 	}
-	series.last_update_was_manual = true;
 	series.mu_user_chapter = chapter;
 }
 
@@ -1097,7 +1119,7 @@ function userPullSeriesLatestRelease(series_id, callback){
  * @param {Release} latest_release
  */
 function setSeriesUpToDate(series, latest_release) {
-	series.last_update_was_manual = false;
+	autoSetMUVolumeChapter(latest_release.volume, latest_release.chapter, series);
 	if (exists(latest_release)) {
 		series.latest_read_release = latest_release;
 		if (!isEmpty(series.unread_releases)) {
@@ -1199,7 +1221,7 @@ function userMoveSeries(list_src_id, list_dst_id, move_series_id_arr, callback) 
 function userManualUpdateVolumeChapter(series_id, volume, chapter, callback) {
 	loadData(function (data) {
 		var series = getSeriesById(data.lists, series_id);
-		setMUVolumeChapter(volume, chapter, series);
+		manualSetMUVolumeChapter(volume, chapter, series);
 		pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
 		saveData(data, callback);
 	});

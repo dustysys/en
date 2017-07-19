@@ -46,13 +46,31 @@ function sendPOSTRequest(url, form_data, callback) {
  * @param {string} chapter
  * @param {string} series_id
  */
-function pushMUVolumeChapter(volume, chapter, series_id){
+function pushMUVolumeChapter(volume, chapter, series_id) {
+	var packaged_volchap = packageMUVolumeChapter(volume, chapter);
 	var link = "https://www.mangaupdates.com/ajax/chap_update.php?";
 	var s = "s="+series_id+"&";
-	var set_v = "set_v="+volume+"&";
-	var set_c = "set_c="+chapter+"&";
+	var set_v = "set_v="+packaged_volchap.volume+"&";
+	var set_c = "set_c="+packaged_volchap.chapter+"&";
 	var cache_j = "cache_j="+ Math.floor(Math.random()*100000000) + "," + Math.floor(Math.random()*100000000) + "," + Math.floor(Math.random()*100000000);
 	sendGETRequest(link + s + set_v + set_c + cache_j);
+}
+
+function packageMUVolumeChapter(volume, chapter) {
+	var val_volume = validateDigits(volume);
+	var val_chapter = validateDigits(chapter);
+	var pkg_volume = val_volume;
+	var pkg_chapter = val_chapter;
+	if (volume.includes("-")) {
+		pkg_volume = validateDigits(volume.substring(volume.indexOf("-")));
+		if (pkg_volume === "") pkg_volume = val_volume;
+	}
+	if (chapter.includes("-")) {
+		pkg_chapter = validateDigits(chapter.substring(chapter.indexOf("-")));
+		if (pkg_chapter === "") pkg_chapter = val_chapter;
+	}
+
+	return { volume: pkg_volume, chapter: pkg_chapter }
 }
 
 /**
@@ -389,7 +407,7 @@ function MUComm_SetVolumeChapter(url, callback, data_lists) {
 	var volume = parseInt(getUrlParam(url, "set_v"));
 
 	if (exists(series)) {
-		setMUVolumeChapter(volume, chapter, series);
+		manualSetMUVolumeChapter(volume, chapter, series);
 	}
 	callback();
 }
