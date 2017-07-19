@@ -77,6 +77,11 @@ function getSeriesRowsUpToDateButton(series_row) {
 	return uptodate_button;
 }
 
+/**
+ * 
+ * @param {Element} series_row
+ * @returns {Element}
+ */
 function getSeriesRowsSeriesSelectWrap(series_row) {
 	var select_wrap = series_row.querySelector('.seriesSelectWrap');
 	return select_wrap;
@@ -133,6 +138,11 @@ function getEditLinkButtonsTitleBlock(edit_link_button) {
 	return edit_link_button.parentElement.parentElement;
 }
 
+/**
+ * 
+ * @param {Element} edit_link_icon
+ * @returns {Element}
+ */
 function getEditLinkIconsTitleBlock(edit_link_icon) {
 	var edit_link_button = edit_link_icon.parentElement;
 	return getEditLinkButtonsTitleBlock(edit_link_button);
@@ -205,7 +215,10 @@ function pullSeriesRowUpToDate(series_row) {
 }
 
 
-
+/**
+ * Gets the latest release for a series on the popup and in the model
+ * @param {Element} series_row
+ */
 function updateSeriesRowsLatestRelease(series_row) {
 	var series_id = getSeriesRowsId(series_row);
 	userPullSeriesLatestRelease(series_id, function (data) {
@@ -219,6 +232,11 @@ function updateSeriesRowsLatestRelease(series_row) {
 	});
 }
 
+/**
+ * inserts a series row marked up-to-date in its correct sorted position
+ * and plays an animation of it doing so
+ * @param {Element} series_row
+ */
 function finalizeMarkSeriesRowUpToDate(series_row) {
 	var uptodate_button = getSeriesRowsUpToDateButton(series_row)
 	hideElement(uptodate_button);
@@ -230,6 +248,12 @@ function finalizeMarkSeriesRowUpToDate(series_row) {
 	animateSeriesUpdate(series_row, start_el_index, end_el_index, start_bbox, end_bbox);
 }
 
+/**
+ * marks a series up to date in the model, pushes it to MU and updates the row
+ * on the popup
+ * @param {Element} series_row
+ * @param {function(Element)} callback
+ */
 function executeMarkSeriesRowUpToDate(series_row, callback) {
 	var series_id = getSeriesRowsId(series_row);
 	userPushSeriesUpToDate(series_id, function (data) {
@@ -240,6 +264,10 @@ function executeMarkSeriesRowUpToDate(series_row, callback) {
 	});
 }
 
+/**
+ * changes the up-to-date button's text to a down arrow prompt
+ * @param {Element} series_row
+ */
 function giveUpToDateButtonSortPrompt(series_row) {
 	var uptodate_button = getSeriesRowsUpToDateButton(series_row);
 	uptodate_button.textContent = "\u2b07";
@@ -250,6 +278,10 @@ function giveUpToDateButtonSortPrompt(series_row) {
 	});
 }
 
+/**
+ * determines what to do when user clicks up-to-date button
+ * @param {Event} event
+ */
 function handleUpToDate(event) {
 	var series_row = getUpToDateButtonsSeriesRow(event.target);
 	if (global_pref_one_click_uptodate.enabled) {
@@ -270,6 +302,11 @@ function handleUpToDate(event) {
 	}
 }
  
+/**
+ * evaluates if series row is the last non-hidden row in sort order
+ * @param {Element} series_row
+ * @returns {boolean}
+ */
 function isLastVisibleSeriesRow(series_row) {
 	var is_last = false;
 	var vis_rows = getVisibleSeriesRows();
@@ -557,6 +594,10 @@ function toggleSeriesSelectVisibility(toggle) {
 	}
 }
 
+/**
+ * toggles visibility for all link buttons
+ * @param {boolean} toggle
+ */
 function toggleEditLinkVisibility(toggle){
 	var link_wraps = document.body.getElementsByClassName("editLinkWrap");
 	for (var i = 0; i < link_wraps.length; i++) {
@@ -585,11 +626,19 @@ function toggleElementVisibility(el, toggle) {
 		toggle ? showElement(el) : hideElement(el);
 	} else console.error("Error: toggleElement requires toggle");
 }
- 
+
+/**
+ * makes an element disappear from DOM flow
+ * @param {Element} el
+ */
 function hideElement(el) {
 	fastdom.mutate(function () { el.style.display = "none"; });
 }
 
+/**
+ * makes an element present in DOM flow
+ * @param {Element} el
+ */
 function showElement(el) {
 	fastdom.mutate(function () { el.style.display = ""; });
 }
@@ -630,6 +679,10 @@ function handleManageSeries(event) {
 	}
 }
 
+/**
+ * toggles the display beteen lists and the option page
+ * @param toggle
+ */
 function toggleOptionPageVisibility(toggle) {
 	window.scrollTo(0, 0);
 	var opt_tables = document.getElementsByClassName("optionTable");
@@ -649,6 +702,10 @@ function toggleOptionPageVisibility(toggle) {
 	}
 }
 
+/**
+ * toggles the visibility between option mode buttons and other buttons
+ * @param {boolean} toggle
+ */
 function toggleOptionModeVisibility(toggle) {
 	var other_buttons = document.querySelectorAll('#manageSeriesButton, #currentListField');
 	for (var i = 0; i < other_buttons.length; i++) {
@@ -656,6 +713,10 @@ function toggleOptionModeVisibility(toggle) {
 	}
 }
 
+/**
+ * initiates animation and appearance/building of option features on clicking option button
+ * @param {Event} event
+ */
 function handleToggleOptions(event) {
 	var toggle = toggleElement(event.target);
 	// load page before animation
@@ -772,6 +833,10 @@ function handleCurrentListChange(event) {
 	changeToSelectedCurrentList();
 }
 
+/**
+ * switches the currently viewed list table to the one
+ * selected in the current list dropdown
+ */
 function changeToSelectedCurrentList() {
 	window.scrollTo(0, 0);
 	var list_id = getCurrentListId();
@@ -799,6 +864,10 @@ function changeToSelectedCurrentList() {
 	});
 }
 
+/**
+ * makes all list tables no longer visible
+ * @param {function} callback
+ */
 function hideAllLists(callback) {
 	var list_tables = document.getElementsByClassName("listTable");
 	fastdom.mutate(function () {
@@ -809,6 +878,11 @@ function hideAllLists(callback) {
 	});
 }
 
+/**
+ * removes the specified list table from the DOM
+ * @param {string} list_id
+ * @param {function} callback
+ */
 function unloadList(list_id, callback) {
 	var list_table = getListTableById(list_id);
 	fastdom.mutate(function () {
@@ -817,6 +891,10 @@ function unloadList(list_id, callback) {
 	});
 }
 
+/**
+ * removes all list tables from the DOM
+ * @param {function} callback
+ */
 function unloadAllLists(callback) {
 	var list_tables = document.getElementsByClassName("listTable");
 	fastdom.mutate(function () {
@@ -986,6 +1064,11 @@ function validateUrl(url) {
 	} else return url;
 }
 
+/**
+ * enters the link provided by user into series' model and removes the input
+ * on clicking away from it
+ * @param {Event} event
+ */
 function handleCompleteEditLink(event) {
 	var input_link = event.target;
 	var link = input_link.value;
@@ -1232,6 +1315,10 @@ function popupApplyPrefs() {
 	}
 }
 
+/**
+ * sends a message to the background script letting it know
+ * user preferences have changed.
+ */
 function popupSendBgPrefUpdate() {
 	var message = {
 		src: "en_popup",
@@ -1243,6 +1330,9 @@ function popupSendBgPrefUpdate() {
 	});
 }
 
+/**
+ * runs any necessary functions to handle preference changes
+ */
 function popupUpdatePrefs() {
 	popupApplyPrefs();
 	popupSendBgPrefUpdate();

@@ -1303,7 +1303,7 @@ function scanForNewLists(existing_lists, callback) {
  * @param {function} callback
  */
 function primeListForPull(data_list, callback) {
-	pushMUListPullOptions(existing_list.list_id, function () {
+	pushMUListPullOptions(data_list.list_id, function () {
 		callback();
 	});
 }
@@ -1322,7 +1322,7 @@ function scanListForNewSeries(existing_list, callback) {
 		var alpha_select = doc.querySelector('[value=alpha]');
 		var perpage_option = doc.querySelector('[value="All"]');
 		if (!alpha_select.hasAttribute('checked') || !perpage_option.hasAttribute('selected')) {
-			primeListForPull(data_list, function () {
+			primeListForPull(existing_list, function () {
 				scanListForNewSeries(existing_list, callback);
 			});
 		} else {
