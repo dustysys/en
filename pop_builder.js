@@ -74,6 +74,20 @@ function buildSeriesRow(data_list, data_series) {
 }
 
 /**
+ * builds DOM elements mimicing browser badge text
+ * @param {number} num_releases
+ */
+function buildBadge(num_releases) {
+	var badge = document.createElement('span');
+	var badge_text = document.createElement('span');
+	badge.className = "badge";
+	badge_text.className = "badgeText";
+	badge_text.textContent = num_releases.toString();
+	badge.appendChild(badge_text);
+	return badge;
+}
+
+/**
  * builds DOM element holding title, link and link button
  * @param {List} data_list
  * @param {Series} data_series
@@ -100,8 +114,15 @@ function buildTitleBlock(data_list, data_series) {
 	var font_size = 14;
 	if (len > 50) font_size = 10;
 	title_cont.style.fontSize = font_size + 'px';
-
 	var edit_link_wrap = buildEditLinkButton(data_series);
+	if (!isEmpty(data_series.unread_releases)){
+		var badge = buildBadge(data_series.unread_releases.length);
+		var title_badge_wrap = document.createElement('div');
+		badge.classList.add("titleBadge");
+		title_badge_wrap.className = "titleBadgeWrap";
+		title_badge_wrap.appendChild(badge);
+		title_block.appendChild(title_badge_wrap);
+	}
 
 	title_block.appendChild(title_disp);
 	title_disp.appendChild(title_cont);
