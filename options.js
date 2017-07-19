@@ -325,8 +325,8 @@ function buildDescriptionBlock(pref_desc) {
 			txt_title = "Sync lists with mangaupdates.com";
 			txt_content = "en tracks changes made to your mangaupdates.com \
 								lists automatically as you browse. Turn this\
-								on to also check periodically for changes you\
-								may have made from other browsers or computers.";
+								on to also check periodically for series\
+								you may have added while on other browsers or computers.";
 			break;
 	}
 	desc_title.textContent = txt_title;

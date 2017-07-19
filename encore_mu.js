@@ -219,9 +219,9 @@ function initializePreferences(callback) {
 	var user_prefs = {};
 	user_prefs["scrollbar"] = { enabled: false };
 	user_prefs["animations"] = { enabled: true };
-	user_prefs["one_click_uptodate"] = { enabled: true };
+	user_prefs["one_click_uptodate"] = { enabled: false };
 	user_prefs["release_update"] = { enabled: true, interval: 15 };
-	user_prefs["list_sync"] = { enabled: true, interval: 60 };
+	user_prefs["list_sync"] = { enabled: false, interval: 60 };
 	user_prefs["notifications"] = { enabled: true };
 	saveAllPrefs(user_prefs, callback);
 }
