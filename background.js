@@ -90,24 +90,36 @@ function sendMessage() {
  * creates an alarm for updating releases with a frequency specified by user preferences
  */
 function scheduleReleaseUpdates() {
-	var alarm_name = "update_releases:" + global_alarm_timestamp;
-	chrome.alarms.create(alarm_name, { periodInMinutes: global_pref_release_update.interval });
+	if (global_pref_release_update.enabled) {
+		var alarm_name = "update_releases:" + global_alarm_timestamp;
+		chrome.alarms.create(alarm_name, { periodInMinutes: global_pref_release_update.interval });
+	}
 }
 
 /**
  * creates an alarm for syncing uncaught list changes with a frequency specified by user preferences
  */
 function scheduleSyncs() {
-	var alarm_name = "update_all:" + global_alarm_timestamp;
-	chrome.alarms.create(alarm_name, { periodInMinutes: global_pref_list_sync.interval });
+	if (global_pref_list_sync.enabled) {
+		var alarm_name = "update_all:" + global_alarm_timestamp;
+		chrome.alarms.create(alarm_name, { periodInMinutes: global_pref_list_sync.interval });
+	}
+}
+
+/**
+ * opens the link associated with a notification in a new tab
+ * @param {string} notif_id
+ */
+function openNotificationLink(notif_id) {
+	chrome.tabs.create({ active: true, url: notif_id });
 }
 
 // listens for notification click events 
 // on click creates a new tab using ID of notification as URL.
 function listenNotifications() {
-	chrome.notifications.onClicked.addListener(function (notif_id) {
-		chrome.tabs.create({ active: true, url: notif_id });
-	});
+	if (global_pref_release_update.enabled) {
+		chrome.notifications.onClicked.addListener(openNotificationLink);
+	}
 }
 
 // updates the badge on startup
@@ -139,23 +151,25 @@ function bgLoadPrefs(callback) {
  * registers to events based on what is enabled by user preferences
  */
 function bgApplyPrefs() {
-	if (global_pref_release_update.enabled) {
-		scheduleReleaseUpdates();
-	}
-	if (global_pref_list_sync.enabled) {
-		scheduleSyncs();
-	}
-	if (global_pref_notifications.enabled) {
-		listenNotifications();
-	}
+	scheduleReleaseUpdates();
+	scheduleSyncs();
+	listenNotifications();
+}
+
+/**
+ * clears old listeners in preparation for making new ones
+ */
+function clearOldPrefs() {
+	chrome.alarms.clearAll();
+	chrome.notifications.onClicked.removeListener(openNotificationLink);
+	global_alarm_timestamp = Date.now();
 }
 
 /**
  * loads newly set preferences, usually because the user has changed them
  */
 function bgUpdatePrefs() {
-	// invalidate old preferences' alarms
-	global_alarm_timestamp = Date.now();
+	clearOldPrefs();
 	bgLoadPrefs(function () {
 		bgApplyPrefs();
 	});
