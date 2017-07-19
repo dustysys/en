@@ -103,6 +103,11 @@ function animateToggleManageMode(toggle, callback) {
 	}
 }
 
+/**
+ * plays the animations for switching to the options menu
+ * @param {boolean} toggle
+ * @param {function} callback
+ */
 function animateToggleOptionMode(toggle, callback) {
 	if (global_pref_animations.enabled) {
 		animateToggleOptionPage(toggle);
@@ -113,6 +118,10 @@ function animateToggleOptionMode(toggle, callback) {
 	}
 }
 
+/**
+ * plays the color transition between option page and lists view
+ * @param {boolean} toggle
+ */
 function animateToggleOptionPage(toggle) {
 	var nav_bar = document.getElementById("navBar");
 	var popup = document.getElementById("popup");
@@ -134,6 +143,10 @@ function animateToggleOptionPage(toggle) {
 	});
 }
 
+/**
+ * plays the color transition for the option button
+ * @param {boolean} toggle
+ */
 function animateToggleOptionsButton(toggle) {
 	fastdom.measure(function () {
 		var opt_button = document.getElementById("optionsButton");
@@ -148,6 +161,11 @@ function animateToggleOptionsButton(toggle) {
 	});
 }
 
+/**
+ * plays animation for hiding/revealing non-option buttons
+ * @param {boolean} toggle
+ * @param {function(boolean)} callback
+ */
 function animateToggleNonOptionButtons(toggle, callback) {	
 	var other_buttons = document.querySelectorAll('#manageSeriesButton, #currentListField');
 	var d_y = 100;
@@ -169,6 +187,13 @@ function animateToggleNonOptionButtons(toggle, callback) {
 	}
 }
 
+/**
+ * changes an element's style property with a delay
+ * @param {Element} element
+ * @param {string} property
+ * @param {string} value
+ * @param {number} delay
+ */
 function changeElementStyle(element, property, value, delay) {
 	setTimeout(function () {
 		fastdom.mutate(function () {
@@ -177,6 +202,13 @@ function changeElementStyle(element, property, value, delay) {
 	}, delay);
 }
 
+/**
+ * animates a color transition between two colors for an element
+ * @param {Element} element
+ * @param {string} color_old
+ * @param {string} color_new
+ * @param {function} callback
+ */
 function animateElementColorChange(element, color_old, color_new, callback) {
 	var color_anim = element.animate([
 		{ background: color_old },

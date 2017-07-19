@@ -3,7 +3,8 @@ File: popup.js
 
 This script runs when the user selects the chrome browser action button and
 popup.html is loaded. User interaction with the popup is handled here.
-Handlers call encore_mu functions 
+Functions in encore_mu.js are called by it to access the data model or
+as a middle-man between the popup and pushing changes to mangaupdates.com
 #############################################################################*/
 
 var global_last_clicked_el;

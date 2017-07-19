@@ -1,7 +1,7 @@
 /*#############################################################################
 File: mu_comm.js
 
-Functions in this file create/receive/process all XHR XMLHttpRequests from and
+Functions in this file create/receive/process all XMLHttpRequests from and
 to www.mangaupdates.com. Essentially it is a reverse engineering of the site's
 My List feature, syncing user actions in the popup and those made on MU with
 both the remote MU lists and the locally stored list model.

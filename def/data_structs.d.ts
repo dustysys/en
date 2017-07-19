@@ -1,5 +1,10 @@
-﻿
-//An xhr request
+﻿/*#############################################################################
+File: data_struct.d.js
+
+This file outlines and specifies the data structures which are consistent
+but not formalized as objects with constructor methods in the code
+#############################################################################*/
+
 interface ReqDetails {
 	requestId: string;
 	method: string;

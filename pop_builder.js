@@ -518,6 +518,10 @@ function buildManageSeriesButton() {
 	return manage_series_button;
 }
 
+/**
+ * builds page for redirecting user to login or register at MU
+ * @returns {Element}
+ */
 function buildRedirectPage() {
 	var redirect_page = document.createElement('div');
 	var redirect_box = document.createElement('div');

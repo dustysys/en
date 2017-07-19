@@ -543,6 +543,10 @@ function setMUChapter(chapter, series) {
 	series.mu_user_chapter = chapter;
 }
 
+/**
+ * sets the badge text to the number of unread releases
+ * @param {List[]} data_lists
+ */
 function setBadge(data_lists) {
 	var num_releases = getTotalNumNewReleases(data_lists);
 	if (num_releases > 0) {
@@ -553,6 +557,10 @@ function setBadge(data_lists) {
 	}
 }
 
+/**
+ * loads data in order to set the badge text
+ * @param {function} callback
+ */
 function updateBadge(callback) {
 	loadData(function (data) {
 		if (data !== "No Data") {
@@ -802,6 +810,12 @@ function getListsByType(data_lists, list_type) {
 	return lists_of_type;
 }
 
+/**
+ * gets the numeric position of a list amongst its listset
+ * @param {List[]} data_lists
+ * @param {string} list_id
+ * @returns {number}
+ */
 function getIndexOfListInLists(data_lists, list_id) {
 	for (var index = 0; index < data_lists.length; index++) {
 		if (data_lists[index].list_id === list_id) {
@@ -814,7 +828,7 @@ function getIndexOfListInLists(data_lists, list_id) {
  * gets position of a series within a data list
  * @param {List} data_list
  * @param {string} series_id
- * @returns
+ * @returns {number}
  */
 function getIndexOfSeriesInList(data_list, series_id) {
 	var s_list = data_list.series_list;
@@ -1508,6 +1522,8 @@ function scanSeriesLatestReleases(series_id) {
 
 /**
  * scans for series_id:release tuples on new release page
+ * TODO: the heavy indentation of all the parser functions isn't great,
+ * but this one is out of control. Refactor.
  * @typedef {Object} SeriesReleasePair
  * @param {function(SeriesReleasePair[])} callback
  */

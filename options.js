@@ -1,4 +1,9 @@
-﻿// file for options composition and handling
+﻿/*#############################################################################
+File: options.js
+
+DOM builder and handler functions are defined here for creation and updating
+user preferences.
+#############################################################################*/
 
 /**
  * DOM Element Getters
