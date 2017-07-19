@@ -424,9 +424,7 @@ function addReleaseUpdateOptions(opt_block) {
 	release_edit_text.textContent = (global_pref_release_update.interval).toString();
 	txt2.textContent = " minutes.";
 	if (!global_pref_release_update.enabled) {
-		txt1.style.display = "none";
-		release_edit_text.style.display = "none";
-		txt2.style.display = "none";
+		release_update_disp.style.display = "none";
 	}
 	release_update_select.onclick = handleToggleReleaseUpdates;
 	release_edit_text.onclick = handleEnableReleaseUpdateIntervalEdit;
