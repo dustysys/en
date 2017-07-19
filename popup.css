@@ -48,6 +48,7 @@ body {
     max-width: var(--popup-width);
     min-height: var(--popup-height);
     background-color: var(--bg-color);
+    padding-bottom: 1px;
 }
 
 .noScroll::-webkit-scrollbar {

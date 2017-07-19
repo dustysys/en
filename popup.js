@@ -1114,6 +1114,15 @@ function clearPopup() {
 }
 
 /**
+ * adds transient delay to give scrollbar time to appear so that scrolling works
+ * correctly when the scrollbar is removed. Yes, this is a hack.
+ * @param popup
+ */
+function delayScrollbar(popup) {
+	setTimeout(function () { popup.style.paddingBottom = "0px"; }, 0);
+}
+
+/**
  * builds the navbar, listtable etc composing the default popup view
  * @param {Data} data
  */
@@ -1128,6 +1137,7 @@ function buildPopup(data) {
 	var list = getListById(data.lists, "read");
 	var list_table = buildListTable(list);
 	popup.appendChild(list_table);
+	delayScrollbar(popup);
 
 	var current_list_select = document.getElementById("currentListSelect");
 	current_list_select.selectedIndex = getIndexOfListInLists(data.lists, "read");
