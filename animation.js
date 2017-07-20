@@ -224,7 +224,7 @@ function animateElementColorChange(element, color_old, color_new, callback) {
  * @param {Element[]} onscreen_rows
  */
 function animateToggleEditLink(toggle, onscreen_rows) {
-	var d_y = 100;
+	var d_y = 75;
 	var y0 = toggle ? 0 : d_y;
 	var y1 = toggle ? d_y : 0;
 	var time_anim = 200;
@@ -234,6 +234,7 @@ function animateToggleEditLink(toggle, onscreen_rows) {
 			edit_link_wrap.style.display = "";
 			var link_anim = edit_link_wrap.animate([
 				{ transform: `translateY(${-y1}px)` },
+				{ offset: 0.8, transform: `translateY(${-y0}px)` },
 				{ transform: `translateY(${-y0}px)` }
 			], { duration: time_anim, easing: 'linear' });
 		}
