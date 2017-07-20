@@ -725,6 +725,7 @@ button {
     min-width: 11px;
     overflow:hidden;
     border-radius:2px;
+
 }
 
 .titleBadge {
@@ -742,5 +743,6 @@ button {
     font-weight: 600;
     color: #ffffff;
     bottom: 4px;
+    left: 1px;
     -webkit-font-smoothing: antialiased;
 }

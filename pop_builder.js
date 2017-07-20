@@ -115,13 +115,15 @@ function buildTitleBlock(data_list, data_series) {
 	if (len > 50) font_size = 10;
 	title_cont.style.fontSize = font_size + 'px';
 	var edit_link_wrap = buildEditLinkButton(data_series);
-	if (!isEmpty(data_series.unread_releases)){
-		var badge = buildBadge(data_series.unread_releases.length);
-		var title_badge_wrap = document.createElement('div');
-		badge.classList.add("titleBadge");
-		title_badge_wrap.className = "titleBadgeWrap";
-		title_badge_wrap.appendChild(badge);
-		title_block.appendChild(title_badge_wrap);
+	if (!isEmpty(data_series.unread_releases)) {
+		if (data_series.unread_releases.length > 1) {
+			var badge = buildBadge(data_series.unread_releases.length);
+			var title_badge_wrap = document.createElement('div');
+			badge.classList.add("titleBadge");
+			title_badge_wrap.className = "titleBadgeWrap";
+			title_badge_wrap.appendChild(badge);
+			title_block.appendChild(title_badge_wrap);
+		}
 	}
 
 	title_block.appendChild(title_disp);
