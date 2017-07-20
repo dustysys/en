@@ -1239,6 +1239,7 @@ function moveSeriesListToListById(data_lists, data_list_new, series_id) {
 		for (var j = 0; j < s_list.length; j++) {
 			if (s_list[j].series_id === series_id) {
 				var series = s_list[j];
+				series.date_added = (new Date(Date.now())).toISOString();
 				data_list_new.series_list.push(series);
 				s_list.splice(j, 1);
 				return;
@@ -1381,6 +1382,8 @@ function scanListForNewSeries(existing_list, callback) {
 					}
 					else if (existing_list.list_type === "wish" || existing_list.list_type === "complete") {
 						date = rows.item(i).children[2].textContent;
+						date = date.replace(/(\d+)(st,|nd,|rd,|th,)/, "$1");
+						date = (new Date(date).toISOString());
 					}
 					else if (existing_list.list_type === "unfinished" || existing_list.list_type === "hold") {
 						var vol_chap = rows.item(i).children[2].textContent;
@@ -1425,7 +1428,7 @@ function scanSeries(series_id, callback) {
 			title: title,
 			mu_user_volume: "1",
 			mu_user_chapter: "1",
-			date_added: "",
+			date_added: (new Date(Date.now()).toISOString()),
 			tracked: true,
 			unread_releases: [],
 			last_update_was_manual: true,

@@ -312,7 +312,7 @@ function handleUpToDateClicked(event) {
 				event.target.style.transform = "translateY(0px)";
 				handleUpToDate(event);
 			});
-		}, 70);
+		}, 50);
 	});
 }
  

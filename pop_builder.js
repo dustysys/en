@@ -184,7 +184,8 @@ function buildReleaseBlock(data_list, data_series) {
 		release_line_disp.appendChild(release_latest_line);
 	} else if (data_list.list_type === "complete") {
 		var date_line = document.createElement('div');
-		date_line.textContent = "Date completed: " + data_series.date_added;
+		var date = new Date(data_series.date_added).toDateString();
+		date_line.textContent = "Date completed: " + date.substring(4);
 		release_line_disp.appendChild(date_line);
 	}		
 	release_block.appendChild(release_line_disp);
