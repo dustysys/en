@@ -58,7 +58,7 @@ function buildSeriesRow(data_list, data_series) {
 	series_row.className = "seriesRow";
 	series_row.setAttribute("list_id", data_list.list_id);
 	series_row.setAttribute("series_id", "s" + data_series.series_id);
-	if (exists(data_series.unread_releases)) {
+	if (data_list.list_type == "read" && exists(data_series.unread_releases)) {
 		series_row.setAttribute("new_releases", "true");
 	} else series_row.setAttribute("new_releases", "false");
 

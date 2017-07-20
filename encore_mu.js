@@ -570,7 +570,7 @@ function setMUChapter(chapter, series) {
  * @param {List[]} data_lists
  */
 function setBadge(data_lists) {
-	var num_releases = getTotalNumNewReleases(data_lists);
+	var num_releases = getTotalNumNewReadingReleases(data_lists);
 	if (num_releases > 0) {
 		chrome.browserAction.setBadgeText({ text: num_releases.toString() });
 		chrome.browserAction.setBadgeBackgroundColor({ color: "#85020e" });
@@ -692,6 +692,22 @@ function getTotalNumNewReleases(data_lists) {
 	var num = 0;
 	for (var i = 0; i < data_lists.length; i++) {
 		num += getNumNewReleasesInList(data_lists[i]);
+	}
+	return num;
+}
+
+/**
+ * gets total number of new releases for all series in
+ * lists of read type in listset
+ * @param {List[]} data_lists
+ * @returns {Number}
+ */
+function getTotalNumNewReadingReleases(data_lists) {
+	var num = 0;
+	for (var i = 0; i < data_lists.length; i++) {
+		if (data_lists[i].list_type === "read") {
+			num += getNumNewReleasesInList(data_lists[i]);
+		}
 	}
 	return num;
 }
