@@ -286,7 +286,7 @@ button {
 
 .releaseLatestLine {
     height: 16px;
-    overflow-y:hidden;
+    overflow:hidden;
 }
 
 .buttonBlock {

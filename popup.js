@@ -291,7 +291,7 @@ function handleUpToDate(event) {
 	} else {
 		var uptodate_button = event.target;
 		var uptodate_status = uptodate_button.getAttribute("up_to_date");
-		
+
 		if (uptodate_status === "unknown") {
 			updateSeriesRowsLatestRelease(series_row);
 		} else {
@@ -302,6 +302,18 @@ function handleUpToDate(event) {
 			});
 		}
 	}
+}
+
+function handleUpToDateClicked(event) {
+	fastdom.mutate(function () {
+		event.target.style.transform = "translateY(1px)";
+		setTimeout(function () {
+			fastdom.mutate(function() {
+				event.target.style.transform = "translateY(0px)";
+				handleUpToDate(event);
+			});
+		}, 70);
+	});
 }
  
 /**
