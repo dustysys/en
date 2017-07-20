@@ -272,6 +272,7 @@ function executeMarkSeriesRowUpToDate(series_row, callback) {
 function giveUpToDateButtonSortPrompt(series_row) {
 	var uptodate_button = getSeriesRowsUpToDateButton(series_row);
 	uptodate_button.textContent = "\u2b07";
+	uptodate_button.style.fontSize = "14px";
 	uptodate_button.style.display = "";
 	series_row.setAttribute("unsorted", "true");
 	uptodate_button.onclick = (function () {

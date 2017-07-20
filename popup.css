@@ -122,6 +122,10 @@ button {
         [new_releases=true] .seriesSelectButton[toggle=on] {
             background-color: var(--button-text-color-new);
         }
+        [new_releases=true] .seriesSelectButton[toggle=on]:hover,
+        .optionSelectButton[toggle=on]:hover {
+            background-color: var(--text-color-new);
+        }
     [new_releases=true] .editLinkInput::-webkit-input-placeholder {
         color: var(--text-color-new);
     }
@@ -150,6 +154,10 @@ button {
         [new_releases=false] .seriesSelectButton[toggle=on],
         #selectAllButton[toggle=on] {
             background-color: var(--button-text-color);
+        }
+        [new_releases=false] .seriesSelectButton[toggle=on]:hover,
+        #selectAllButton[toggle=on]:hover {
+            background-color: var(--text-color);
         }
     [new_releases=false] .editLinkInput::-webkit-input-placeholder {
     color: var(--text-color);
@@ -331,6 +339,8 @@ button {
     padding: 12px 0px;
     margin-top: 4px;
     width: 118px;
+    height:16px;
+    overflow:hidden;
 }
 
     .upToDateButton:hover {
