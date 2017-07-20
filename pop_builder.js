@@ -395,14 +395,7 @@ function buildListSelect(data_lists) {
 		var list_option = document.createElement('option');
 		list_option.className = 'listOption';
 		list_option.value = data_lists[i].list_id;
-		// add number of new releases to option
-		var releases_in_list = getNumNewReleasesInList(data_lists[i]);
-		var list_text = data_lists[i].list_name;
-		if (releases_in_list > 0) {
-			list_text = list_text.padEnd(16, "\u00a0");
-			list_text = list_text + "(" + releases_in_list + ")!";
-		}
-		list_option.textContent = list_text;
+		list_option.textContent = data_lists[i].list_name;
 		list_option.setAttribute("list_id", data_lists[i].list_id);
 
 		list_select.appendChild(list_option);
@@ -434,6 +427,15 @@ function buildCurrentListField(data_lists) {
  */
 function buildCurrentListSelect(data_lists) {
 	var current_list_select = buildListSelect(data_lists);
+	for (var i = 0; i < current_list_select.length; i++) {
+		var releases_in_list = getTotalNumNewReadingReleases([data_lists[i]]);
+		var list_text = data_lists[i].list_name;
+		if (releases_in_list > 0) {
+			list_text = list_text.padEnd(16, "\u00a0");
+			list_text = list_text + "(" + releases_in_list + ")!";
+			current_list_select.children[i].textContent = list_text;
+		}
+	}
 	current_list_select.id = 'currentListSelect';
 	current_list_select.onchange = handleCurrentListChange;
 
