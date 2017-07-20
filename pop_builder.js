@@ -14,10 +14,11 @@ with that model.
  */
 function buildNavBar(data_lists) {
 	var nav_bar = document.createElement("div");
-	nav_bar.className = "navBar";
+	nav_bar.id = "navBar";
 
 	//nav_bar.appendChild(buildDevTools());
 	nav_bar.appendChild(buildCurrentListField(data_lists));
+	nav_bar.appendChild(buildOptionsButton());
 	nav_bar.appendChild(buildManageSeriesField(data_lists));
 	nav_bar.appendChild(buildManageSeriesButton());
 	return nav_bar;
@@ -32,6 +33,7 @@ function buildListTable(data_list) {
 	var list_table = document.createElement("div");
 	list_table.className = "listTable";
 	list_table.setAttribute("list_id", data_list.list_id);
+	list_table.setAttribute("list_type", data_list.list_type);
 	var s_list = data_list.series_list;
 	s_list.sort(cmpReleaseAlphabetical);
 	for (var i = 0; i < s_list.length; i++) {
@@ -56,14 +58,13 @@ function buildSeriesRow(data_list, data_series) {
 	series_row.className = "seriesRow";
 	series_row.setAttribute("list_id", data_list.list_id);
 	series_row.setAttribute("series_id", "s" + data_series.series_id);
-	if (exists(data_series.unread_releases)) {
+	if (data_list.list_type == "read" && exists(data_series.unread_releases)) {
 		series_row.setAttribute("new_releases", "true");
 	} else series_row.setAttribute("new_releases", "false");
 
-	var title_block = buildTitleBlock(data_series);
-	var release_block = buildReleaseBlock(data_series);
-	var button_block = buildButtonBlock(data_series);
-
+	var title_block = buildTitleBlock(data_list, data_series);
+	var release_block = buildReleaseBlock(data_list, data_series);
+	var button_block = buildButtonBlock(data_list, data_series);
 	series_row.appendChild(title_block);
 	series_row.appendChild(button_block);
 	series_row.appendChild(release_block);
@@ -73,11 +74,26 @@ function buildSeriesRow(data_list, data_series) {
 }
 
 /**
+ * builds DOM elements mimicing browser badge text
+ * @param {number} num_releases
+ */
+function buildBadge(num_releases) {
+	var badge = document.createElement('span');
+	var badge_text = document.createElement('span');
+	badge.className = "badge";
+	badge_text.className = "badgeText";
+	badge_text.textContent = num_releases.toString();
+	badge.appendChild(badge_text);
+	return badge;
+}
+
+/**
  * builds DOM element holding title, link and link button
+ * @param {List} data_list
  * @param {Series} data_series
  * @returns {Element}
  */
-function buildTitleBlock(data_series) {
+function buildTitleBlock(data_list, data_series) {
 	var title_block = document.createElement('div');
 	var title_disp = document.createElement('div');
 	var title_cont = document.createElement('p');
@@ -98,8 +114,17 @@ function buildTitleBlock(data_series) {
 	var font_size = 14;
 	if (len > 50) font_size = 10;
 	title_cont.style.fontSize = font_size + 'px';
-
 	var edit_link_wrap = buildEditLinkButton(data_series);
+	if (!isEmpty(data_series.unread_releases)) {
+		if (data_series.unread_releases.length > 1) {
+			var badge = buildBadge(data_series.unread_releases.length);
+			var title_badge_wrap = document.createElement('div');
+			badge.classList.add("titleBadge");
+			title_badge_wrap.className = "titleBadgeWrap";
+			title_badge_wrap.appendChild(badge);
+			title_block.appendChild(title_badge_wrap);
+		}
+	}
 
 	title_block.appendChild(title_disp);
 	title_disp.appendChild(title_cont);
@@ -141,21 +166,88 @@ function buildEditLinkButton(data_series) {
 
 /**
  * builds DOM element with latest read/published release info for series
+ * @param {List} data_list
  * @param {Series} data_series
  * @returns {Element}
  */
-function buildReleaseBlock(data_series) {
+function buildReleaseBlock(data_list, data_series) {
+	if (data_list.list_type === "read") return buildReadReleaseBlock(data_list, data_series);
+	if (data_list.list_type === "wish") return buildWishReleaseBlock(data_list, data_series);
+	if (data_list.list_type === "complete") return buildCompleteReleaseBlock(data_list, data_series);
 	var release_block = document.createElement('div');
-
 	var release_line_disp = document.createElement('div');
+	var release_read_line = buildReleaseReadLine(data_series);
 	release_block.className = "seriesReleaseBlock";
 	release_line_disp.className = "releaseLineDisplay";
+	release_line_disp.appendChild(release_read_line);
+	release_block.appendChild(release_line_disp);
 
+	return release_block;
+}
+
+/**
+ * build release block for lists of type 'read'. It is the only
+ * list type which shows the latest published release
+ * @param {List} data_list
+ * @param {Series} data_series
+ * @returns {Element}
+ */
+function buildReadReleaseBlock(data_list, data_series) {
+	var release_block = document.createElement('div');
+	var release_line_disp = document.createElement('div');
 	var release_read_line = buildReleaseReadLine(data_series);
 	var release_latest_line = buildReleaseLatestLine(data_series);
-
+	release_block.className = "seriesReleaseBlock";
+	release_line_disp.className = "releaseLineDisplay";
 	release_line_disp.appendChild(release_read_line);
 	release_line_disp.appendChild(release_latest_line);
+	release_block.appendChild(release_line_disp);
+
+	return release_block;
+}
+
+/**
+ * build release block for lists of type 'wish'. It only has
+ * the date added to the wish list.
+ * @param {List} data_list
+ * @param {Series} data_series
+ * @returns {Element}
+ */
+function buildWishReleaseBlock(data_list, data_series) {
+	var release_block = document.createElement('div');
+	var release_line_disp = document.createElement('div');
+	var date_line = document.createElement('div');
+	var date = new Date(data_series.date_added).toDateString();
+	release_block.className = "seriesReleaseBlock";
+	release_line_disp.className = "releaseLineDisplay";
+	date_line.className = "dateLine";
+	date_line.textContent = "Date added: " + date.substring(4);
+	release_line_disp.appendChild(date_line);
+	release_block.appendChild(release_line_disp);
+
+	return release_block;
+}
+
+/**
+ * build release block for lists of type 'complete'
+ * It has the latest release read and a date completed (when it
+ * was added to the complete list)
+ * @param {List} data_list
+ * @param {Series} data_series
+ * @returns {Element}
+ */
+function buildCompleteReleaseBlock(data_list, data_series) {
+	var release_block = document.createElement('div');
+	var release_line_disp = document.createElement('div');
+	var release_read_line = buildReleaseReadLine(data_series);
+	var date_line = document.createElement('div');
+	var date = new Date(data_series.date_added).toDateString();
+	release_block.className = "seriesReleaseBlock";
+	release_line_disp.className = "releaseLineDisplay";
+	date_line.className = "dateLine";
+	date_line.textContent = "Date completed: " + date.substring(4);
+	release_line_disp.appendChild(release_read_line);
+	release_line_disp.appendChild(date_line);
 	release_block.appendChild(release_line_disp);
 
 	return release_block;
@@ -168,8 +260,8 @@ function buildReleaseBlock(data_series) {
  */
 function buildReleaseReadLine(data_series) {
 	var release_read_line = document.createElement('div');
-	var release_read_desc = document.createElement('div');
-	var release_read_disp = document.createElement('div');
+	var release_read_desc = document.createElement('span');
+	var release_read_disp = document.createElement('span');
 	var read_volume_desc = document.createElement('span');
 	var read_volume = document.createElement('span');
 	var read_chapter_desc = document.createElement('span');
@@ -218,12 +310,14 @@ function buildReleaseReadLine(data_series) {
 
 	release_read_desc.textContent = "Latest Read: ";
 
+	release_read_disp.appendChild(read_volume_desc);
+	release_read_disp.appendChild(read_volume);
+	release_read_disp.appendChild(read_chapter_desc);
+	release_read_disp.appendChild(read_chapter);
+	release_read_disp.appendChild(read_not_applic);
+
 	release_read_line.appendChild(release_read_desc);
-	release_read_line.appendChild(read_volume_desc);
-	release_read_line.appendChild(read_volume);
-	release_read_line.appendChild(read_chapter_desc);
-	release_read_line.appendChild(read_chapter);
-	release_read_line.appendChild(read_not_applic);
+	release_read_line.appendChild(release_read_disp);
 
 	return release_read_line;
 }
@@ -235,8 +329,8 @@ function buildReleaseReadLine(data_series) {
  */
 function buildReleaseLatestLine(data_series) {
 	var release_latest_line = document.createElement('div');
-	var release_latest_desc = document.createElement('div');
-	var release_latest_disp = document.createElement('div');
+	var release_latest_desc = document.createElement('span');
+	var release_latest_disp = document.createElement('span');
 	var latest_volume = "";
 	var latest_chapter = "";
 
@@ -246,12 +340,12 @@ function buildReleaseLatestLine(data_series) {
 
 	release_latest_desc.textContent = "Latest Release: ";
 	var latest_release_str = "n/a";
-	var latest_release = getLatestRelease(data_series)
+	var latest_release = getLatestRelease(data_series);
 
 	if (!isEmpty(latest_release)) {
 		var latest_volume_desc = "";
 		var latest_chapter_desc = "";
-		if (latest_release.volume !== "" && latest_release.chap !== "") {
+		if (latest_release.volume !== "" && latest_release.chapter !== "") {
 			latest_volume_desc = "v. ";
 			latest_chapter_desc = " c. ";
 		}
@@ -276,15 +370,18 @@ function buildReleaseLatestLine(data_series) {
 /**
  * builds DOM element container for up-to-date and series select buttons,
  * the buttons which will be used most frequently by user
+ * @param {List} data_list
  * @param {Series} data_series
  * @returns {Element}
  */
-function buildButtonBlock(data_series) {
+function buildButtonBlock(data_list, data_series) {
 	var button_block = document.createElement('div');
 	button_block.className = "buttonBlock";
-	var uptodate_button_wrap = buildUpToDateButton(data_series);
+	if (data_list.list_type === "read") {
+		var uptodate_button_wrap = buildUpToDateButton(data_series);
+		button_block.appendChild(uptodate_button_wrap);
+	}
 	var series_select_button_wrap = buildSeriesSelectButton();
-	button_block.appendChild(uptodate_button_wrap);
 	button_block.appendChild(series_select_button_wrap);
 	var latest_read = data_series.latest_read_release;
 
@@ -302,16 +399,26 @@ function buildUpToDateButton(data_series) {
 	var uptodate_button_wrap = document.createElement('div');
 	uptodate_button_wrap.className = "upToDateButtonWrap";
 	uptodate_button.className = 'upToDateButton';
-	uptodate_button.onclick = setSeriesUpToDate;
+	uptodate_button.onclick = handleUpToDateClicked;
 	uptodate_button.textContent = "Mark\u00A0Up\u2011to\u2011Date";
-	if (!data_series.last_update_was_manual && isEmpty(data_series.latest_unread_release)) {
+
+	var latest_release = getLatestRelease(data_series);
+	if (data_series.no_published_releases) {
+		uptodate_button.setAttribute("up_to_date", "true");
+		hideElement(uptodate_button);
+	} else if (!data_series.last_update_was_manual && isEmpty(data_series.latest_unread_release)) {
 		uptodate_button.style.display = "none";
 		uptodate_button.setAttribute("up_to_date", "true");
+	} else if (isEmpty(latest_release)) {
+		uptodate_button.setAttribute("up_to_date", "unknown");
+		if (!global_pref_one_click_uptodate.enabled) {
+			uptodate_button.textContent = "Sync\u00A0Latest\u00A0Release";
+		}
 	} else {
 		uptodate_button.setAttribute("up_to_date", "false");
 	}
 	if (manageModeOn()) {
-		uptodate_button.style.display = "none";
+		hideElement(uptodate_button);
 	}
 
 	uptodate_button_wrap.appendChild(uptodate_button);
@@ -345,14 +452,24 @@ function buildListSelect(data_lists) {
 	var list_select = document.createElement('select');
 	list_select.className = 'listSelect';
 	for (var i = 0; i < data_lists.length; i++) {
-		var list_option = document.createElement('option');
-		list_option.className = 'listOption';
-		list_option.value = data_lists[i].list_id;
-		list_option.textContent = data_lists[i].list_name.replace(/&nbsp;/g, ' ');
-		list_option.setAttribute("list_id", data_lists[i].list_id);
+		var list_option = buildListOption(data_lists[i]);
 		list_select.appendChild(list_option);
 	}
 	return list_select;
+}
+
+/**
+ * builds generic DOM list option for list selects
+ * @param {List} data_list
+ * @returns {Element}
+ */
+function buildListOption(data_list) {
+	var list_option = document.createElement('option');
+	list_option.className = 'listOption';
+	list_option.value = data_list.list_id;
+	list_option.textContent = data_list.list_name;
+	list_option.setAttribute("list_id", data_list.list_id);
+	return list_option;
 }
 
 /**
@@ -378,11 +495,34 @@ function buildCurrentListField(data_lists) {
  * @returns {Element}
  */
 function buildCurrentListSelect(data_lists) {
-	var current_list_select = buildListSelect(data_lists);
+	var current_list_select = document.createElement('select');
+	current_list_select.className = 'listSelect';
 	current_list_select.id = 'currentListSelect';
+	for (var i = 0; i < data_lists.length; i++) {
+		var list_option = buildCurrentListOption(data_lists[i]);
+		current_list_select.appendChild(list_option);
+	}
 	current_list_select.onchange = handleCurrentListChange;
 
 	return current_list_select;
+}
+
+/**
+ * builds DOM list option for the current list select dropdown
+ * @param {List} data_list
+ * @returns {Element}
+ */
+function buildCurrentListOption(data_list) {
+	var list_option = buildListOption(data_list);
+	var list_text = data_list.list_name;
+	var releases_in_list = getTotalNumNewReadingReleases([data_list]);
+	if (releases_in_list > 0) {
+		list_text = list_text.padEnd(16, "\u00a0");
+		list_text = list_text + "(" + releases_in_list + ")!";
+	}
+	list_option.textContent = list_text;
+
+	return list_option;
 }
 
 /**
@@ -393,7 +533,7 @@ function buildListFilter() {
 	var list_filter = document.createElement("input");
 	list_filter.id = ("seriesRowListFilter");
 	list_filter.onkeyup = handleListFilter;
-	list_filter.placeholder = "Search";
+	list_filter.placeholder = "Filter Series";
 
 	return list_filter;
 }
@@ -446,6 +586,7 @@ function buildMoveSeriesButton() {
 	var move_series_button = document.createElement("div");
 	move_series_button.id = "moveSeriesButton";
 	move_series_button.onclick = handleMoveSeries;
+	move_series_button.title = "Move Series";
 	var move_button_desc = document.createElement("span");
 	move_button_desc.id = "moveButtonDescription";
 	move_button_desc.textContent = "Move \u21FE";
@@ -492,6 +633,54 @@ function buildManageSeriesButton() {
 
 	manage_series_button.appendChild(manage_button_desc);
 	return manage_series_button;
+}
+
+/**
+ * builds page for redirecting user to login or register at MU
+ * @returns {Element}
+ */
+function buildRedirectPage() {
+	var redirect_page = document.createElement('div');
+	var redirect_box = document.createElement('div');
+	var redirect_text = document.createElement('span');
+	var redirect_login = document.createElement('div');
+	var redirect_register = document.createElement('div');
+	redirect_page.id = "redirectPage";
+	redirect_box.id = "redirectBox";
+	redirect_box.className = "enBox";
+	redirect_text.id = "redirectText";
+	redirect_text.textContent = "Use of en requires a mangaupdates.com account.";
+	redirect_login.id = "loginButton";
+	redirect_login.className = "enButton";
+	redirect_login.textContent = "Login"
+	redirect_register.id = "registerButton";
+	redirect_register.className = "enButton";
+	redirect_register.textContent = "Register";
+
+	redirect_login.onclick = (function () {
+		chrome.tabs.create({
+			active: true, url: "https://www.mangaupdates.com/" }, function () {
+			if (chrome.runtime.lastError) {
+				console.error("Failed to load login page: " + chrome.runtime.lastError.message);
+			}
+		})
+	});
+
+	redirect_register.onclick = (function () {
+		chrome.tabs.create({
+			active: true, url: "https://www.mangaupdates.com/signup.html" }, function () {
+			if (chrome.runtime.lastError) {
+				console.error("Failed to load register page: " + chrome.runtime.lastError.message);
+			}
+		})
+	});
+
+	redirect_box.appendChild(redirect_text);
+	redirect_box.appendChild(redirect_login);
+	redirect_box.appendChild(redirect_register);
+	redirect_page.appendChild(redirect_box);
+
+	return redirect_page;
 }
 
 /**
@@ -572,10 +761,3 @@ function buildDevTools() {
 	return dev_toolbar;
 }
 
-function getDefaultLink(series_id) {
-	//TODO: add user-specified default link options, such as
-	// search google "[series.title + read online]"
-
-	var series_id = series_id;
-	return "https://www.mangaupdates.com/series.html?id=" + series_id;
-}

@@ -1,7 +1,7 @@
 /*#############################################################################
 File: mu_comm.js
 
-Functions in this file create/receive/process all XHR XMLHttpRequests from and
+Functions in this file create/receive/process all XMLHttpRequests from and
 to www.mangaupdates.com. Essentially it is a reverse engineering of the site's
 My List feature, syncing user actions in the popup and those made on MU with
 both the remote MU lists and the locally stored list model.
@@ -46,13 +46,31 @@ function sendPOSTRequest(url, form_data, callback) {
  * @param {string} chapter
  * @param {string} series_id
  */
-function pushMUVolumeChapter(volume, chapter, series_id){
+function pushMUVolumeChapter(volume, chapter, series_id) {
+	var packaged_volchap = packageMUVolumeChapter(volume, chapter);
 	var link = "https://www.mangaupdates.com/ajax/chap_update.php?";
 	var s = "s="+series_id+"&";
-	var set_v = "set_v="+volume+"&";
-	var set_c = "set_c="+chapter+"&";
+	var set_v = "set_v="+packaged_volchap.volume+"&";
+	var set_c = "set_c="+packaged_volchap.chapter+"&";
 	var cache_j = "cache_j="+ Math.floor(Math.random()*100000000) + "," + Math.floor(Math.random()*100000000) + "," + Math.floor(Math.random()*100000000);
 	sendGETRequest(link + s + set_v + set_c + cache_j);
+}
+
+function packageMUVolumeChapter(volume, chapter) {
+	var val_volume = validateDigits(volume);
+	var val_chapter = validateDigits(chapter);
+	var pkg_volume = val_volume;
+	var pkg_chapter = val_chapter;
+	if (volume.includes("-")) {
+		pkg_volume = validateDigits(volume.substring(volume.indexOf("-")));
+		if (pkg_volume === "") pkg_volume = val_volume;
+	}
+	if (chapter.includes("-")) {
+		pkg_chapter = validateDigits(chapter.substring(chapter.indexOf("-")));
+		if (pkg_chapter === "") pkg_chapter = val_chapter;
+	}
+
+	return { volume: pkg_volume, chapter: pkg_chapter }
 }
 
 /**
@@ -75,6 +93,29 @@ function pushMUSeriesMove(src_list_id, dst_list_id, series_id_arr) {
 	form_data.append("moveto", dst_list_id);
 
 	sendPOSTRequest(url, form_data);
+}
+
+/**
+ * pushes list view options to MU which are favorable to
+ * pulling list/series data
+ * @param {string} list_id
+ */
+function pushMUListPullOptions(list_id, callback) {
+	var url = "https://www.mangaupdates.com/mylist.html";
+	var form_data = new FormData();
+
+	form_data.append("act", "update");
+	form_data.append("list", list_id);
+	form_data.append("perpage", "All");
+	form_data.append("published", "1");
+	form_data.append("show_comment", "2");
+	form_data.append("show_latest", "1");
+	form_data.append("show_rating", "1");
+	form_data.append("show_status", "1");
+	form_data.append("sort", "alpha");
+	form_data.append("update_options", "Update");
+
+	sendPOSTRequest(url, form_data, callback);
 }
 
 /**
@@ -123,6 +164,15 @@ function getMyListPage(callback) {
  */
 function getListPage(list_id, callback) {
 	var url = "https://www.mangaupdates.com/mylist.html?list=" + list_id;
+	sendGETRequest(url, callback);
+}
+
+/**
+ * gets MU list edit/management page
+ * @param callback
+ */
+function getEditListPage(callback) {
+	var url = "https://www.mangaupdates.com/mylist.html?act=edit";
 	sendGETRequest(url, callback);
 }
 
@@ -357,7 +407,7 @@ function MUComm_SetVolumeChapter(url, callback, data_lists) {
 	var volume = parseInt(getUrlParam(url, "set_v"));
 
 	if (exists(series)) {
-		setMUVolumeChapter(volume, chapter, series);
+		manualSetMUVolumeChapter(volume, chapter, series);
 	}
 	callback();
 }
@@ -511,19 +561,45 @@ function MUComm_UpdateLists(request_details, complete_details, callback, data_li
 }
 
 /**
+ * deletes stale requests
+ */
+function cleanMUComms() {
+	loadStorage(function (local_storage) {
+		var current_time = Date.now();
+		for (const key of Object.keys(local_storage)) {
+			if (key.includes("req_")) {
+				var req_id = key.substring(key.indexOf("req_") + 4);
+				var timestamp = new Date(local_storage[key].enTime);
+				var TWO_MINUTES = 2 * 60 * 1000;
+				if (current_time - timestamp > TWO_MINUTES) {
+					console.log("Deleted request: " + req_id);
+					deleteRequest(req_id);
+				}
+			}
+		}
+	});
+}
+
+/**
  * captures and saves the initial xhr to MU
  * @param {ReqDetails} request_details
  */
 function handleMURequestComm(request_details){
-	//TODO: garbage clean requests before saving
-	console.log("Request");
-	console.log(request_details);
+	//console.log("Request");
+	//console.log(request_details.requestId);
 	// filter out our own requests
 	if (request_details.tabId >= 0) {
 		loadRequest(request_details.requestId, function (req_details) {
 			if (!exists(req_details)) {
-				//avoid overwriting POST request
+				//MU POST requests have a corresponding GET request after
+				//Checking to make sure there isn't already a saved POST
+				//request of the same id avoids losing the request.
 				saveRequest(request_details);
+
+				if (parseInt(request_details.requestId) % 10 == 0) {
+					//cleans requests occasionally
+					cleanMUComms();
+				}
 			}
 		});
 	}
@@ -544,8 +620,8 @@ function handleMUCompleteComm(complete_details){
 				var req_id = request_details.requestId;
 				if (complete_details.requestId === req_id) {
 					handleMUComm(request_details, complete_details);
-					console.log("Complete");
-					console.log(complete_details);
+					//console.log("Complete");
+					//console.log(complete_details.requestId);
 				} else console.log("Error: Request mismatch");
 			} else {
 				//console.warn("Warning: Failed to load request");
@@ -577,7 +653,7 @@ function handleErrorMUComm(error_details){
 /**
  * Starts listening for requests to/from MU
  */
-function beginListening(){
+function listenMUComm(){
 	chrome.webRequest.onBeforeRequest.addListener(handleMURequestComm, {urls: [ "*://www.mangaupdates.com/*" ]}, ["requestBody"]);
 	chrome.webRequest.onCompleted.addListener(handleMUCompleteComm,{urls: [ "*://www.mangaupdates.com/*" ]});
 	chrome.webRequest.onErrorOccurred.addListener(handleErrorMUComm,{urls: [ "*://www.mangaupdates.com/*" ]});
