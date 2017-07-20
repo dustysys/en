@@ -1203,7 +1203,7 @@ function clearPopup() {
  * @param popup
  */
 function delayScrollbar(popup) {
-	setTimeout(function () { popup.style.paddingBottom = "0px"; }, 0);
+	setTimeout(function () { popup.style.paddingBottom = "0px"; }, 10);
 }
 
 /**
