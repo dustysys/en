@@ -272,11 +272,13 @@ button {
 
 .releaseLineDisplay {
     padding-top: 8px;
-    overflow:visible;
+    overflow-x: hidden;
+    overflow-y: visible;
 }
 
-.releaseReadLine, .releaseLatestLine {
-    height: 14px;
+.releaseLatestLine {
+    height: 16px;
+    overflow-y:hidden;
 }
 
 .buttonBlock {

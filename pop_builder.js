@@ -351,7 +351,7 @@ function buildUpToDateButton(data_series) {
 	} else if (isEmpty(latest_release)) {
 		uptodate_button.setAttribute("up_to_date", "unknown");
 		if (!global_pref_one_click_uptodate.enabled) {
-			uptodate_button.textContent = "Get\u00A0Latest\u00A0Release";
+			uptodate_button.textContent = "Sync\u00A0Latest\u00A0Release";
 		}
 	} else {
 		uptodate_button.setAttribute("up_to_date", "false");
