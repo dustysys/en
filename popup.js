@@ -29,7 +29,7 @@ var global_pref_notifications = { enabled: true };
  * @returns {Element}
  */
 function getTitleBlocksTitleLink(title_block) {
-	return title_block.firstChild.firstChild.firstChild;
+	return title_block.querySelector('.titleLink');
 }
 
 /**
@@ -38,7 +38,7 @@ function getTitleBlocksTitleLink(title_block) {
  * @returns {Element}
  */
 function getSeriesRowsEditLinkButton(series_row) {
-	return series_row.firstChild.children[1].firstChild;
+	return series_row.querySelector('.editLinkButton');
 }
 
 /**
@@ -47,7 +47,7 @@ function getSeriesRowsEditLinkButton(series_row) {
  * @returns {Element}
  */
 function getEditLinkButtonsLinkIcon(link_button) {
-	return link_button.firstChild;
+	return link_button.querySelector('.editLinkIcon');
 }
 
 /**
@@ -56,7 +56,7 @@ function getEditLinkButtonsLinkIcon(link_button) {
  * @returns {Element}
  */
 function getSeriesRowsEditLinkWrap(series_row) {
-	return series_row.firstChild.children[1];
+	return series_row.querySelector('.editLinkWrap');
 }
 
 /**
@@ -119,7 +119,7 @@ function getSeriesRowsWrap(series_row) {
  * @returns {Element}
  */
 function getSeriesRowsTitleLink(series_row) {
-	return series_row.firstChild.firstChild.firstChild.firstChild;
+	return series_row.querySelector('.titleLink');
 }
 /**
  * 
