@@ -171,23 +171,83 @@ function buildEditLinkButton(data_series) {
  * @returns {Element}
  */
 function buildReleaseBlock(data_list, data_series) {
+	if (data_list.list_type === "read") return buildReadReleaseBlock(data_list, data_series);
+	if (data_list.list_type === "wish") return buildWishReleaseBlock(data_list, data_series);
+	if (data_list.list_type === "complete") return buildCompleteReleaseBlock(data_list, data_series);
 	var release_block = document.createElement('div');
-
 	var release_line_disp = document.createElement('div');
+	var release_read_line = buildReleaseReadLine(data_series);
 	release_block.className = "seriesReleaseBlock";
 	release_line_disp.className = "releaseLineDisplay";
-
-	var release_read_line = buildReleaseReadLine(data_series);
 	release_line_disp.appendChild(release_read_line);
-	if (data_list.list_type === "read") {
-		var release_latest_line = buildReleaseLatestLine(data_series);
-		release_line_disp.appendChild(release_latest_line);
-	} else if (data_list.list_type === "complete") {
-		var date_line = document.createElement('div');
-		var date = new Date(data_series.date_added).toDateString();
-		date_line.textContent = "Date completed: " + date.substring(4);
-		release_line_disp.appendChild(date_line);
-	}		
+	release_block.appendChild(release_line_disp);
+
+	return release_block;
+}
+
+/**
+ * build release block for lists of type 'read'. It is the only
+ * list type which shows the latest published release
+ * @param {List} data_list
+ * @param {Series} data_series
+ * @returns {Element}
+ */
+function buildReadReleaseBlock(data_list, data_series) {
+	var release_block = document.createElement('div');
+	var release_line_disp = document.createElement('div');
+	var release_read_line = buildReleaseReadLine(data_series);
+	var release_latest_line = buildReleaseLatestLine(data_series);
+	release_block.className = "seriesReleaseBlock";
+	release_line_disp.className = "releaseLineDisplay";
+	release_line_disp.appendChild(release_read_line);
+	release_line_disp.appendChild(release_latest_line);
+	release_block.appendChild(release_line_disp);
+
+	return release_block;
+}
+
+/**
+ * build release block for lists of type 'wish'. It only has
+ * the date added to the wish list.
+ * @param {List} data_list
+ * @param {Series} data_series
+ * @returns {Element}
+ */
+function buildWishReleaseBlock(data_list, data_series) {
+	var release_block = document.createElement('div');
+	var release_line_disp = document.createElement('div');
+	var date_line = document.createElement('div');
+	var date = new Date(data_series.date_added).toDateString();
+	release_block.className = "seriesReleaseBlock";
+	release_line_disp.className = "releaseLineDisplay";
+	date_line.className = "dateLine";
+	date_line.textContent = "Date added: " + date.substring(4);
+	release_line_disp.appendChild(date_line);
+	release_block.appendChild(release_line_disp);
+
+	return release_block;
+}
+
+/**
+ * build release block for lists of type 'complete'
+ * It has the latest release read and a date completed (when it
+ * was added to the complete list)
+ * @param {List} data_list
+ * @param {Series} data_series
+ * @returns {Element}
+ */
+function buildCompleteReleaseBlock(data_list, data_series) {
+	var release_block = document.createElement('div');
+	var release_line_disp = document.createElement('div');
+	var release_read_line = buildReleaseReadLine(data_series);
+	var date_line = document.createElement('div');
+	var date = new Date(data_series.date_added).toDateString();
+	release_block.className = "seriesReleaseBlock";
+	release_line_disp.className = "releaseLineDisplay";
+	date_line.className = "dateLine";
+	date_line.textContent = "Date completed: " + date.substring(4);
+	release_line_disp.appendChild(release_read_line);
+	release_line_disp.appendChild(date_line);
 	release_block.appendChild(release_line_disp);
 
 	return release_block;
