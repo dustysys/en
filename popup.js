@@ -204,7 +204,7 @@ function pullSeriesRowUpToDate(series_row) {
 	var series_id = getSeriesRowsId(series_row);
 	userPullThenPushSeriesUpToDate(series_id, function (data) {
 		// in case sync thread changed parent element
-		var async_series_row = table.querySelectorAll(".seriesRow[series_id=s" + series_id + "]")[0];
+		var async_series_row = table.querySelector(".seriesRow[series_id=s" + series_id + "]");
 		var list = getList(data.lists, async_series_row.getAttribute("list_id"));
 		var series = getSeriesById([list], series_id);
 		var updated_row = updateSeriesRow(async_series_row, list, series);
@@ -453,7 +453,7 @@ function updateSeriesRow(series_row, data_list, data_series) {
  * @return {Number} new index of series row 
  */
 function sortInsertMarkedReadSeriesRow(series_row) {
-	var title = series_row.querySelectorAll(".titleLink")[0].textContent;
+	var title = series_row.querySelector(".titleLink").textContent;
 	var table = getSeriesRowsTable(series_row);
 	var row_titles = table.querySelectorAll(".titleLink");
 
@@ -981,11 +981,11 @@ function updateCurrentListOption(list_option, callback) {
  * @param {function} callback
  */
 function handleUserMUReadUpdate(series_row, vol_input, chap_input, callback) {
-	var read_volume = series_row.querySelectorAll(".readVolume")[0];
-	var read_volume_desc = series_row.querySelectorAll(".readVolumeDescription")[0];
-	var read_chapter = series_row.querySelectorAll(".readChapter")[0];
-	var read_chapter_desc = series_row.querySelectorAll(".readChapterDescription")[0];
-	var not_applic = series_row.querySelectorAll(".readChapVolNA")[0];
+	var read_volume = series_row.querySelector(".readVolume");
+	var read_volume_desc = series_row.querySelector(".readVolumeDescription");
+	var read_chapter = series_row.querySelector(".readChapter");
+	var read_chapter_desc = series_row.querySelector(".readChapterDescription");
+	var not_applic = series_row.querySelector(".readChapVolNA");
 	var volume = vol_input.value;
 	var chapter = chap_input.value;
 	if (volume === read_volume.textContent && chapter === read_chapter.textContent) {
