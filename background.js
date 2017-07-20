@@ -74,8 +74,15 @@ function checkMessage(message, sender, sendResponse) {
 				bgUpdatePrefs();
 				var response = {
 					src: "en_bg",
-					title: "ACK"
-				}
+					title: "ACK_UPDATED_PREFERENCE"
+				};
+				sendResponse(response);
+			} else if (message.title === "REQ_UPDATE_BADGE") {
+				updateBadge();
+				var response = {
+					src: "en_bg",
+					title: "ACK_UPDATE_BADGE"
+				};
 				sendResponse(response);
 			}
 		}

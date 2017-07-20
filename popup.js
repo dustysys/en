@@ -210,6 +210,7 @@ function pullSeriesRowUpToDate(series_row) {
 		var updated_row = updateSeriesRow(async_series_row, list, series);
 		var uptodate_button = getSeriesRowsUpToDateButton(updated_row);
 		uptodate_button.style.display = "none";
+		updateListState(list.list_id);
 	});
 
 	finalizeMarkSeriesRowUpToDate(series_row);
@@ -227,6 +228,7 @@ function updateSeriesRowsLatestRelease(series_row) {
 		var series = getSeriesById([list], series_id);
 		var updated_row = updateSeriesRow(series_row, list, series);
 		var updated_uptodate_button = getSeriesRowsUpToDateButton(updated_row);
+		updateListState(list.list_id);
 		updated_uptodate_button.onclick = (function () {
 			executeMarkSeriesRowUpToDate(updated_row);
 		});
@@ -261,6 +263,7 @@ function executeMarkSeriesRowUpToDate(series_row, callback) {
 		var list = getList(data.lists, series_row.getAttribute("list_id"));
 		var series = getSeriesById([list], series_id);
 		var updated_row = updateSeriesRow(series_row, list, series);
+		updateListState(list.list_id);
 		if (callback) callback(updated_row);
 	});
 }
@@ -566,7 +569,9 @@ function getIndexOfElementInDOM(el) {
  * @param {Element} old_el
  */
 function replaceElementInPlace(new_el, old_el) {
+
 	old_el.parentElement.replaceChild(new_el, old_el);
+	
 }
 
 /**
@@ -804,7 +809,9 @@ function handleDeleteSeries() {
 	}
 	var list_src_id = getCurrentListId();
 
-	userDeleteSeries(list_src_id, delete_series_id_arr);
+	userDeleteSeries(list_src_id, delete_series_id_arr, function () {
+		updateListState(list_src_id);
+	});
 }
 
 /**
@@ -826,12 +833,9 @@ function handleMoveSeries() {
 	}
 
 	userMoveSeries(list_src_id, list_dst_id, move_series_id_arr, function (data) {
-		var dst_list_table = getListTableById(list_dst_id);
-		if (dst_list_table !== null) {
-			var updated_table = buildListTable(getListById(data.lists, list_dst_id));
-			updated_table.style.display = "none";
-			replaceElementInPlace(updated_table, dst_list_table);
-		}
+		updateListState(list_src_id, function () {
+			updateListState(list_dst_id);
+		});
 	});
 }
 
@@ -899,10 +903,12 @@ function hideAllLists(callback) {
  */
 function unloadList(list_id, callback) {
 	var list_table = getListTableById(list_id);
-	fastdom.mutate(function () {
-		list_table.parentElement.removeChild(list_table);
-		if (callback) callback();
-	});
+	if (list_table !== null) {
+		fastdom.mutate(function () {
+			list_table.parentElement.removeChild(list_table);
+			if (callback) callback();
+		});
+	}
 }
 
 /**
@@ -917,6 +923,52 @@ function unloadAllLists(callback) {
 			list_tables[i].parentElement.removeChild(list_tables[i]);
 			i--;
 		}
+		if (callback) callback();
+	});
+}
+
+/**
+ * updates information about a list, such as its unread series count
+ * and its contents. Also updates the badge.
+ * @param {string} list_id
+ */
+function updateListState(list_id, callback) {
+
+	function finishUpdateListState(list_option, callback) {
+		updateCurrentListOption(list_option, function () {
+			popupSendBgBadgeUpdateRequest();
+			if (callback) callback();
+		});
+	}
+
+	var current_list_select = document.getElementById("currentListSelect");
+	var current_list_id = getCurrentListId();
+	var list_option = current_list_select.querySelector('[list_id=' + list_id + ']');
+	if (list_id !== current_list_id) {
+		// defer update
+		unloadList(list_id, function () {
+			finishUpdateListState(list_option, callback);
+		}); 
+		
+	} else {
+		// do current-list specific things
+		finishUpdateListState(list_option, callback);
+	}
+}
+
+/**
+ * updates the specified list option with fresh data, including updating the number
+ * of unread releases
+ * @param {Element} list_option
+ * @param {function} callback
+ */
+function updateCurrentListOption(list_option, callback) {
+	loadData(function (data) {
+		var list = getListById(data.lists, list_option.getAttribute("list_id"));
+		var updated_list_option = buildCurrentListOption(list);
+		var current_list_id = getCurrentListId();
+		replaceElementInPlace(updated_list_option, list_option);
+		changeVisibleCurrentListSelection(current_list_id);
 		if (callback) callback();
 	});
 }
@@ -1169,6 +1221,16 @@ function filterList(filter) {
 }
 
 /**
+ * changes the current selected list to the one specified
+ * @param {list_id} list_id
+ */
+function changeVisibleCurrentListSelection(list_id) {
+	var current_list_select = document.getElementById('currentListSelect');
+	var list_option = current_list_select.querySelector('[list_id=' + list_id + ']');
+	current_list_select.selectedIndex = getIndexOfElementInDOM(list_option);
+}
+
+/**
  *  DEV TOOLS HANDLERS
  *
  *	handlers for the dev tool buttons activating
@@ -1235,9 +1297,7 @@ function buildPopup(data) {
 	var list_table = buildListTable(list);
 	popup.appendChild(list_table);
 	delayScrollbar(popup);
-
-	var current_list_select = document.getElementById("currentListSelect");
-	current_list_select.selectedIndex = getIndexOfListInLists(data.lists, "read");
+	changeVisibleCurrentListSelection("read");
 }
 
 /**
@@ -1337,6 +1397,21 @@ function popupSendBgPrefUpdate() {
 	var message = {
 		src: "en_popup",
 		title: "UPDATED_PREFERENCE"
+	};
+
+	chrome.runtime.sendMessage(message, function (response) {
+		console.log(response.title);
+	});
+}
+
+/**
+ * sends a message to background script asking it to update
+ * the badge text
+ */
+function popupSendBgBadgeUpdateRequest() {
+	var message = {
+		src: "en_popup",
+		title: "REQ_UPDATE_BADGE"
 	};
 
 	chrome.runtime.sendMessage(message, function (response) {

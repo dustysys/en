@@ -1104,7 +1104,6 @@ function userPullThenPushSeriesUpToDate(series_id, callback) {
 				series.no_published_releases = true;
 			}
 			pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
-			setBadge(data.lists);
 			saveData(data, callback);
 		});
 	});
@@ -1121,7 +1120,6 @@ function userPullSeriesLatestRelease(series_id, callback){
 			var series = getSeriesById(data.lists, series_id);
 			if (exists(release)) {
 				addNewRelease(release, series);
-				setBadge(data.lists);
 			} else series.no_published_releases = true;
 			saveData(data, callback);
 		});
@@ -1159,7 +1157,6 @@ function userPushSeriesUpToDate(series_id, callback) {
 		var release = getLatestRelease(series);
 		setSeriesUpToDate(series, release);
 		pushMUVolumeChapter(series.mu_user_volume, series.mu_user_chapter, series.series_id);
-		setBadge(data.lists);
 		saveData(data, callback);
 	});
 }
@@ -1206,7 +1203,6 @@ function userDeleteSeries(list_src_id, delete_series_id_arr, callback) {
 	loadData(function (data) {
 		removeSeriesArrayFromListById(data.lists, list_src_id, delete_series_id_arr);
 		pushMUSeriesDelete(list_src_id, delete_series_id_arr);
-		setBadge(data.lists);
 		saveData(data, callback);
 	});
 }

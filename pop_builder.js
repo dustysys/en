@@ -392,15 +392,24 @@ function buildListSelect(data_lists) {
 	var list_select = document.createElement('select');
 	list_select.className = 'listSelect';
 	for (var i = 0; i < data_lists.length; i++) {
-		var list_option = document.createElement('option');
-		list_option.className = 'listOption';
-		list_option.value = data_lists[i].list_id;
-		list_option.textContent = data_lists[i].list_name;
-		list_option.setAttribute("list_id", data_lists[i].list_id);
-
+		var list_option = buildListOption(data_lists[i]);
 		list_select.appendChild(list_option);
 	}
 	return list_select;
+}
+
+/**
+ * builds generic DOM list option for list selects
+ * @param {List} data_list
+ * @returns {Element}
+ */
+function buildListOption(data_list) {
+	var list_option = document.createElement('option');
+	list_option.className = 'listOption';
+	list_option.value = data_list.list_id;
+	list_option.textContent = data_list.list_name;
+	list_option.setAttribute("list_id", data_list.list_id);
+	return list_option;
 }
 
 /**
@@ -426,20 +435,34 @@ function buildCurrentListField(data_lists) {
  * @returns {Element}
  */
 function buildCurrentListSelect(data_lists) {
-	var current_list_select = buildListSelect(data_lists);
-	for (var i = 0; i < current_list_select.length; i++) {
-		var releases_in_list = getTotalNumNewReadingReleases([data_lists[i]]);
-		var list_text = data_lists[i].list_name;
-		if (releases_in_list > 0) {
-			list_text = list_text.padEnd(16, "\u00a0");
-			list_text = list_text + "(" + releases_in_list + ")!";
-			current_list_select.children[i].textContent = list_text;
-		}
-	}
+	var current_list_select = document.createElement('select');
+	current_list_select.className = 'listSelect';
 	current_list_select.id = 'currentListSelect';
+	for (var i = 0; i < data_lists.length; i++) {
+		var list_option = buildCurrentListOption(data_lists[i]);
+		current_list_select.appendChild(list_option);
+	}
 	current_list_select.onchange = handleCurrentListChange;
 
 	return current_list_select;
+}
+
+/**
+ * builds DOM list option for the current list select dropdown
+ * @param {List} data_list
+ * @returns {Element}
+ */
+function buildCurrentListOption(data_list) {
+	var list_option = buildListOption(data_list);
+	var list_text = data_list.list_name;
+	var releases_in_list = getTotalNumNewReadingReleases([data_list]);
+	if (releases_in_list > 0) {
+		list_text = list_text.padEnd(16, "\u00a0");
+		list_text = list_text + "(" + releases_in_list + ")!";
+	}
+	list_option.textContent = list_text;
+
+	return list_option;
 }
 
 /**
