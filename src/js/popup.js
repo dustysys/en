@@ -65,7 +65,7 @@ function getSeriesRowsEditLinkWrap(series_row) {
  * @returns {Element}
  */
 function getInputLinksSeriesRow(input_link) {
-	return input_link.parentElement.parentElement;
+	return input_link.closest('.seriesRow');
 }
 
 /**
@@ -102,7 +102,7 @@ function getSeriesRowsSeriesSelectButton(series_row) {
  * @returns {Element}
  */
 function getSeriesRowsTable(series_row) {
-	return getSeriesRowsWrap(series_row).parentElement;
+	return getSeriesRowsWrap(series_row).closest('.listTable');
 }
 
 /**
@@ -127,7 +127,7 @@ function getSeriesRowsTitleLink(series_row) {
  * @returns {Element}
  */
 function getTitleLinksSeriesRow(title_link) {
-	return title_link.parentElement.parentElement.parentElement.parentElement;
+	return title_link.closest('.seriesRow');
 }
 
 /**
@@ -136,7 +136,7 @@ function getTitleLinksSeriesRow(title_link) {
  * @returns {Element}
  */
 function getEditLinkButtonsTitleBlock(edit_link_button) {
-	return edit_link_button.parentElement.parentElement;
+	return edit_link_button.closest('.titleBlock');
 }
 
 /**
@@ -145,8 +145,7 @@ function getEditLinkButtonsTitleBlock(edit_link_button) {
  * @returns {Element}
  */
 function getEditLinkIconsTitleBlock(edit_link_icon) {
-	var edit_link_button = edit_link_icon.parentElement;
-	return getEditLinkButtonsTitleBlock(edit_link_button);
+	return edit_link_icon.closest('.titleBlock');
 };
 
 /**
@@ -155,8 +154,7 @@ function getEditLinkIconsTitleBlock(edit_link_icon) {
  * @returns {Element}
  */
 function getReleaseFieldsSeriesRow(field) {
-	var display = getReleaseFieldsReleaseDisplay(field);
-	return display.parentElement.parentElement.parentElement;
+	return field.closest('.seriesRow');
 }
 /**
  * 
@@ -182,7 +180,7 @@ function getReadInputsReleaseLine(input) {
  * @returns {Element}
  */
 function getUpToDateButtonsSeriesRow(button) {
-	return button.parentElement.parentElement.parentElement;
+	return button.closest('.seriesRow');
 }
 
 /**
