@@ -746,6 +746,8 @@ button {
     min-width: 11px;
     overflow:hidden;
     border-radius:2px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 
 }
 

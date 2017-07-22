@@ -189,10 +189,11 @@ function bgInit() {
 	listenMUComm();
 	listenStartup();
 	listenMessages();
-	chrome.runtime.onInstalled.addListener(bgSync);
+	chrome.runtime.onInstalled.addListener(bgNewInstall);
 	chrome.alarms.onAlarm.addListener(checkAlarm);
 	bgLoadPrefs(function () {
 		bgApplyPrefs();
 	});
 }
+
 bgInit();
