@@ -18,6 +18,7 @@ interface Release {
 	volume: string;
 	chapter: string;
 	groups: string;
+	marked_seen: boolean;
 }
 
 interface Series {

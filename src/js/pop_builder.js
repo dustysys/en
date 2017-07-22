@@ -58,7 +58,8 @@ function buildSeriesRow(data_list, data_series) {
 	series_row.className = "seriesRow";
 	series_row.setAttribute("list_id", data_list.list_id);
 	series_row.setAttribute("series_id", "s" + data_series.series_id);
-	if (data_list.list_type == "read" && exists(data_series.unread_releases)) {
+	series_row.onclick = handleClickedSeriesRow;
+	if (data_list.list_type == "read" && getNumNewReleasesForSeries(data_series) > 0) {
 		series_row.setAttribute("new_releases", "true");
 	} else series_row.setAttribute("new_releases", "false");
 
@@ -116,7 +117,7 @@ function buildTitleBlock(data_list, data_series) {
 	title_cont.style.fontSize = font_size + 'px';
 	var edit_link_wrap = buildEditLinkButton(data_series);
 	if (!isEmpty(data_series.unread_releases)) {
-		if (data_series.unread_releases.length > 1) {
+		if (data_series.unread_releases.length > 0) {
 			var badge = buildBadge(data_series.unread_releases.length);
 			var title_badge_wrap = document.createElement('div');
 			badge.classList.add("titleBadge");

@@ -272,7 +272,7 @@ function executeMarkSeriesRowUpToDate(series_row, callback) {
  * changes the up-to-date button's text to a down arrow prompt
  * @param {Element} series_row
  */
-function giveUpToDateButtonSortPrompt(series_row) {
+function giveSeriesRowSortPrompt(series_row) {
 	var uptodate_button = getSeriesRowsUpToDateButton(series_row);
 	uptodate_button.textContent = "\u2b07";
 	uptodate_button.style.fontSize = "14px";
@@ -300,7 +300,7 @@ function handleUpToDate(event) {
 		} else {
 			executeMarkSeriesRowUpToDate(series_row, function (updated_row) {
 				if (!isLastVisibleSeriesRow(updated_row)) {
-					giveUpToDateButtonSortPrompt(updated_row);
+					giveSeriesRowSortPrompt(updated_row);
 				}
 			});
 		}
@@ -1217,6 +1217,25 @@ function filterList(filter) {
 		} else {
 			series_row.style.display = "none";
 		}
+	}
+}
+
+/**
+ * 
+ * @param {Event} event
+ */
+function handleClickedSeriesRow(event) {
+	if (event.altKey) {
+		var series_row = event.target.closest('.seriesRow');
+		var series_id = getSeriesRowsId(series_row);
+		var list_id = getSeriesRowsTable(series_row).getAttribute("list_id");
+		userMarkSeriesReleasesSeen(getSeriesRowsId(series_row), function (data) {
+			var series = getSeriesById(data.lists, series_id);
+			var list = getListById(data.lists, list_id);
+			var updated_row = updateSeriesRow(series_row, list, series);
+			giveSeriesRowSortPrompt(updated_row);
+			updateListState(list_id);
+		});
 	}
 }
 

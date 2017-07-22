@@ -357,11 +357,15 @@ function instancesOf(string, substring) {
  * @returns {boolean}
  */
 function cmpReleaseAlphabetical(a, b) {
-	if (!isEmpty(a.latest_unread_release)) {
-		if (isEmpty(b.latest_unread_release)) {
-			return -1;
+	var a_latest = a.latest_unread_release;
+	var b_latest = b.latest_unread_release;
+	if (!isEmpty(a_latest) && !a_latest.marked_seen) {
+		if (isEmpty(b_latest)) {
+			if (typeof b_latest === 'undefined' || b_latest.marked_seen) {
+				return -1;
+			}
 		}
-	} else if (!isEmpty(b.latest_unread_release)){
+	} else if (!isEmpty(b_latest) && !b_latest.marked_seen){
 		return 1;
 	}
 
@@ -721,9 +725,24 @@ function getNumNewReleasesInList(data_list) {
 	var num = 0;
 	for (var i = 0; i < data_list.series_list.length; i++) {
 		if (exists(data_list.series_list[i].unread_releases)) {
-			num += data_list.series_list[i].unread_releases.length;
+			var releases = data_list.series_list[i].unread_releases;
+			num += getNumUnseenReleases(releases);
 		}
 	}
+	return num;
+}
+
+/**
+ * gets the number of releases out of a release set the user
+ * has not marked as seen
+ * @param {Release[]} unread_releases
+ * @returns {Number}
+ */
+function getNumUnseenReleases(unread_releases) {
+	var num = 0;
+	unread_releases.forEach(function (item) {
+		if (!item.marked_seen) num++;
+	});
 	return num;
 }
 
@@ -748,9 +767,8 @@ function getTotalNumSeriesWithNewReleases(data_lists) {
 function getNumSeriesWithNewReleasesInList(data_list) {
 	var num = 0;
 	for (var i = 0; i < data_list.series_list.length; i++) {
-		if (exists(data_list.series_list[i].latest_unread_release)) {
-			num++;
-		}
+		var releases = data_list.series_list[i].unread_releases;
+		if (getNumUnseenReleases(releases) > 0) num++;
 	}
 	return num;
 }
@@ -761,7 +779,7 @@ function getNumSeriesWithNewReleasesInList(data_list) {
  * @returns {Number}
  */
 function getNumNewReleasesForSeries(series) {
-	return series.unread_releases.length;
+	return getNumUnseenReleases(series.unread_releases);
 }
 
 /**
@@ -1067,7 +1085,7 @@ function notifyOfRelease(release, series) {
 		type: "list",
 		title: "New manga release",
 		message: "New manga release",
-		iconUrl: "img/icon128.png",
+		iconUrl: "../../img/icon128.png",
 		items: messages
 	};
 	var url;
@@ -1165,7 +1183,7 @@ function userPushSeriesUpToDate(series_id, callback) {
  * attaches a link provided by the user to the series corresponding to the id
  * @param {string} series_id
  * @param {string} link
- * @param {function} callback
+ * @param {function(Data)} callback
  */
 function userSetSeriesLink(series_id, link, callback) {
 	loadData(function (data) {
@@ -1180,7 +1198,7 @@ function userSetSeriesLink(series_id, link, callback) {
 /**
  * removes user_link property from series corresponding to id
  * @param {string} series_id
- * @param {function} callback
+ * @param {function(Data)} callback
  */
 function userClearSeriesLink(series_id, callback) {
 	loadData(function (data) {
@@ -1193,11 +1211,27 @@ function userClearSeriesLink(series_id, callback) {
 }
 
 /**
+ * marks all series releases as having been seen by user
+ * @param {string} series_id
+ * @param {function(Data)} callback
+ */
+function userMarkSeriesReleasesSeen(series_id, callback) {
+	loadData(function (data) {
+		var series = getSeriesById(data.lists, series_id);
+		series.unread_releases.forEach(function (item) {
+			item.marked_seen = true;
+		});
+		series.latest_unread_release.marked_seen = true;
+		saveData(data, callback);
+	});
+}
+
+/**
  * deletes all series corresponding to ids in given array from lists, then
  * pushes the deletions to MU
  * @param {string} list_src_id
  * @param {string[]} delete_series_id_arr
- * @param {function} callback
+ * @param {function(Data)} callback
  */
 function userDeleteSeries(list_src_id, delete_series_id_arr, callback) {
 	loadData(function (data) {
@@ -1213,7 +1247,7 @@ function userDeleteSeries(list_src_id, delete_series_id_arr, callback) {
  * @param {string} list_src_id
  * @param {string} list_dst_id
  * @param {string[]} move_series_id_arr
- * @param {function} callback
+ * @param {function(Data)} callback
  */
 function userMoveSeries(list_src_id, list_dst_id, move_series_id_arr, callback) {
 	loadData(function (data) {
@@ -1228,7 +1262,7 @@ function userMoveSeries(list_src_id, list_dst_id, move_series_id_arr, callback) 
  * @param {string} series_id
  * @param {string} volume
  * @param {string} chapter
- * @param {function} callback
+ * @param {function(Data)} callback
  */
 function userManualUpdateVolumeChapter(series_id, volume, chapter, callback) {
 	loadData(function (data) {
@@ -1491,7 +1525,8 @@ function scanSeriesLatestRelease(series_id, callback) {
 				title: r_title,
 				volume: r_volume,
 				chapter: r_chapter,
-				groups: r_groups
+				groups: r_groups,
+				marked_seen: false
 			};
 			callback(release);
 		}
@@ -1545,7 +1580,8 @@ function scanSeriesLatestReleases(series_id) {
 					title:r_title,
 					volume:r_volume,
 					chapter:r_chapter,
-					groups:r_groups
+					groups: r_groups,
+					marked_seen: false
 				};
 					console.log(release);
 					
@@ -1621,7 +1657,8 @@ function scanNewReleases(callback) {
 								title: r_title,
 								volume: r_volume,
 								chapter: r_chapter,
-								groups: r_groups
+								groups: r_groups,
+								marked_seen: false
 							};
 
 							if (i === 0 && j === 0 && exists(release)) {
