@@ -84,6 +84,8 @@ function buildBadge(num_releases) {
 	badge.className = "badge";
 	badge_text.className = "badgeText";
 	badge_text.textContent = num_releases.toString();
+	badge_text.title = num_releases + " unread releases";
+	if (num_releases === 1) badge_text.title = "1 unread release";
 	badge.appendChild(badge_text);
 	return badge;
 }
@@ -117,7 +119,7 @@ function buildTitleBlock(data_list, data_series) {
 	title_cont.style.fontSize = font_size + 'px';
 	var edit_link_wrap = buildEditLinkButton(data_series);
 	if (!isEmpty(data_series.unread_releases)) {
-		if (data_series.unread_releases.length > 0) {
+		if (data_series.unread_releases.length > 1 || data_series.latest_unread_release.marked_seen) {
 			var badge = buildBadge(data_series.unread_releases.length);
 			var title_badge_wrap = document.createElement('div');
 			badge.classList.add("titleBadge");
