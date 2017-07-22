@@ -361,9 +361,7 @@ function cmpReleaseAlphabetical(a, b) {
 	var b_latest = b.latest_unread_release;
 	if (!isEmpty(a_latest) && !a_latest.marked_seen) {
 		if (isEmpty(b_latest)) {
-			if (typeof b_latest === 'undefined' || b_latest.marked_seen) {
 				return -1;
-			}
 		}
 	} else if (!isEmpty(b_latest) && !b_latest.marked_seen){
 		return 1;

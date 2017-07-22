@@ -3,7 +3,7 @@
   "name": "en: Extension + Notifier for Manga Updates",
   "short_name": "en",
   "description": "Get notified of new English-translated Asian releases (manga, light/web novels, etc.) and track your progress",
-  "version": "0.1.2.3220",
+  "version": "0.1.2.3221",
   "permissions": [
     "*://www.mangaupdates.com/*",
     "storage",
