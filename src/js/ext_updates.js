@@ -8,7 +8,7 @@ function bgNewInstall(details) {
 	var old_version = details.previousVersion;
 
 	if (reason === "install") {
-		bgSync();
+		clearAllData(bgSync);
 	} else if (reason === "updated") {
 		switch (old_version) {
 			case "0.1.2.3210":

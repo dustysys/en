@@ -276,7 +276,8 @@ function giveSeriesRowSortPrompt(series_row) {
 	uptodate_button.style.fontSize = "14px";
 	uptodate_button.style.display = "";
 	series_row.setAttribute("unsorted", "true");
-	uptodate_button.onclick = (function () {
+	uptodate_button.onclick = (function (event) {
+		if (event.altKey) return;
 		finalizeMarkSeriesRowUpToDate(series_row);
 	});
 }
@@ -286,6 +287,7 @@ function giveSeriesRowSortPrompt(series_row) {
  * @param {Event} event
  */
 function handleUpToDate(event) {
+	if (event.altKey) return;
 	var series_row = getUpToDateButtonsSeriesRow(event.target);
 	if (global_pref_one_click_uptodate.enabled) {
 		pullSeriesRowUpToDate(series_row);
@@ -1248,8 +1250,7 @@ function handleClickedSeriesRow(event) {
 			var series = getSeriesById(data.lists, series_id);
 			var list = getListById(data.lists, list_id);
 			var updated_row = updateSeriesRow(series_row, list, series);
-			giveSeriesRowSortPrompt(updated_row);
-			updateListState(list_id);
+			finalizeMarkSeriesRowUpToDate(updated_row);
 		});
 	}
 }
