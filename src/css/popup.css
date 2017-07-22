@@ -135,6 +135,9 @@ button {
     [new_releases=true] .seriesTitleBlock {
         border-right-color: var(--border-color-new);
     }
+    [new_releases=true] .badge {
+        background-color: var(--text-color-new);
+    }
 
 .seriesRow[new_releases=false] ,
 [new_releases=false] * {
@@ -167,6 +170,9 @@ button {
     }
     [new_releases=false] .seriesTitleBlock {
         border-right-color: var(--border-color);
+    }
+    [new_releases=false] .badge {
+        background-color: var(--text-color);
     }
 
 .listTable {
@@ -735,7 +741,6 @@ button {
 .badge{
     position:absolute;
     display:inline;
-    background-color: var(--text-color-new);
     text-align:center;
     height: 11px;
     min-width: 11px;
