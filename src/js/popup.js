@@ -448,6 +448,23 @@ function updateSeriesRow(series_row, data_list, data_series) {
 }
 
 /**
+ * updates series row on the popup, called when local function has no
+ * need to access data otherwise
+ * @param {Element} series_row
+ * @param {function(Element)} callback
+ */
+function updateUnloadedSeriesRow(series_row, callback) {
+	loadData(function (data) {
+		var series_id = getSeriesRowsId(series_row);
+		var series = getSeriesById(data.lists, series_id);
+		var list_id = series_row.getAttribute("list_id");
+		var list = getListById(data.lists, list_id);
+		var updated_row = updateSeriesRow(series_row, list, series);
+		if (callback) callback(updated_row);
+	 });
+}
+
+/**
  * inserts series row in proper place assuming array is pre-sorted
  * @param {Element} series_row
  * @return {Number} new index of series row 
@@ -1221,14 +1238,14 @@ function filterList(filter) {
 }
 
 /**
- * 
+ * marks a series' releases seen when alt-clicked
  * @param {Event} event
  */
 function handleClickedSeriesRow(event) {
 	if (event.altKey) {
 		var series_row = event.target.closest('.seriesRow');
 		var series_id = getSeriesRowsId(series_row);
-		var list_id = getSeriesRowsTable(series_row).getAttribute("list_id");
+		var list_id = series_row.getAttribute("list_id");
 		userMarkSeriesReleasesSeen(getSeriesRowsId(series_row), function (data) {
 			var series = getSeriesById(data.lists, series_id);
 			var list = getListById(data.lists, list_id);
