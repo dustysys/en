@@ -7,6 +7,6 @@ cache:
     - test/node_modules
 script: cd test && yarn && npm test
 after_script:
-  - cd test && yarn codecov
+  - yarn codecov
 notifications:
   email: false
