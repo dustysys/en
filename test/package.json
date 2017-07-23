@@ -6,7 +6,7 @@
     "test": "karma start karma.conf.js --single-run",
     "twatch": "karma start karma.conf.js",
     "report-coverage": "codecov",
-    "codecov": "cat ./coverage/*/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js"
+    "travis-codecov": "cat ./coverage/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js"
   },
   "devDependencies": {
     "chai": "^3.5.0",

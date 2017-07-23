@@ -3,7 +3,7 @@
 
 module.exports = function(config) {
 
-    let customBrowsers = ['Chrome', 'Firefox', 'PhantomJS']
+    let customBrowsers = ['Chrome', 'PhantomJS']
     if (process.env.TRAVIS) {
       customBrowsers = ['PhantomJS']
     }
