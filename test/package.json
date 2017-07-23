@@ -1,0 +1,32 @@
+{
+  "name": "en-test",
+  "version": "0.0.1",
+  "description": "absurdly big node.js module for testing simple chrome extension",
+  "scripts": {
+    "test": "karma start karma.conf.js --single-run",
+    "twatch": "karma start karma.conf.js",
+    "report-coverage": "codecov",
+    "codecov": "codecov"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "codecov.io": "^0.1.6",
+    "istanbul": "^0.4.4",
+    "karma": "^1.7.0",
+    "karma-browserify": "^5.0.5",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coverage": "^1.0.0",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-mocha": "^1.1.1",
+    "karma-mocha-reporter": "^2.0.4",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-safari-launcher": "^1.0.0",
+    "karma-sinon-chai": "^1.2.2",
+    "lolex": "^1.5.0",
+    "mocha": "^3.0.2",
+    "phantomjs-prebuilt": "^2.1.7",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0",
+    "watchify": "^3.7.0"
+  }
+}

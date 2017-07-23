@@ -1,2 +1,7 @@
 vwd.webinfo
 doc/chrome/
+test/node_modules/
+/.vscode/
+yarn.lock
+package-lock.json
+coverage/
