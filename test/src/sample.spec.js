@@ -9,6 +9,7 @@ describe('karma test with Chai', function() {
 
   it('should expose the Chai expect method', function() {
     expect('foo').to.not.equal('bar');
+    debugger;
   })
 
   it('should expose the Chai should property', function() {

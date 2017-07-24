@@ -8,5 +8,9 @@ function throttle (callback) {
     }, 100)
   }
 }
+debugger;
 
-console.log("hello");
+function sayHi(){
+  debugger;
+  console.log("hello");
+}

@@ -3,15 +3,16 @@
 
 module.exports = function(config) {
 
-    let customBrowsers = ['Chrome', 'PhantomJS']
+    var customBrowsers = ['ChromeDebug'];
+
     if (process.env.TRAVIS) {
-      customBrowsers = ['PhantomJS']
+      customBrowsers = ['PhantomJS'];
     }
 
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: '..',
 
 
     // frameworks to use
@@ -21,7 +22,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../src/js/sample.js', 'src/sample.spec.js'
+      'src/js/sample.js', 'test/src/sample.spec.js'
     ],
 
 
@@ -33,7 +34,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      '../src/js/sample.js':['coverage']
+    // '../src/js/*.js':['coverage']
     },
 
 
@@ -45,9 +46,8 @@ module.exports = function(config) {
     coverageReporter: {
       reporters: [
           {type: 'text'},
-          {type: 'html', dir: 'coverage'},
-          {type: 'lcovonly', subdir:'.'},
-          {type:'json', subdir: '.'}
+          {type: 'html', dir: 'test/coverage'},
+          {type: 'lcovonly', subdir:'test/.'},
         ]
     },
 
@@ -68,11 +68,17 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
+    customLaunchers:{
+      ChromeDebug: {
+        base: 'Chrome',
+        flags: [ '--remote-debugging-port=9222'],
+        debug:true
+      },
+    },
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: customBrowsers,
-
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -80,6 +86,6 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: 1
   })
 }
