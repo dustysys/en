@@ -3,11 +3,7 @@
 
 module.exports = function(config) {
 
-  var By = require('selenium-webdriver').By,
-    until = require('selenium-webdriver').until,
-    webdriver = require('selenium-webdriver');
-
-    var customBrowsers = ['swd_chrome'];
+    var customBrowsers = ['ChromeHeadless'];
 
     if (process.env.TRAVIS) {
       customBrowsers = ['ChromeHeadless'];
@@ -76,17 +72,6 @@ module.exports = function(config) {
         base: 'Chrome',
         flags: [ '--remote-debugging-port=9222'],
         debug:true
-      },
-      swd_chrome: {
-        base: 'SeleniumWebdriver',
-        browserName: 'Chrome',
-        getDriver: function(){
-          // example from https://www.npmjs.com/package/selenium-webdriver#usage
-          var driver = new webdriver.Builder()
-              .forBrowser('chrome')
-              .build();
-          return driver;
-        }
       }
     },
 
