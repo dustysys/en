@@ -9,7 +9,7 @@
     "selen-test": "istanbul cover --report lcovonly --report text --dir ./coverage/selenium/ ./node_modules/mocha/bin/_mocha src/selenium/selen_test.spec.js",
     "report-coverage": "codecov",
     "travis-karma-test": "karma start src/karma.conf.js --single-run",
-    "travis-selen-test": "istanbul cover --report lcovonly --report text --dir ./coverage/selenium/ ./node_modules/mocha/bin/_mocha src/selenium/selen_test.spec.js",
+    "travis-selen-test": "istanbul cover --dir ./coverage/selenium/ ./node_modules/mocha/bin/_mocha src/selenium/selen_test.spec.js",
     "travis-coverage": "npm run travis-karma-codecov && npm run travis-selen-codecov",
     "travis-karma-codecov": "cat ./coverage/selenium/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js",
     "travis-selen-codecov": "cat ./coverage/karma/*/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js"
