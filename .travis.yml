@@ -1,6 +1,9 @@
 language: node_js
 node_js:
   - "7.5"
+dist: trusty
+addons:
+  chrome: stable
 cache:
   yarn: true
   directories:

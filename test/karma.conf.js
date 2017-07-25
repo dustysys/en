@@ -10,7 +10,7 @@ module.exports = function(config) {
     var customBrowsers = ['swd_chrome'];
 
     if (process.env.TRAVIS) {
-      customBrowsers = ['PhantomJS'];
+      customBrowsers = ['ChromeHeadless'];
     }
 
   config.set({

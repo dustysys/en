@@ -6,9 +6,9 @@
     "test": "karma start karma.conf.js",
     "twatch": "karma start karma.conf.js",
     "report-coverage": "codecov",
-    "selenium-test": "mocha src/selen_test.spec.js",
+    "selenium-test": "istanbul cover --report lcovonly --report text ./node_modules/mocha/bin/_mocha src/selen_test.spec.js",
     "travis-test": "karma start karma.conf.js --single-run",
-    "travis-codecov": "cat ./coverage/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js"
+    "travis-codecov": "cat ./coverage/*/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js"
   },
   "devDependencies": {
     "chai": "^4.1.0",
