@@ -3,7 +3,11 @@
 
 module.exports = function(config) {
 
-    var customBrowsers = ['PhantomJS'];
+  var By = require('selenium-webdriver').By,
+    until = require('selenium-webdriver').until,
+    webdriver = require('selenium-webdriver');
+
+    var customBrowsers = ['swd_chrome'];
 
     if (process.env.TRAVIS) {
       customBrowsers = ['PhantomJS'];
@@ -46,8 +50,7 @@ module.exports = function(config) {
     coverageReporter: {
       reporters: [
           {type: 'text'},
-          {type: 'html', dir: 'test/coverage'},
-          {type: 'lcovonly', subdir:'test/.'},
+          {type: 'lcovonly', dir:'test/coverage'},
         ]
     },
 
@@ -74,6 +77,17 @@ module.exports = function(config) {
         flags: [ '--remote-debugging-port=9222'],
         debug:true
       },
+      swd_chrome: {
+        base: 'SeleniumWebdriver',
+        browserName: 'Chrome',
+        getDriver: function(){
+          // example from https://www.npmjs.com/package/selenium-webdriver#usage
+          var driver = new webdriver.Builder()
+              .forBrowser('chrome')
+              .build();
+          return driver;
+        }
+      }
     },
 
     // start these browsers
