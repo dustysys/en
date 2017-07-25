@@ -8,8 +8,15 @@ cache:
   yarn: true
   directories:
     - test/node_modules
-script: cd test && yarn && npm run travis-test
+script: whereis google-chrome-stable && whereis chromedriver && cd test && yarn && npm run travis-test
 after_script:
   - yarn travis-codecov
 notifications:
   email: false
+install: # Install ChromeDriver (64bits; replace 64 with 32 for 32bits).
+  - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
+  - unzip ~/chromedriver_linux64.zip -d ~/
+  - rm ~/chromedriver_linux64.zip
+  - sudo mv -f ~/chromedriver /usr/local/share/
+  - sudo chmod +x /usr/local/share/chromedriver
+  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
