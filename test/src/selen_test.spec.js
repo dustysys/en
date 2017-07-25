@@ -19,10 +19,8 @@ test.describe('Google Search', function() {
          build();
 driver.get('http://www.google.com');
     var searchBox = driver.findElement(webdriver.By.name('q'));
-    console.log("Hello");
     searchBox.sendKeys('simple programmer');
-    searchBox.getAttribute('innerHTML').then(function(value) {
-      console.log("Hello2");
+    searchBox.getAttribute('value').then(function(value) {
       assert.equal(value, 'simple programmer');
     });
     driver.quit();
