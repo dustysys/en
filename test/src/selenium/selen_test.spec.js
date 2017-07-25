@@ -9,7 +9,10 @@ test.describe('Google Search', function() {
   this.timeout(30000);
   test.it('should work', function() {
     var options = new chrome.Options();
-    options.setChromeBinaryPath('/usr/bin/google-chrome-stable');
+    /* istanbul ignore if */
+    if (process.env.TRAVIS) {
+        options.setChromeBinaryPath('/usr/bin/google-chrome-stable');
+    }
     options.addArguments('--headless');
     options.addArguments('--disable-gpu');
     
