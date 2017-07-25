@@ -8,9 +8,9 @@ cache:
   yarn: true
   directories:
     - test/node_modules
-script: whereis google-chrome-stable && whereis chromedriver && cd test && yarn && npm run travis-selen-test && npm run travis-karma-test
+script: cd test && yarn && npm run travis-selen-test && npm run travis-karma-test
 after_script:
-  - yarn travis-codecov
+  - npm run travis-coverage
 notifications:
   email: false
 install: # Install ChromeDriver (64bits; replace 64 with 32 for 32bits).
