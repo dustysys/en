@@ -423,36 +423,18 @@ function userManualUpdateVolumeChapter(series_id, volume, chapter, callback) {
  * @param {function([List])} callback
  */
 function scanForNewLists(existing_lists, callback) {
+	var default_list = createReadingList();
+	if (!hasList(existing_lists, default_list)) {
+		existing_lists.push(default_list);
+	}
 	getMyListPage(function (list_page) {
-		var parser = new DOMParser();
-		var doc = parser.parseFromString(list_page, "text/html");
-		var elm = doc.querySelector('[id="add_series"]');
-		var root = elm.previousElementSibling;
-		var first_list = 10; // wish list
+		var parsed_lists = parseMyListPage(list_page);
 		var lists_to_add = [];
-
-		// Reading list treated separately because data is not available
-		// for it on My Lists page
-		var reading_list = createReadingList();
-		if (!hasList(existing_lists, reading_list)) {
-			lists_to_add.push(reading_list);
-		}
-
-		for (var i = first_list; i < root.children.length; i++) {
-			var list_elm = root.children[i];
-			var link = list_elm.getAttribute("href");
-			var list_id = link.substring(link.indexOf("=") + 1);
-			var list_name = list_elm.firstElementChild.textContent;
-			var new_list = {
-				list_id: list_id,
-				list_name: list_name,
-				series_list: []
-			};
-
-			if (!hasList(existing_lists, new_list)) {
-				lists_to_add.push(new_list);
+		parsed_lists.forEach(function (list) {
+			if (!hasList(existing_lists, list)) {
+				lists_to_add.push(list);
 			}
-		}
+		});
 		// finish list scan by adding types
 		pullListTypes(lists_to_add, callback);
 	});
