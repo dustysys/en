@@ -48,3 +48,11 @@ function parseMembersPageForUserId(members_page) {
 		return user_id;
 	} else return null;
 }
+
+function parseSeriesInfoPageForTitle(series_page) {
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(series_page, "text/html");
+	var title_elms = doc.getElementsByClassName("releasestitle tabletitle");
+	var title = title_elms[0].textContent;
+	return title;
+}

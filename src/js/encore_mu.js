@@ -528,11 +528,8 @@ function scanListForNewSeries(existing_list, callback) {
  * @param {function(Series)} callback
  */
 function scanSeries(series_id, callback) {
-	getSeriesInfoPage(series_id, function(series_page){
-		var parser = new DOMParser();
-		var doc = parser.parseFromString(series_page, "text/html");
-		var title_elms = doc.getElementsByClassName("releasestitle tabletitle");
-		var title = title_elms[0].textContent;
+	getSeriesInfoPage(series_id, function (series_page) {
+		var title = parseSeriesInfoPageForTitle(series_page);
 
 		var series = {
 			series_id: series_id,
