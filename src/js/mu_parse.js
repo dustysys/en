@@ -56,3 +56,45 @@ function parseSeriesInfoPageForTitle(series_page) {
 	var title = title_elms[0].textContent;
 	return title;
 }
+
+function parseSeriesReleasePageForLatestRelease(release_page) {
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(release_page, "text/html");
+	var elm_list = doc.querySelector('[title="Series Info"]');
+	if (elm_list) {
+
+		var elm_title = elm_list;
+		var elm_date = elm_title.parentElement.previousElementSibling;
+		var elm_volume = elm_list.parentElement.nextElementSibling;
+		var elm_chapter = elm_volume.nextElementSibling;
+		var elm_groups = elm_chapter.nextElementSibling;
+
+		var default_date = new Date(1970, 1, 1);
+		var r_date = default_date.toISOString();
+		if (validateDigits(elm_date.textContent) !== "") {
+			var actual_date = new Date(elm_date.textContent);
+			r_date = actual_date.toISOString();
+		}
+		var r_title = elm_title.textContent;
+		var r_volume = elm_volume.textContent;
+		var r_chapter = elm_chapter.textContent;
+		var r_groups = "";
+
+		for (var j = 0; j < elm_groups.children.length; j++) {
+			if (j == 0) r_groups += elm_groups.children[0].textContent;
+			else {
+				r_groups += " & " + elm_groups.children[j].textContent;
+			}
+		}
+		var release = {
+			date: r_date,
+			title: r_title,
+			volume: r_volume,
+			chapter: r_chapter,
+			groups: r_groups,
+			marked_seen: false
+		};
+		return release;
+
+	} else return null;
+}
