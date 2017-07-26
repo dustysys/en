@@ -600,62 +600,6 @@ function scanSeriesLatestRelease(series_id, callback) {
 }
 
 /**
- * scans for all releases from series' release page(unused/unfinished)
- * @param {string} series_id
- */
-function scanSeriesLatestReleases(series_id) {
-	getSeriesReleasePage(series_id, function(release_page){
-		var parser = new DOMParser();
-		var doc = parser.parseFromString(release_page, "text/html");
-		var elm_list = doc.querySelectorAll('[title="Series Info"]');
-		if (elm_list && elm_list.length>0){
-			for (var i = 0; i < elm_list.length; i++) {
-				
-				var elm_title = elm_list[i];
-				var elm_date = elm_title.parentElement.previousElementSibling;
-				var elm_volume = elm_list[i].parentElement.nextElementSibling;
-				var elm_chapter = elm_volume.nextElementSibling;
-				var elm_groups = elm_chapter.nextElementSibling;
-				
-				var default_date = new Date(1970, 1, 1);
-				var r_date = default_date.toISOString();
-				if (validateDigits(elm_date.textContent) !== "") {
-					var actual_date = new Date(elm_date.textContent);
-					r_date = actual_date.toISOString();
-				}
-				var r_title = elm_title.textContent;
-				var r_volume = elm_volume.textContent;
-				var r_chapter = elm_chapter.textContent;
-				var r_groups = "";
-				
-				for (var j = 0; j < elm_groups.children.length; j++)
-				{
-					if (j==0) r_groups += elm_groups.children[0].textContent;
-					else{
-						r_groups += " & " + elm_groups.children[j].textContent;
-					}
-				}
-				
-				
-				var release = {
-					date:r_date,
-					title:r_title,
-					volume:r_volume,
-					chapter:r_chapter,
-					groups: r_groups,
-					marked_seen: false
-				};
-					console.log(release);
-					
-				}
-			}
-		else {
-			console.log("No releases found!");
-		}
-	});
-}
-
-/**
  * scans for series_id:release tuples on new release page
  * TODO: the heavy indentation of all the parser functions isn't great,
  * but this one is out of control. Refactor.
