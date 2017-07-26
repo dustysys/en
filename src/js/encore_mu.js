@@ -143,6 +143,11 @@ function getTotalNumNewReadingReleases(data_lists) {
  * @returns {List} corresponding to enum
  */
 function getListByEnum(data_lists, num) {
+	var list_id = getListIdByEnum(num);
+	return getListById(data_lists, list_id);
+}
+
+function getListIdByEnum(num) {
 	var list_id = "";
 	// MU user lists start at 101
 	// 101 = list id user1 112 = user12 etc
@@ -172,7 +177,8 @@ function getListByEnum(data_lists, num) {
 				break;
 		}
 	}
-	return getListById(data_lists, list_id);
+
+	return list_id;
 }
 
 /**
@@ -778,7 +784,7 @@ function setDefaultListsTypes(data_lists) {
 	data_lists.forEach(function (list) {
 		var default_list_ids = ["read", "wish", "complete", "unfinished", "hold"];
 		var list_id = list.list_id;
-		if (default_list_ids.indexOf(list_id) >= 0) {
+		if (default_list_ids.includes(list_id)) {
 			list.list_type = list.list_id;
 		}
 	});
@@ -791,20 +797,15 @@ function setDefaultListsTypes(data_lists) {
  */
 function pullCustomListsTypes(data_lists, callback) {
 	getEditListPage(function (edit_list_page) {
-		var edit_list_parser = new DOMParser();
-		var edit_list_doc = edit_list_parser.parseFromString(edit_list_page, "text/html");
-		var select_elms = edit_list_doc.getElementsByTagName('select');
-		for (var i = 0; i < select_elms.length; i++) {
-			var select_name = select_elms[i].name;
-			if (select_name.includes("][type]")) {
-				var list_num = parseInt(select_name.substring(6, select_name.indexOf("][type]")));
-				var list = getListByEnum(data_lists, list_num);
-				if (exists(list)) {
-					var selected_type = select_elms[i].querySelector('[selected="selected"]');
-					list.list_type = selected_type.value;
-				}
+		var list_id_type_pairs = parseEditListPage(edit_list_page);
+		list_id_type_pairs.forEach(function (pair) {
+			var list_id = pair[0];
+			var list_type = pair[1];
+			var list = getListById(data_lists, list_id);
+			if (exists(list)) {
+				list.list_type = list_type;
 			}
-		}
+		});
 		if (callback) callback(data_lists);
 	});
 }

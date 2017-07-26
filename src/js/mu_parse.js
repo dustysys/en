@@ -19,3 +19,21 @@ function parseMyListPage(list_page) {
 	}
 	return parsed_lists;
 }
+
+function parseEditListPage(edit_list_page) {
+	var list_id_type_pairs = [];
+	var edit_list_parser = new DOMParser();
+	var edit_list_doc = edit_list_parser.parseFromString(edit_list_page, "text/html");
+	var select_elms = edit_list_doc.getElementsByTagName('select');
+	for (var i = 0; i < select_elms.length; i++) {
+		var select_name = select_elms[i].name;
+		if (select_name.includes("][type]")) {
+			var list_num = parseInt(select_name.substring(6, select_name.indexOf("][type]")));
+			var selected_type = select_elms[i].querySelector('[selected="selected"]');
+			var list_id = getListIdByEnum(list_num);
+			var list_type = selected_type.value;
+			list_id_type_pairs.push([list_id, list_type]);
+		}
+	}
+	return list_id_type_pairs;
+}
