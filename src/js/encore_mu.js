@@ -531,9 +531,7 @@ function scanSeriesLatestRelease(series_id, callback) {
 }
 
 /**
- * scans for series_id:release tuples on new release page
- * TODO: the heavy indentation of all the parser functions isn't great,
- * but this one is out of control. Refactor.
+ * scans for series_id:release pairs on new release page
  * @typedef {Object} SeriesReleasePair
  * @param {function(SeriesReleasePair[])} callback
  */
@@ -541,83 +539,8 @@ function scanNewReleases(callback) {
 	var new_releases_page_num = "1";
 	getNewReleasesPage(new_releases_page_num, function (new_releases_page) {
 		loadLatestReleaseUpdate(function (latest_release_update) {
-			var series_id_release_pairs = [];
-			var parser = new DOMParser();
-			var doc = parser.parseFromString(new_releases_page, "text/html");
-			var elm_date_list = doc.querySelectorAll('[style="display:inline"]');
-			if (elm_date_list && elm_date_list.length > 0) {
-				for (var i = 0; i < elm_date_list.length; i++) {
-					var elm_date = elm_date_list[i].firstElementChild;
-					var str_date = elm_date.textContent;
-					var str_date_sans_day = str_date.substring(str_date.indexOf(",") + 2);
-					var str_date_parsed = str_date_sans_day.replace(/(\d+)(st|nd|rd|th)/, "$1");
-					var date_obj = new Date(str_date_parsed);
-					var r_date = date_obj.toISOString();
-
-					var release_root = elm_date_list[i].nextElementSibling.querySelectorAll('img[src="images/listicons/type0.gif"]');
-					if (release_root && release_root.length > 0) {
-						for (var j = 0; j < release_root.length; j++) {
-							var elm_title = release_root[j].parentElement.nextElementSibling;
-							var elm_vol_chap = elm_title.parentElement.nextElementSibling;
-							var elm_groups = elm_vol_chap.nextElementSibling;
-							var series_link = elm_title.getAttribute("href");
-							var series_id = series_link.substring(series_link.indexOf("=") + 1);
-
-							var r_title = elm_title.textContent;
-							var r_vol_chap = elm_vol_chap.textContent;
-							var r_volume = "";
-							var r_chapter = "";
-							var r_groups = "";
-
-							var vol_indicators = instancesOf(elm_vol_chap.textContent, "v.", true);
-							var chap_indicators = instancesOf(elm_vol_chap.textContent, "c.", true);
-							if (vol_indicators == 1 && chap_indicators == 0) {
-								r_volume = r_vol_chap.substring(3);
-							}
-							else if (vol_indicators == 0 && chap_indicators == 1) {
-								r_chapter = r_vol_chap.substring(3);
-							}
-							else if (vol_indicators == 1 && chap_indicators == 1) {
-								r_volume = r_vol_chap.substring(3, r_vol_chap.indexOf('c.') - 1);
-								r_chapter = r_vol_chap.substring(r_vol_chap.indexOf('c.') + 2);
-							}
-
-							for (var k = 0; k < elm_groups.children.length; k++) {
-								if (k == 0) r_groups += elm_groups.children[0].textContent;
-								else {
-									r_groups += " & " + elm_groups.children[k].textContent;
-								}
-							}
-
-							var release = {
-								date: r_date,
-								title: r_title,
-								volume: r_volume,
-								chapter: r_chapter,
-								groups: r_groups,
-								marked_seen: false
-							};
-
-							if (i === 0 && j === 0 && exists(release)) {
-								saveLatestReleaseUpdate(release);
-							}
-
-							if (latest_release_update && latest_release_update !== "No Release") {
-								if (releasesAreSame(latest_release_update, release)) {
-									console.log("Checked up to latest release!");
-									// break out of the loops:
-									i = elm_date_list.length;
-									j = release_root.length;
-								} else {
-									series_id_release_pairs.push([series_id, release]);
-								}
-							} else {
-								series_id_release_pairs.push([series_id, release]);
-							}
-						}
-					}
-				}
-			}
+			var series_id_release_pairs =
+				parseNewReleasesPageForReleases(new_releases_page, latest_release_update);
 			callback(series_id_release_pairs);
 		});
 	});
