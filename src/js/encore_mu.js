@@ -768,47 +768,28 @@ function scanLoggedInUserId(callback) {
  * @param {function(List)} callback
  */
 function pullListTypes(data_lists, callback) {
-	var lists_typed_count = 0;
-	var typed_lists = [];
 	if (data_lists.length > 0) {
-		data_lists.forEach(function (item, index, array) {
-			getListPage(item.list_id, function (icon_page) {
-
-				var icon_parser = new DOMParser();
-				var icon_doc = icon_parser.parseFromString(icon_page, "text/html");
-				var icon_elm = icon_doc.querySelector('img[alt="icon"]');
-				var icon_link = icon_elm.getAttribute("src");
-				var icon_type = "";
-				switch (icon_link) {
-					default:
-						icon_type = "read"; break;
-					case "images/listicons/big/icon1.gif":
-						icon_type = "wish"; break;
-					case "images/listicons/big/icon2.gif":
-						icon_type = "complete"; break;
-					case "images/listicons/big/icon3.gif":
-						icon_type = "unfinished"; break;
-					case "images/listicons/big/icon4.gif":
-						icon_type = "hold"; break;
-				}
-				item.list_type = icon_type;
-				typed_lists.push(item);
-				lists_typed_count++;
-
-				if (lists_typed_count === array.length) {
-					correctCustomListsTypes(typed_lists, callback);
-				}
-			});
-		});
+		setDefaultListsTypes(data_lists);
+		pullCustomListsTypes(data_lists, callback);
 	} else callback(data_lists);
 }
 
+function setDefaultListsTypes(data_lists) {
+	data_lists.forEach(function (list) {
+		var default_list_ids = ["read", "wish", "complete", "unfinished", "hold"];
+		var list_id = list.list_id;
+		if (default_list_ids.indexOf(list_id) >= 0) {
+			list.list_type = list.list_id;
+		}
+	});
+}
+
 /**
- * fixes lists whose icons do not describe their types
+ * scans and sets the types for custom lists
  * @param {List[]} data_lists
  * @param {function(List[])} callback
  */
-function correctCustomListsTypes(data_lists, callback) {
+function pullCustomListsTypes(data_lists, callback) {
 	getEditListPage(function (edit_list_page) {
 		var edit_list_parser = new DOMParser();
 		var edit_list_doc = edit_list_parser.parseFromString(edit_list_page, "text/html");

@@ -12,6 +12,7 @@ function parseMyListPage(list_page) {
 		var parsed_list = {
 			list_id: list_id,
 			list_name: list_name,
+			list_type: "",
 			series_list: []
 		};
 			parsed_lists.push(parsed_list);
