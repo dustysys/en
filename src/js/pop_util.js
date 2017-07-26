@@ -2,8 +2,7 @@
 File: pop_util.js
 
 Functions defined here process are useful for determining information about
-the popup or its elements. Though this usually requiring some processing these
-functions do not modify the state of the DOM or their underlying data.
+the popup or its elements, or for modifying generic elements.
 #############################################################################*/
 
 /**
@@ -100,6 +99,55 @@ function getIndexOfElementInDOM(el) {
 	var el_index = 0;
 	for (el_index; (el = el.previousSibling); el_index++);
 	return el_index;
+}
+
+/**
+ * switches an elements toggle attribute, returns toggle's new truth value
+ * @param {Element}
+ * @returns {boolean}
+ */
+function toggleElement(element) {
+	var toggle = element.getAttribute("toggle") === "on";
+	element.setAttribute("toggle", toggle ? "off" : "on");
+	return !toggle;
+}
+
+/**
+ * generic function for toggling any element's visibility
+ * @param {Element} el
+ * @param {boolean} toggle
+ */
+function toggleElementVisibility(el, toggle) {
+	if (typeof toggle === "boolean") {
+		toggle ? showElement(el) : hideElement(el);
+	} else console.error("Error: toggleElement requires toggle");
+}
+
+/**
+ * replaces element without modifying its DOM position
+ * @param {Element} new_el
+ * @param {Element} old_el
+ */
+function replaceElementInPlace(new_el, old_el) {
+
+	old_el.parentElement.replaceChild(new_el, old_el);
+
+}
+
+/**
+ * makes an element disappear from DOM flow
+ * @param {Element} el
+ */
+function hideElement(el) {
+	fastdom.mutate(function () { el.style.display = "none"; });
+}
+
+/**
+ * makes an element present in DOM flow
+ * @param {Element} el
+ */
+function showElement(el) {
+	fastdom.mutate(function () { el.style.display = ""; });
 }
 
 /**

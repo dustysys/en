@@ -8,7 +8,6 @@ elements but do not modify the state of any elements or underlying data.
 #############################################################################*/
 
 /**
- * 
  * @param {Element} title_block
  * @returns {Element}
  */
@@ -17,7 +16,6 @@ function getTitleBlocksTitleLink(title_block) {
 }
 
 /**
- * 
  * @param {Element} series_row
  * @returns {Element}
  */
@@ -26,7 +24,6 @@ function getSeriesRowsEditLinkButton(series_row) {
 }
 
 /**
- * 
  * @param {Element} link_button
  * @returns {Element}
  */
@@ -35,7 +32,6 @@ function getEditLinkButtonsLinkIcon(link_button) {
 }
 
 /**
- * 
  * @param {Element} series_row
  * @returns {Element}
  */
@@ -44,7 +40,6 @@ function getSeriesRowsEditLinkWrap(series_row) {
 }
 
 /**
- * 
  * @param {Element} input_link
  * @returns {Element}
  */
@@ -53,7 +48,6 @@ function getInputLinksSeriesRow(input_link) {
 }
 
 /**
- * 
  * @param {Element} series_row
  * @returns {Element}
  */
@@ -63,7 +57,6 @@ function getSeriesRowsUpToDateButton(series_row) {
 }
 
 /**
- * 
  * @param {Element} series_row
  * @returns {Element}
  */
@@ -71,8 +64,8 @@ function getSeriesRowsSeriesSelectWrap(series_row) {
 	var select_wrap = series_row.querySelector('.seriesSelectWrap');
 	return select_wrap;
 }
+
 /**
- * 
  * @param {Element} series_row
  * @returns {Element}
  */
@@ -80,8 +73,8 @@ function getSeriesRowsSeriesSelectButton(series_row) {
 	var select_button = series_row.querySelector('.seriesSelectButton');
 	return select_button;
 }
+
 /**
- * 
  * @param {Element} series_row
  * @returns {Element}
  */
@@ -90,7 +83,6 @@ function getSeriesRowsTable(series_row) {
 }
 
 /**
- * 
  * @param {Element} series_row
  * @returns {Element}
  */
@@ -98,7 +90,6 @@ function getSeriesRowsWrap(series_row) {
 	return series_row.parentElement;
 }
 /**
- * 
  * @param {Element} series_row
  * @returns {Element}
  */
@@ -106,7 +97,6 @@ function getSeriesRowsTitleLink(series_row) {
 	return series_row.querySelector('.titleLink');
 }
 /**
- * 
  * @param {Element} title_link
  * @returns {Element}
  */
@@ -115,7 +105,6 @@ function getTitleLinksSeriesRow(title_link) {
 }
 
 /**
- * 
  * @param {Element} edit_link_button
  * @returns {Element}
  */
@@ -124,7 +113,6 @@ function getEditLinkButtonsTitleBlock(edit_link_button) {
 }
 
 /**
- * 
  * @param {Element} edit_link_icon
  * @returns {Element}
  */
@@ -133,7 +121,6 @@ function getEditLinkIconsTitleBlock(edit_link_icon) {
 };
 
 /**
- * 
  * @param {Element} field
  * @returns {Element}
  */
@@ -141,7 +128,6 @@ function getReleaseFieldsSeriesRow(field) {
 	return field.closest('.seriesRow');
 }
 /**
- * 
  * @param {Element} field
  * @returns {Element}
  */
@@ -150,7 +136,6 @@ function getReleaseFieldsReleaseDisplay(field) {
 }
 
 /**
- * 
  * @param {Element} input
  * @returns {Element}
  */
@@ -159,12 +144,27 @@ function getReadInputsReleaseLine(input) {
 }
 
 /**
- * 
  * @param {Element} button
  * @returns {Element}
  */
 function getUpToDateButtonsSeriesRow(button) {
 	return button.closest('.seriesRow');
+}
+
+/**
+ * @param {Element} opt_select
+ * @returns
+ */
+function getOptionSelectsEditText(opt_select) {
+	return opt_select.nextElementSibling.children[1];
+}
+
+/**
+ * @param {Element} edit_text
+ * @returns
+ */
+function getEditTextsOptionSelect(edit_text) {
+	return edit_text.parentElement.previousElementSibling;
 }
 
 /**
