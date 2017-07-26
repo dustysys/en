@@ -434,7 +434,7 @@ function scanForNewLists(existing_lists, callback) {
 		existing_lists.push(default_list);
 	}
 	getMyListPage(function (list_page) {
-		var parsed_lists = parseMyListPage(list_page);
+		var parsed_lists = parseMyListPageForLists(list_page);
 		var lists_to_add = [];
 		parsed_lists.forEach(function (list) {
 			if (!hasList(existing_lists, list)) {
@@ -757,12 +757,8 @@ function scanNewReleases(callback) {
  */
 function scanLoggedInUserId(callback) {
 	getMembersPage(function (members_page) {
-		var parser = new DOMParser();
-		var doc = parser.parseFromString(members_page, "text/html");
-		var login_box = doc.getElementById("login_box_padding");
-		var user_page_link = login_box.children[0].getAttribute("href");
-		if (exists(user_page_link)) {
-			var user_id = user_page_link.substring(user_page_link.indexOf("=") + 1);
+		var user_id = parseMembersPageForUserId(members_page);
+		if (exists(user_id)) {
 			callback(user_id);
 		} else callback("No User");
 	});
@@ -797,7 +793,7 @@ function setDefaultListsTypes(data_lists) {
  */
 function pullCustomListsTypes(data_lists, callback) {
 	getEditListPage(function (edit_list_page) {
-		var list_id_type_pairs = parseEditListPage(edit_list_page);
+		var list_id_type_pairs = parseEditListPageForTypes(edit_list_page);
 		list_id_type_pairs.forEach(function (pair) {
 			var list_id = pair[0];
 			var list_type = pair[1];

@@ -1,6 +1,6 @@
 ﻿
 
-function parseMyListPage(list_page) {
+function parseMyListPageForLists(list_page) {
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(list_page, "text/html");
 	var elms = doc.querySelectorAll('[href^="https://www.mangaupdates.com/mylist.html?list="]');
@@ -20,7 +20,7 @@ function parseMyListPage(list_page) {
 	return parsed_lists;
 }
 
-function parseEditListPage(edit_list_page) {
+function parseEditListPageForTypes(edit_list_page) {
 	var list_id_type_pairs = [];
 	var edit_list_parser = new DOMParser();
 	var edit_list_doc = edit_list_parser.parseFromString(edit_list_page, "text/html");
@@ -36,4 +36,15 @@ function parseEditListPage(edit_list_page) {
 		}
 	}
 	return list_id_type_pairs;
+}
+
+function parseMembersPageForUserId(members_page) {
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(members_page, "text/html");
+	var login_box = doc.getElementById("login_box_padding");
+	var user_page_link = login_box.children[0].getAttribute("href");
+	if (exists(user_page_link)) {
+		var user_id = user_page_link.substring(user_page_link.indexOf("=") + 1);
+		return user_id;
+	} else return null;
 }
