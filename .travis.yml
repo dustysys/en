@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+  - "7.5"
+dist: trusty
+addons:
+  chrome: stable
+cache:
+  yarn: true
+  directories:
+    - test/node_modules
+script: cd test && yarn && npm run travis-selen-test && npm run travis-karma-test
+after_script:
+  - npm run travis-coverage
+notifications:
+  email: false
+install: # Install ChromeDriver (64bits; replace 64 with 32 for 32bits).
+  - wget -N http://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip -P ~/
+  - unzip ~/chromedriver_linux64.zip -d ~/
+  - rm ~/chromedriver_linux64.zip
+  - sudo mv -f ~/chromedriver /usr/local/share/
+  - sudo chmod +x /usr/local/share/chromedriver
+  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
