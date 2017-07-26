@@ -1,4 +1,18 @@
-﻿/**
+﻿/*#############################################################################
+Project: en, extension+notifier for english-translated asian text-based media
+Author: dustysys
+Contact: dustysys@protonmail.com
+Github: https://github.com/dustysys
+
+File: encore.js
+
+Functions defined in this file are used to create, modify and delete objects
+of the List-Series-Release model. Application state such as loading and
+saving of these objects, as well as data that needs to be stored like
+preferences or unhandled web requests, are also defined here.
+#############################################################################*/
+
+/**
  * loads all storage
  * @param {function(Object)} callback
  */

@@ -1,16 +1,10 @@
 /*#############################################################################
-Project: en, extension+notifier for english-translated asian text-based media
-Author: dustysys
-Contact: dustysys@protonmail.com
-Github: https://github.com/dustysys
-
 File: encore_mu.js
 
-This file contains the operations for accessing and modifying the local
-List-Series-Release model. This includes loading and saving of the data from
-local storage, as well as parsing www.mangaupdates.com html pages to get
-information to store as data objects. All local creation, editing and deletion
-of lists, series and releases is defined in the functions of this file.
+This file contains functions for creating and modifying objects of the
+List-Series-Releases model, but only those which are specific to usage
+with mangaupdates.com and could not be generalized for a different site.
+For example, making calls to pull and parse data from lists on MU.
 #############################################################################*/
 
 /**
@@ -147,6 +141,11 @@ function getListByEnum(data_lists, num) {
 	return getListById(data_lists, list_id);
 }
 
+/**
+ * gets list id based on MU list count
+ * @param {number} num
+ * @returns {string}
+ */
 function getListIdByEnum(num) {
 	var list_id = "";
 	// MU user lists start at 101
@@ -571,6 +570,10 @@ function pullListTypes(data_lists, callback) {
 	} else callback(data_lists);
 }
 
+/**
+ * sets types for default lists
+ * @param {List[]} data_lists
+ */
 function setDefaultListsTypes(data_lists) {
 	data_lists.forEach(function (list) {
 		var default_list_ids = ["read", "wish", "complete", "unfinished", "hold"];

@@ -1,4 +1,11 @@
-﻿/**
+﻿/*#############################################################################
+File: ext_updates.js
+
+This file contains handling for when en is initially installed or when
+it is updated.
+#############################################################################*/
+
+/**
  * decides what to do when en is installed or updated, especially when
  * an update requires special handling to make existing data fit new code
  * @param details

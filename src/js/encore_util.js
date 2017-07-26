@@ -1,4 +1,11 @@
-﻿/**
+﻿/*#############################################################################
+File: encore_util.js
+
+General purpose functions which could be useful anywhere are defined here.
+#############################################################################*/
+
+
+/**
  * find number of instances of substring within string
  * @param {string} string 
  * @param {string} substring

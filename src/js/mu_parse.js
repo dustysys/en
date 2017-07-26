@@ -1,5 +1,15 @@
-﻿
+﻿/*#############################################################################
+File: mu_parse.js
 
+These functions are for parsing data from specific mangaupdates.com pages.
+They will be useless if MU ever goes down or makes significant UI changes.
+#############################################################################*/
+
+/**
+ * parses MyList page for lists based on DOM
+ * @param {string} list_page
+ * @returns {List[]}
+ */
 function parseMyListPageForLists(list_page) {
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(list_page, "text/html");
@@ -20,6 +30,11 @@ function parseMyListPageForLists(list_page) {
 	return parsed_lists;
 }
 
+/**
+ * parses the edit list page to get the types of custom lists
+ * @param {string} edit_list_page
+ * @returns {[string][string]}
+ */
 function parseEditListPageForTypes(edit_list_page) {
 	var list_id_type_pairs = [];
 	var edit_list_parser = new DOMParser();
@@ -38,6 +53,11 @@ function parseEditListPageForTypes(edit_list_page) {
 	return list_id_type_pairs;
 }
 
+/**
+ * parses the members page to get the user ID of the currently logged in user
+ * @param {string} members_page
+ * @returns {string}
+ */
 function parseMembersPageForUserId(members_page) {
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(members_page, "text/html");
@@ -49,6 +69,11 @@ function parseMembersPageForUserId(members_page) {
 	} else return null;
 }
 
+/**
+ * parses a series' page to get its title
+ * @param {string} series_page
+ * @returns {string}
+ */
 function parseSeriesInfoPageForTitle(series_page) {
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(series_page, "text/html");
@@ -57,6 +82,11 @@ function parseSeriesInfoPageForTitle(series_page) {
 	return title;
 }
 
+/**
+ * parses a series' releases page for its most recent release
+ * @param {string} release_page
+ * @returns {Release}
+ */
 function parseSeriesReleasePageForLatestRelease(release_page) {
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(release_page, "text/html");
@@ -99,6 +129,11 @@ function parseSeriesReleasePageForLatestRelease(release_page) {
 	} else return null;
 }
 
+/**
+ * parses to see if a list page has favorable options for further parsing
+ * @param {string} list_page
+ * @returns {boolean}
+ */
 function listPageIsPrimed(list_page) {
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(list_page, "text/html");
@@ -109,6 +144,13 @@ function listPageIsPrimed(list_page) {
 	} else return true;
 }
 
+/**
+ * parses the series from a list page, formatted based on the target list
+ * it will be placed in.
+ * @param {string} list_page
+ * @param {List[]} existing_list
+ * @returns {Series[]}
+ */
 function parseListPageForSeriesList(list_page, existing_list) {
 	var s_list = [];
 	var parser = new DOMParser();
@@ -156,6 +198,13 @@ function parseListPageForSeriesList(list_page, existing_list) {
 	return s_list;
 }
 
+/**
+ * parses the new releases page to get any previously uncaptured releases. It saves the
+ * latest release and checks against it on subsequent calls to avoid reparsing.
+ * @param {string} new_releases_page
+ * @param {Release} latest_release_update
+ * @returns {[string][Release]}
+ */
 function parseNewReleasesPageForReleases(new_releases_page, latest_release_update) {
 	var series_id_release_pairs = [];
 	var parser = new DOMParser();
