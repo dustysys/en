@@ -1,5 +1,5 @@
 ﻿/*#############################################################################
-File: options.js
+File: pop_options.js
 
 DOM builder and handler functions are defined here for creation and updating
 user preferences.
