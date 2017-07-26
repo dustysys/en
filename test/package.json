@@ -3,13 +3,12 @@
   "version": "0.0.1",
   "description": "absurdly big node.js module for testing simple chrome extension",
   "scripts": {
-    "test": "npm run karma-test && npm run selen-test",
-    "ist": "istanbul help cover", 
+    "test": "npm run karma-test -s && npm run selen-test -s",
     "karma-test": "karma start src/karma.conf.js --single-run",
-    "selen-test": "istanbul cover --report lcov --report text --dir ./coverage/selenium/ ./node_modules/mocha/bin/_mocha src/selenium/selen_test.spec.js",
+    "selen-test": "istanbul cover --report lcov --report text --dir ./coverage/selenium/ ./node_modules/mocha/bin/_mocha src/selenium/*.spec.js",
     "report-coverage": "codecov",
     "travis-karma-test": "karma start src/karma.conf.js --single-run",
-    "travis-selen-test": "istanbul cover --report lcov --report text --dir ./coverage/selenium/ ./node_modules/mocha/bin/_mocha src/selenium/selen_test.spec.js",
+    "travis-selen-test": "istanbul cover --report lcov --report text --dir ./coverage/selenium/ ./node_modules/mocha/bin/_mocha src/selenium/*.spec.js",
     "travis-coverage": "npm run travis-karma-codecov && npm run travis-selen-codecov",
     "travis-karma-codecov": "cat ./coverage/selenium/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js",
     "travis-selen-codecov": "cat ./coverage/karma/*/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js"
