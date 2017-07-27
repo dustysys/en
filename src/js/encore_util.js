@@ -97,10 +97,13 @@ function validateDigits(input) {
  * @returns {boolean}
  */
 function isEmpty(value) {
+	
 	if (value == null || value.length === 0) {
 		return true;
-	} else if (typeof value == 'undefined') {
+	} else if (typeof value === 'undefined') {
 		return true;
+	} else if (typeof value === 'number') {
+		return false;
 	}
 	else {
 		for (var key in value) {
