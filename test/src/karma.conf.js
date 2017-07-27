@@ -77,6 +77,11 @@ module.exports = function(config) {
         base: 'Chrome',
         flags: [ '--remote-debugging-port=9222'],
         debug:true
+      },
+      ChromeHeadlessDebug: {
+        base: 'ChromeHeadlessChrome',
+        flags: [ '--remote-debugging-port=9222'],
+        debug:true
       }
     },
 

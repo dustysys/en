@@ -11,6 +11,11 @@ function configurator(cli_opts){
         config.reporters = ['mocha'];
     }
 
+    if (cli_opts.debug){
+        config.browsers = ['ChromeDebug'];
+        config.singleRun = false;
+    }
+
     return config;
 }
 
@@ -37,6 +42,10 @@ function init(){
 
     if(passedArg('cover')){
         cli_opts.coverage = true;
+    }
+
+    if (passedArg('debug')){
+        cli_opts.debug = true;
     }
 
     startKarma(cli_opts); 
