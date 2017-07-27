@@ -41,8 +41,17 @@ describe('isEmpty() should NOT report empty for', ()=>{
     it('numbers', ()=>{
         isEmpty(0).should.be.false;
         isEmpty(1).should.be.false;
+        isEmpty(Infinity).should.be.false;
+        isEmpty(-100).should.be.false;
     });
     it('Objects with properties', ()=>{
         isEmpty({prop: true}).should.be.false;
+        isEmpty({prop: false}).should.be.false;
+        isEmpty({prop: ""}).should.be.false;
+        isEmpty({prop: undefined}).should.be.false;
+    });
+    it('DOM elements', ()=>{
+        var div = document.createElement("div");
+        isEmpty(div).should.be.false;
     });
 });

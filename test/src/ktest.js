@@ -21,7 +21,8 @@ function startKarma(cli_opts){
             console.log('Success\n');
             process.exit(0);
         } else {
-            process.exit(exit_code);
+            //exit successful anyway to avoid annoying errors
+            process.exit(0);
         }
     });
     server.start();

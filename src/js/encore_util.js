@@ -97,26 +97,21 @@ function validateDigits(input) {
  * @returns {boolean}
  */
 function isEmpty(value) {
-	
-	if (value == null || value.length === 0) {
+	if (value === null || typeof value === 'undefined') {
 		return true;
-	} else if (typeof value === 'undefined') {
+	} else if (value.length === 0) {
 		return true;
 	} else if (typeof value === 'number') {
 		return false;
-	}
-	else {
-		for (var key in value) {
-			if (value.hasOwnProperty(key))
-				return false;
-		}
-	}
-	return true;
+	} else if (value instanceof Element) {
+		return false;
+	} else if (Object.keys(value).length === 0) {
+		return true;
+	} else return false;
 }
 
 /**
- * this is supposed to be a lazy typechecker but it fails for things
- * such as numbers or DOM elements.
+ * alias for !isEmpty()
  * TODO: replace all instances used to check type with a logical alternative
  * @param {any} value
  * @returns {boolean}
