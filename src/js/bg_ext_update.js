@@ -1,5 +1,5 @@
 ﻿/*#############################################################################
-File: ext_updates.js
+File: bg_ext_update.js
 
 This file contains handling for when en is initially installed or when
 it is updated.
