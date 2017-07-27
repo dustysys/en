@@ -23,15 +23,3 @@ describe('setMUVolumeChapter(volume, chapter, series)', ()=>{
         });
     });
 });
-
-describe('removeSeriesFromListsById(data_lists, series_id)', ()=>{
-    it('should remove the series', ()=>{
-        var list1 = readListExampleBasic1();
-        var list2 = wishListExampleBasic1();
-        var series = list1.series_list[1];
-        var series_id = series.series_id;
-        removeSeriesFromListsById([list1, list2], series_id);
-        var has_series = list1.series_list.includes(series);
-        (has_series).should.be.false;
-    });
-});

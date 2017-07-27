@@ -12,8 +12,9 @@ function configurator(cli_opts){
     }
 
     if (cli_opts.debug){
-        config.browsers = ['ChromeDebug'];
+        config.browsers = ['ChromeHeadlessDebug'];
         config.singleRun = false;
+        config.autoWatch = true;
     }
 
     return config;

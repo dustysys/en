@@ -2,7 +2,7 @@
 // Generated on Sun Jul 23 2017 04:06:59 GMT-0400 (Eastern Daylight Time)
 
 module.exports = function(config) {
-
+  
     var customBrowsers = ['ChromeHeadless'];
 
     if (process.env.TRAVIS) {
@@ -66,7 +66,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_WARN,
 
 
     // enable / disable watching file and executing tests whenever any file changes
@@ -79,7 +79,7 @@ module.exports = function(config) {
         debug:true
       },
       ChromeHeadlessDebug: {
-        base: 'ChromeHeadlessChrome',
+        base: 'ChromeHeadless',
         flags: [ '--remote-debugging-port=9222'],
         debug:true
       }
