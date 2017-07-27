@@ -385,7 +385,7 @@ function buildUpToDateButton(data_series) {
 	var uptodate_button_wrap = document.createElement('div');
 	uptodate_button_wrap.className = "upToDateButtonWrap";
 	uptodate_button.className = 'upToDateButton';
-	uptodate_button.onclick = handleUpToDateClicked;
+	uptodate_button.onclick = (function (event) { handleUpToDateClicked(event, handleUpToDate); });
 	uptodate_button.textContent = "Mark\u00A0Up\u2011to\u2011Date";
 
 	var latest_release = getLatestRelease(data_series);

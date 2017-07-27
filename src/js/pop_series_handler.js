@@ -9,15 +9,16 @@ processing or access to data it will escalate to calling an action function.
 /**
  * moves uptodate button slightly to indicate it was clicked and
  * calls the uptodate handler to determine next action
- * @param event
+ * @param {Event} event
+ * @param {function(event)} callback
  */
-function handleUpToDateClicked(event) {
+function handleUpToDateClicked(event, callback) {
 	fastdom.mutate(function () {
 		event.target.style.transform = "translateY(1px)";
 		setTimeout(function () {
 			fastdom.mutate(function () {
 				event.target.style.transform = "translateY(0px)";
-				handleUpToDate(event);
+				callback(event);
 			});
 		}, 50);
 	});

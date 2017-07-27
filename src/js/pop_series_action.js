@@ -40,8 +40,10 @@ function updateSeriesRowsLatestRelease(series_row) {
 		var updated_row = updateSeriesRow(series_row, list, series);
 		var updated_uptodate_button = getSeriesRowsUpToDateButton(updated_row);
 		updateListState(list.list_id);
-		updated_uptodate_button.onclick = (function () {
-			executeMarkSeriesRowUpToDate(updated_row);
+		updated_uptodate_button.onclick = (function (event) {
+			handleUpToDateClicked(event, function () {
+				executeMarkSeriesRowUpToDate(updated_row);
+			});
 		});
 	});
 }
@@ -91,7 +93,9 @@ function giveSeriesRowSortPrompt(series_row) {
 	series_row.setAttribute("unsorted", "true");
 	uptodate_button.onclick = (function (event) {
 		if (event.altKey) return;
-		finalizeMarkSeriesRowUpToDate(series_row);
+		handleUpToDateClicked(event, function () {
+			finalizeMarkSeriesRowUpToDate(series_row);
+		});
 	});
 }
 
