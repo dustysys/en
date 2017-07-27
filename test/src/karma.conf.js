@@ -22,20 +22,20 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src/js/encore_mu.js', 'test/src/karma/*.spec.js'
+      'src/js/*.js', 'test/src/karma/*.spec.js'
     ],
 
 
     // list of files to exclude
-    exclude: [
+	exclude: [
+		'src/js/popup.js', 'src/js/background.js'
     ],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-     'src/js/sample.js':['coverage'],
-     'src/js/encore_mu.js':['coverage']
+     'src/js/*.js':['coverage']
     },
 
 
