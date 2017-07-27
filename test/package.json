@@ -11,7 +11,9 @@
     "travis-selen-test": "istanbul cover --report lcov --report text --dir ./coverage/selenium/ ./node_modules/mocha/bin/_mocha src/selenium/*.spec.js",
     "travis-coverage": "npm run travis-karma-codecov && npm run travis-selen-codecov",
     "travis-karma-codecov": "cat ./coverage/selenium/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js",
-    "travis-selen-codecov": "cat ./coverage/karma/*/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js"
+    "travis-selen-codecov": "cat ./coverage/karma/*/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js",
+    "dord": "karma start --help",
+    "ktest": "node src/ktest.js"
   },
   "devDependencies": {
     "chai": "^4.1.0",

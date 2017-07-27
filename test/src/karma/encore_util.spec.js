@@ -1,3 +1,5 @@
+
+
 describe('The digit validator should', function() {
     it('remove letters', function(){
         validateDigits("Hello1").should.equal("1");
@@ -5,5 +7,11 @@ describe('The digit validator should', function() {
     it('remove special characters', function(){
         (2).should.equal(2);
         validateDigits("*$@#(2@#$3-+=)&&%!").should.equal("23");
+    });
+});
+
+describe('isEmpty() should report empty for', function() {
+    it('undefined', ()=>{
+        isEmpty(undefined).should.be.true;
     });
 });
