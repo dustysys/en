@@ -19,9 +19,12 @@
   },
   "background": {
     "scripts": [
+      "src/js/encore.js",
+      "src/js/encore_util.js",
       "src/js/encore_mu.js",
+      "src/js/mu_parse.js",
       "src/js/mu_comm.js",
-      "src/js/ext_updates.js",
+      "src/js/bg_ext_update.js",
       "src/js/background.js"
     ]
   },
