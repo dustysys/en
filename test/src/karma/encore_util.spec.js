@@ -55,3 +55,34 @@ describe('isEmpty() should NOT report empty for', ()=>{
         isEmpty(div).should.be.false;
     });
 });
+
+describe('exists() should', ()=>{
+    it('report the opposite of isEmpty()', ()=>{
+        exists("Test!").should.not.be.false;
+        exists("0").should.not.be.false;
+        exists([4, "dog"]).should.not.be.false;
+        exists([0]).should.not.be.false;
+        exists([""]).should.not.be.false;
+        exists(0).should.not.be.false;
+        exists(1).should.not.be.false;
+        exists(Infinity).should.not.be.false;
+        exists(-100).should.not.be.false;
+        exists({prop: true}).should.not.be.false;
+        exists({prop: false}).should.not.be.false;
+        exists({prop: ""}).should.not.be.false;
+        exists({prop: undefined}).should.not.be.false;
+        var div = document.createElement("div");
+        exists(div).should.not.be.false;
+    });
+});
+
+describe('cmp_date(a,b) should', ()=>{
+    it('return true if date a is newer than date b ', ()=>{
+        cmp_date("7/27/2017", "3/14/1990").should.be.true;
+        cmp_date("1/1/2001", "4/14/1600", ).should.be.true;
+    });
+    it('return false otherwise', ()=>{
+        cmp_date("2/2/2002", "2/3/2002").should.be.false;
+        cmp_date("2/2/2002", "2/2/2002").should.be.false;
+    });
+});
