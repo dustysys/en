@@ -720,14 +720,15 @@ function pullAllData(callback){
 
 /**
  * checks for new releases for all series in all lists
+ * @param {function} callback
  */
-function updateLists(){
+function updateLists(callback){
 	loadData(function(data){
 		if (data === "No Data") {
 			console.log("Error: No data to update");
 		} else {
 			pullNewReleases(data.lists, function () {
-				saveData(data);
+				saveData(data, callback);
 			});
 		}
 	});		

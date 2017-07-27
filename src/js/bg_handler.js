@@ -32,7 +32,9 @@ function bgSync() {
  * Updates lists with new releases
  */
 function bgUpdateReleases() {
-	updateLists();
+	updateLists(function () {
+		updateBadge();
+	});
 }
 
 /**
