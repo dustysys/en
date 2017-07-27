@@ -125,13 +125,29 @@ function redirectToLogin() {
 }
 
 /**
+ * applies and refreshes effects of global preferences
+ */
+function popupApplyPrefs() {
+	if (global_pref_scrollbar.enabled) {
+		document.body.classList.remove("noScroll");
+	} else {
+		document.body.className = "noScroll";
+	}
+
+	if (global_pref_animations.enabled) {
+		//shouldn't be necessary but just in case
+		global_block_transitions = false;
+	}
+}
+
+/**
  * if chrome.storage fails to load data or user info this will either
  * prompt the user or to address them or if there is a current session
  * it will do nothing so as not to interfere with user
  * @param {string} current_user_id
  * @param {string} logged_in_user_id
  */
-function handleSessionErrors(current_user_id, logged_in_user_id) {
+function popupHandleSessionErrors(current_user_id, logged_in_user_id) {
 	var no_session = !exists(current_user_id);
 	var no_login = !exists(logged_in_user_id);
 
@@ -147,47 +163,39 @@ function handleSessionErrors(current_user_id, logged_in_user_id) {
 }
 
 /**
- * determines if the session (current user, login and data) is valid and
- * consistent with previous session. If not, it will either create a new
- * session, prompt the user to login, or do nothing (if it is valid)
+ * determines if the session (current user, login and data) is acceptable
+ * for the usage of the popup. I.e., there is valid information for the
+ * user to view and interact with. If not, it will either create a new
+ * session, prompt the user to login, or do nothing.
  * @param {Data} data
  */
-function validateSession(data) {
+function popupHandleInvalidSession(data) {
 	pullUserSessionInfo(function (current_user_id, logged_in_user_id) {
 		if (!exists(current_user_id) || !exists(logged_in_user_id)) {
-			handleSessionErrors();
+			popupHandleSessionErrors();
 		}
 
 		if (logged_in_user_id === "No User") {
 			if (current_user_id === "No User") {
 				redirectToLogin();
 			} else if (current_user_id !== "No User") {
-				//do nothing
+				//session is suitable for popup
 			}
 		} else {
-			if (current_user_id === "No User") {
-				initializeNewSession(logged_in_user_id, rebuildPopup);
-			} else if (current_user_id !== logged_in_user_id) {
-				initializeNewSession(logged_in_user_id, rebuildPopup);
-			} else if (data === "No Data") {
-				initializeNewSession(current_user_id, rebuildPopup);
-			}//else session is valid
+			if (   current_user_id === "No User"
+				|| current_user_id !== logged_in_user_id
+				|| data === "No Data") {
+				attemptNewSession(
+					function success() {
+						console.log("New session initialized from popup");
+						rebuildPopup();
+					},
+					function error(msg) {
+						console.log("Failed to initialize new session from popup");
+						console.warn("Warning: " + msg);
+					}
+				);
+			} //else session is suitable for popup
 		}
 	});
-}
-
-/**
- * applies and refreshes effects of global preferences
- */
-function popupApplyPrefs() {
-	if (global_pref_scrollbar.enabled) {
-		document.body.classList.remove("noScroll");
-	} else {
-		document.body.className = "noScroll";
-	}
-
-	if (global_pref_animations.enabled) {
-		//shouldn't be necessary but just in case
-		global_block_transitions = false;
-	}
 }

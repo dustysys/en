@@ -82,6 +82,22 @@ function popupHookListeners() {
 }
 
 /**
+ * checks if session is valid and if not, initiates a check to
+ * see if it's at least valid for popup purposes and handles
+ * problems if it isn't.
+ * @param data
+ */
+function popupValidateSession(data) {
+	sessionIsValid(function (valid_session) {
+		if (valid_session && data !== "No Data") {
+			// session is fine, popup is probably already loaded
+		} else {
+			popupHandleInvalidSession(data);
+		}
+	});
+}
+
+/**
  * initialization that runs on popup startup
  * defers session validation to async while popup loads
  * to give general case user quicker startup
@@ -97,7 +113,7 @@ function popupInit() {
 				buildPopup(data);
 			}
 			popupHookListeners();
-			validateSession(data);
+			popupValidateSession(data);
 		});
 	});
 	

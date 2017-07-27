@@ -746,3 +746,59 @@ function initializeNewSession(user_id, callback) {
 		});
 	});
 }
+
+/**
+ * initializes a session in an en installation that has been identified
+ * to have not had any sessions initialized previously. On successful
+ * initialization, sets flag that subsequent sessions are not the first
+ * @param {string} user_id
+ * @param {function} callback
+ */
+function initializeFirstSession(user_id, callback) {
+	initializeNewSession(user_id, function () {
+		finishFirstSession(callback);
+	});
+}
+
+/**
+ * tries to start a new session based on user logged into MU. If there
+ * are errors loading data or no user logged in, it calls back with an error.
+ * @param callback
+ * @param callerror
+ */
+function attemptNewSession(callback, callerror) {
+	pullUserSessionInfo(function (current_user_id, logged_in_user_id) {
+		if (exists(logged_in_user_id) && logged_in_user_id !== "No User") {
+			isFirstSession(function (first_session) {
+				if (first_session) {
+					initializeFirstSession(logged_in_user_id, callback);
+				} else {
+					initializeNewSession(logged_in_user_id, callback);
+				}
+			});
+		} else if (callerror) {
+			if (!exists(logged_in_user_id)) callerror("Undefined login id");
+			else if (logged_in_user_id == "No User") callerror("No user logged in");
+		}
+	});
+}
+
+/**
+ * makes sure the current en session id is consistent with user logged in
+ * to MU. If either of these are not defined it considers the session invalid.
+ * @param {function(boolean)} callback
+ */
+function sessionIsValid(callback) {
+	pullUserSessionInfo(function (current_user_id, logged_in_user_id) {
+		var valid_session = true;
+		if (!exists(current_user_id) || !exists(logged_in_user_id)) {
+			valid_session = false;
+		}
+		else if (current_user_id === "No User" || logged_in_user_id === "No User") {
+			valid_session = false;
+		} else if (current_user_id !== logged_in_user_id) {
+			valid_session = false;
+		}
+		callback(valid_session);
+	});
+}

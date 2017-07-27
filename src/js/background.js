@@ -11,28 +11,33 @@ var global_pref_release_update = { enabled: true, interval: 15 };
 var global_pref_list_sync = { enabled: true, interval: 60 };
 var global_pref_notifications = { enabled: true };
 
-
-// TODO: clean up this unnecessary callback spaghetti
+/**
+ * Syncs user's data. It also checks if the session is valid and
+ * attempts a new session if it isn't.
+ */
 function bgSync() {
-	pullUserSessionInfo(function (current_user_id, logged_in_user_id) {
-		isFirstSession(function (first_session) {
-			if (first_session) {
-				if (logged_in_user_id && logged_in_user_id !== "No User") {
-					initializeNewSession(logged_in_user_id, function () {
-						finishFirstSession(function () {
-							console.log("New session initialized from background script");
-							updateBadge();
-						});
-					});
+	sessionIsValid(function (valid_session) {
+		if (valid_session) {
+			pullAllData();
+			updateBadge();
+		}
+		else {
+			attemptNewSession(
+				function success() {
+					console.log("New session initialized from background script");
+					updateBadge();
+				}, function error(msg) {
+					console.log("New session failed to initialize from background script");
+					console.warn("Warning: " + msg);
 				}
-			} else {
-				pullAllData();
-				updateBadge();
-			}
-		});
+			);
+		}
 	});
 }
 
+/**
+ * Updates lists with new releases
+ */
 function bgUpdateReleases() {
 	updateLists();
 }
