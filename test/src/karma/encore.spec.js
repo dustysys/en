@@ -50,6 +50,35 @@ describe('hasSeries(data_list, series_id)', () => {
     });
 });
 
+describe('hasList(data_lists, data_list)', () => {
+    var list1;
+    var list2;
+    var list3;
+    var listset;
+    beforeEach(()=>{
+         list1 = readListExampleBasic1();
+         list2 = wishListExampleBasic1();
+         list3 = {list_id:"complete", list_name:"Complete List"};
+         listset = [list1, list2];
+    });
+    
+    it('should report true if it has a list with the same name and id', () => {
+        hasList(listset, list1).should.be.true;
+        hasList(listset, list2).should.be.true;
+    });
+    it('shouldn\'t report true if only the name or id match', () => {
+        var list4 = readListExampleBasic1();
+        var list5 = wishListExampleBasic1();
+        list4.list_name = "On Hold";
+        list5.list_id = "unfinished";
+        hasList(listset, list4).should.be.false;
+        hasList(listset, list5).should.be.false;
+    });
+    it('and should also report false if the list doesn\'t match at all', () => {
+        hasList(listset, list3).should.be.false;
+    });
+});
+
 describe('releaseCouldBeNewer(release1, release2)', () => {
     var release1;
     var release2;
