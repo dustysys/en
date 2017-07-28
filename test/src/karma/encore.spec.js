@@ -32,6 +32,24 @@ describe('getNumLists(data_lists)', () => {
     });
 });
 
+describe('hasSeries(data_list, series_id)', () => {
+    var list;
+    var present_series_id;
+    var missing_series_id;
+    beforeEach(()=>{
+        list = readListExampleBasic1();
+        present_series_id = list.series_list[0].series_id;
+        missing_series_id = "12345";
+    });
+    
+    it('should report true if it has a series with the same id', () => {
+        hasSeries(list, present_series_id).should.be.true;
+    });
+    it('and false if it doesn\'t', () => {
+        hasSeries(list, missing_series_id).should.be.false;
+    });
+});
+
 describe('releaseCouldBeNewer(release1, release2)', () => {
     var release1;
     var release2;
