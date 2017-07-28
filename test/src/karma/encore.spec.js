@@ -32,16 +32,43 @@ describe('getNumLists(data_lists)', () => {
     });
 });
 
+describe('getLatestRelease(data_series))', () => {
+    var series;
+    beforeEach(() => {
+        series = seriesExampleBasic1();
+        series.latest_read_release = {};
+        series.latest_unread_release = {};
+        release1 = releaseExampleBasic1();
+        release2 = releaseExampleBasic2();
+        release1.date = "2017-07-27T04:00:00.000Z";
+        release2.date = "2017-07-26T04:00:00.000Z";
+    });
+
+    it('should get the latest unread release', () => {
+        series.latest_unread_release = release1;
+        series.latest_read_release = release2;
+        getLatestRelease(series).should.deep.equal(release1);
+    });
+    it('unless there is no latest unread release, in which case it should get the latest read release', () => {
+        series.latest_read_release = release2;
+        getLatestRelease(series).should.deep.equal(release2);
+    });
+    it('it should return empty if neither exists.', () => {
+        var ex = exists(getLatestRelease(series));
+        exists(getLatestRelease(series)).should.not.be.true;
+    });
+});
+
 describe('hasSeries(data_list, series_id)', () => {
     var list;
     var present_series_id;
     var missing_series_id;
-    beforeEach(()=>{
+    beforeEach(() => {
         list = readListExampleBasic1();
         present_series_id = list.series_list[0].series_id;
         missing_series_id = "12345";
     });
-    
+
     it('should report true if it has a series with the same id', () => {
         hasSeries(list, present_series_id).should.be.true;
     });
@@ -55,13 +82,13 @@ describe('hasList(data_lists, data_list)', () => {
     var list2;
     var list3;
     var listset;
-    beforeEach(()=>{
-         list1 = readListExampleBasic1();
-         list2 = wishListExampleBasic1();
-         list3 = {list_id:"complete", list_name:"Complete List"};
-         listset = [list1, list2];
+    beforeEach(() => {
+        list1 = readListExampleBasic1();
+        list2 = wishListExampleBasic1();
+        list3 = { list_id: "complete", list_name: "Complete List" };
+        listset = [list1, list2];
     });
-    
+
     it('should report true if it has a list with the same name and id', () => {
         hasList(listset, list1).should.be.true;
         hasList(listset, list2).should.be.true;
