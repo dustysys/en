@@ -25,14 +25,25 @@ describe('setMUVolumeChapter(volume, chapter, series)', () => {
 });
 
 describe('scanLoggedInUserId(callback)', () => {
-    it('should return our id', (done) => {
-        var member_page_stub = sinon.stub(window, 'getMembersPage');
-        member_page_stub.callsFake((callback) => {
-            callback(membersPageExample1());
-        });
+
+    it('should return my id', (done) => {
+        var member_stub = sinon.stub(window, 'getMembersPage');
+        member_stub.callsFake((cb) => cb(membersPageExample1()));
 
         scanLoggedInUserId((user_id) => {
             user_id.should.equal("499601");
+            member_stub.restore();
+            done();
+        });
+    });
+
+    it('should return REF_USER_0\'s ID', (done) => {
+        var member_stub = sinon.stub(window, 'getMembersPage');
+        member_stub.callsFake((cb) => cb(membersPage_REF_USER_0()));
+
+        scanLoggedInUserId((user_id) => {
+            user_id.should.equal("501586");
+            member_stub.restore();
             done();
         });
     });
