@@ -48,3 +48,61 @@ describe('scanLoggedInUserId(callback)', () => {
         });
     });
 });
+
+describe('sessionIsValid(callback)', () => {
+    it('should be invalid if there is no current user', (done) => {
+        var session_stub = sinon.stub(window, 'pullUserSessionInfo');
+        session_stub.callsFake((cb) => cb("No User", "123456"));
+
+        sessionIsValid(valid_session => {
+            valid_session.should.be.false;
+            session_stub.restore();
+            done();
+        });
+    });
+
+    it('or if there is no logged in user', (done) => {
+        var session_stub = sinon.stub(window, 'pullUserSessionInfo');
+        session_stub.callsFake((cb) => cb("123456", "No User"));
+
+        sessionIsValid(valid_session => {
+            valid_session.should.be.false;
+            session_stub.restore();
+            done();
+        });
+    });
+
+    it('or if there is neither user', (done) => {
+        var session_stub = sinon.stub(window, 'pullUserSessionInfo');
+        session_stub.callsFake((cb) => cb("No User", "No User"));
+
+        sessionIsValid(valid_session => {
+            valid_session.should.be.false;
+            session_stub.restore();
+            done();
+        });
+    });
+
+    it('or if the two are different', (done) => {
+        var session_stub = sinon.stub(window, 'pullUserSessionInfo');
+        session_stub.callsFake((cb) => cb("123456", "654321"));
+
+        sessionIsValid(valid_session => {
+            valid_session.should.be.false;
+            session_stub.restore();
+            done();
+        });
+    });
+
+    it('if they both exist and are the same, only then is the session valid', (done) => {
+        var session_stub = sinon.stub(window, 'pullUserSessionInfo');
+        session_stub.callsFake((cb) => cb("123456", "123456"));
+
+        sessionIsValid(valid_session => {
+            valid_session.should.be.true;
+            session_stub.restore();
+            done();
+        });
+    });
+
+});
