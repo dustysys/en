@@ -1,4 +1,18 @@
 
+describe('listPageIsPrimed(list_page)', () => {
+	it('should identify list without priority and perpage limit as being primed', () => {
+		var page = readListPage_REF_USER_0();
+		var is_primed = listPageIsPrimed(page);
+		is_primed.should.be.true;
+	});
+	it('should identify list with priority as not primed', () => {
+		var page = wishListPage_REF_USER_0();
+		var is_primed = listPageIsPrimed(page);
+		is_primed.should.be.false;
+	});
+	// TODO: test list with different page limit
+});
+
 describe('setMUVolumeChapter(volume, chapter, series)', () => {
     it('should change the volume and chapter', () => {
         var series = seriesExampleBasic1();
