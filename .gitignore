@@ -1,8 +1,9 @@
 vwd.webinfo
-doc/chrome/
+doc/def/
 test/node_modules/
 /.vscode/
 yarn.lock
 package-lock.json
 coverage/
 *.log
+tsconfig.json
