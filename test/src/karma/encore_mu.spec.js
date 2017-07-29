@@ -1,4 +1,3 @@
-
 describe('listPageIsPrimed(list_page)', () => {
 	it('should identify list without priority and perpage limit as being primed', () => {
 		var page = readListPage_REF_USER_0();
@@ -11,6 +10,40 @@ describe('listPageIsPrimed(list_page)', () => {
 		is_primed.should.be.false;
 	});
 	// TODO: test list with different page limit
+});
+
+describe('scanListForNewSeries(existing_list, callback, iteration)', () => {
+	it('should get 3 series for REF_0\'s reading list', (done) => {
+		var page_stub = sinon.stub(window, 'getListPage');
+		page_stub.callsFake((list_id, cb) => cb(readListPage_REF_USER_0()));
+		var list = {
+			list_id: "read",
+			list_type: "read",
+			list_name: "Reading List",
+			series_list: []
+		};
+		scanListForNewSeries(list, (s_list) => {
+			s_list.length.should.equal(3);
+			page_stub.restore();
+			done();
+		});
+	});
+
+	it('should get 2 series for REF_0\'s unfinished list', (done) => {
+		var page_stub = sinon.stub(window, 'getListPage');
+		page_stub.callsFake((list_id, cb) => cb(unfinishedListPage_REF_USER_0()));
+		var list = {
+			list_id: "unfinished",
+			list_type: "unfinished",
+			list_name: "Unfinished List",
+			series_list: []
+		};
+		scanListForNewSeries(list, (s_list) => {
+			s_list.length.should.equal(2);
+			page_stub.restore();
+			done();
+		});
+	});
 });
 
 describe('setMUVolumeChapter(volume, chapter, series)', () => {
