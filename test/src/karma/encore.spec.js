@@ -1,3 +1,37 @@
+describe('addSeriesToList(data_list, series_list)', () => {
+    var series1;
+    var series2;
+    var series3;
+    var list;
+
+    beforeEach(()=>{
+        series1 = seriesExampleBasic1();
+        series2 = seriesExampleBasic2();
+        series3 = seriesExampleBasic3();
+
+        list = {
+            list_id:"read",
+            list_name:"Reading List",
+            series_list: []
+        }
+        
+    });
+    
+    it('should add a series list to the list', () => {
+        addSeriesToList(list, [series1, series2]);
+        var has_series = list.series_list.includes(series1) && list.series_list.includes(series2);
+        (has_series).should.be.true;
+    });
+
+    it('should preserve existing series in the list', ()=>{
+        list.series_list = [series3];
+        addSeriesToList(list, [series1, series2]);
+        var has_series = list.series_list.includes(series3);
+        (has_series).should.be.true;
+    });
+});
+
+
 describe('removeSeriesFromListsById(data_lists, series_id)', () => {
     it('should remove the series', () => {
         var list1 = readListExampleBasic1();
