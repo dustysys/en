@@ -711,7 +711,7 @@ function pullAllData(callback){
 		pullLists(data.lists, function(){
 			pullSeriesInLists(data.lists, function(){
 				saveData(data, function () {
-					if (callback) callback();
+					if (callback) callback(data);
 				});
 			});
 		});

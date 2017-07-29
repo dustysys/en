@@ -47,12 +47,14 @@ describe('removeSeriesFromListsById(data_lists, series_id)', () => {
 describe('removeSeriesArrayFromListById(data_lists, list_id, series_id_arr)', () => {
     it('should remove all the series in the array from the list', () => {
         var list1 = wishListExampleBasic1();
-        var list2 = readListExampleBasic1();
+		var list2 = readListExampleBasic1();
+
         var list_id = list1.list_id;
         var series_id_arr = [];
         list1.series_list.forEach(series => {
             series_id_arr.push(series.series_id);
-        });
+		});
+
         removeSeriesArrayFromListById([list1, list2], list_id, series_id_arr);
         (list1.series_list.length).should.equal(0);
     });

@@ -15,7 +15,11 @@ function configurator(cli_opts){
         config.browsers = ['ChromeHeadlessDebug'];
         config.singleRun = false;
         config.autoWatch = true;
-    }
+	}
+
+	if (cli_opts.gui) {
+		config.browsers = ['ChromeDebug'];
+	}
 
     return config;
 }
@@ -47,7 +51,11 @@ function init(){
 
     if (passedArg('debug')){
         cli_opts.debug = true;
-    }
+	}
+
+	if (passedArg('gui')) {
+		cli_opts.gui = true;
+	}
 
     startKarma(cli_opts); 
 }
