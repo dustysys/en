@@ -16,7 +16,7 @@ var ListEnum = {
 	COMPLETE: 2,
 	UNFINISHED: 3,
 	ONHOLD: 4
-}
+};
 
 /**
  * creates empty reading list. This is treated separately
@@ -201,7 +201,7 @@ function getDefaultLink(series_id) {
 function releasesAreSame(release1, release2) {
 	var release1_str = release1.groups + release1.volume + release1.chapter + release1.date;
 	var release2_str = release2.groups + release2.volume + release2.chapter + release2.date;
-	return (release1_str === release2_str);
+	return release1_str === release2_str;
 }
 
 /**
@@ -211,8 +211,8 @@ function releasesAreSame(release1, release2) {
  * @param {Series} series
  */
 function notifyOfRelease(release, series) {
-	var exists_volume = (release.volume !== "");
-	var exists_chapter = (release.chapter !== "");
+	var exists_volume = release.volume !== "";
+	var exists_chapter = release.chapter !== "";
 	var chap_vol = "n/a";
 	if (exists_volume && exists_chapter) {
 		chap_vol = "v. " + release.volume + " c." + release.chapter;
@@ -501,7 +501,7 @@ function scanSeries(series_id, callback) {
 			title: title,
 			mu_user_volume: "1",
 			mu_user_chapter: "1",
-			date_added: (new Date(Date.now()).toISOString()),
+			date_added: new Date(Date.now()).toISOString(),
 			tracked: true,
 			unread_releases: [],
 			last_update_was_manual: true,
@@ -656,7 +656,7 @@ function pullSeriesToListById(data_list, series_id, callback) {
  */
 function pullSeriesLatestRelease(data_series) {
 	scanSeriesLatestRelease(data_series.series_id, function (release) {
-		
+		//TODO: do pulling here instead of in user fn
 	});
 }
 
@@ -764,8 +764,8 @@ function initializeFirstSession(user_id, callback) {
 /**
  * tries to start a new session based on user logged into MU. If there
  * are errors loading data or no user logged in, it calls back with an error.
- * @param callback
- * @param callerror
+ * @param {function} callback
+ * @param {function(string)} callerror
  */
 function attemptNewSession(callback, callerror) {
 	pullUserSessionInfo(function (current_user_id, logged_in_user_id) {
@@ -779,7 +779,7 @@ function attemptNewSession(callback, callerror) {
 			});
 		} else if (callerror) {
 			if (!exists(logged_in_user_id)) callerror("Undefined login id");
-			else if (logged_in_user_id == "No User") callerror("No user logged in");
+			else if (logged_in_user_id === "No User") callerror("No user logged in");
 		}
 	});
 }

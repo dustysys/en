@@ -39,14 +39,14 @@ describe('setMUVolumeChapter(volume, chapter, series)', () => {
 	it('should change the volume and chapter', () => {
 		var series = seriesExampleBasic1();
 		setMUVolumeChapter("3", "4", series);
-		(series.mu_user_volume).should.equal("3");
-		(series.mu_user_chapter).should.equal("4");
+		series.mu_user_volume.should.equal("3");
+		series.mu_user_chapter.should.equal("4");
 	});
 	it('shouldn\'t validate the input', () => {
 		var series = seriesExampleBasic1();
 		setMUVolumeChapter("@#$%^3-2#@#", "4/\/\/\/", series);
-		(series.mu_user_volume).should.equal("@#$%^3-2#@#");
-		(series.mu_user_chapter).should.equal("4/\/\/\/");
+		series.mu_user_volume.should.equal("@#$%^3-2#@#");
+		series.mu_user_chapter.should.equal("4/\/\/\/");
 	});
 	it('shouldn\'t change anything else', () => {
 		var series = seriesExampleBasic1();
@@ -54,7 +54,7 @@ describe('setMUVolumeChapter(volume, chapter, series)', () => {
 		setMUVolumeChapter("3", "4", series);
 		Object.getOwnPropertyNames(series).forEach(prop => {
 			if (prop !== "mu_user_volume" && prop !== "mu_user_chapter") {
-				(series[prop]).should.deep.equal(unmodified_series[prop]);
+				series[prop].should.deep.equal(unmodified_series[prop]);
 			}
 		});
 	});
@@ -180,7 +180,7 @@ function stubLoadDataEmpty() {
 	var load_stub = sinon.stub(window, 'loadData');
 	load_stub.callsFake(cb => cb("No Data"));
 
-	return load_stub
+	return load_stub;
 }
 
 function stubSaveDataReturnOnly() {
@@ -231,7 +231,7 @@ function getEmptyDefaultListById(list_id) {
 		list_type: list_type,
 		list_name: list_name,
 		series_list: []
-	}
+	};
 
 	return list;
 }
@@ -264,7 +264,7 @@ function getEmptyCustomListById(list_id, username) {
 		list_type: list_type,
 		list_name: list_name,
 		series_list: []
-	}
+	};
 
 	return list;
 }
