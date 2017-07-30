@@ -22,6 +22,10 @@ function configurator(cli_opts){
 		config.files.push('src/css/*.css');
 	}
 
+	if (cli_opts.random) {
+		config.files.push('test/src/karma/manual_debug/*.js');
+	}
+
     return config;
 }
 
@@ -56,6 +60,10 @@ function init(){
 
 	if (passedArg('gui')) {
 		cli_opts.gui = true;
+	}
+
+	if (passedArg('random')) {
+		cli_opts.random = true;
 	}
 
     startKarma(cli_opts); 
