@@ -153,7 +153,7 @@ function seriesExampleWithUnreadReleases1(){
     return series;
 }
 
-function seriesNamesArray1000() {
+function seriesTitlesArray1000() {
 	return ["Aleph Code", "All You Need Is Kill", "An Honest Bargain", "An Honor-Roll Member at the Magic Academy", "Arabian Porno", "Din No Monshou (Novel)", "Elf-san wa Yaserarenai.",
 		"Eliza (Novel)", "Eto Royale", "Everyday Life in This Wonderful World!", "EXIT_", "Fate/Extra CCC - Foxtail", "Fate/Grand Order dj - Love That Leads To The Abyss", "Flowers Falling Together",
 		"Fumi-chan no Kyuushokubukuro", "Fushigi no Kuni no Bird", "Gakkou Gurashi!", "Golden Kamui", "H", "H × Koi × Haji 2", "H (AMANO Ameno)", "H (KINJOUJI Tama)", "H (YAMAOKA Kotetsuro)",

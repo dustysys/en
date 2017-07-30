@@ -36,10 +36,6 @@ function seriesTitlesArrayRandom(size_arr) {
 	return series_title_arr;
 }
 
-function seriesTitleRandom() {
-	return seriesTitlesArrayRandom(1)[0];
-}
-
 function chapterRandom() {
 	var chapter;
 	if (Math.random() >= 0.9) {
@@ -134,35 +130,35 @@ function seriesArrayRandom(size_arr, num_releases) {
 		series.no_published_releases = false;
 		releases_left--;
 	}
-}
 
-// returns all 5 default lists
-function defaultListsRandom(num_series, num_releases) {
-
-}
-
-function customListsArrayRandom(size_arr, num_series, num_releases) {
-
-}
-
-function seriesRandom(num_releases) {
-	return seriesArrayRandom(1, num_releases);
-}
-
-function defaultListRandom(num_series, num_releases) {
-	var default_list_arr = defaultListArrayRandom(num_series, num_releases);
-	return default_list_arr[intRandom(0, 5)];
-}
-
-function customListRandom(num_series, num_releases) {
-	return customListsRandom(1, num_series, num_releases);
+	return series_arr;
 }
 
 function dataRandom(num_custom_lists, num_series, num_releases) {
-	var num_default_series = intRandom(0, num_series);
-	var num_custom_series = num_series - num_default_series;
-	var num_default_releases = intRandom(0, num_releases);
-	var num_custom_releases = num_releases - num_default_releases;
+	var lists = [];
+	var series_arr = seriesArrayRandom(num_series, num_releases);
+	var series_left = series_arr.length;
+	lists.push(getEmptyDefaultListById('read'));
+	lists.push(getEmptyDefaultListById('wish'));
+	lists.push(getEmptyDefaultListById('complete'));
+	lists.push(getEmptyDefaultListById('unfinished'));
+	lists.push(getEmptyDefaultListById('hold'));
+	for (var i = 0; i < num_custom_lists; i++) {
+		var list_num = (i + 1).toString();
+		var custom_list = {
+			list_id: "user" + list_num,
+			list_name: "usr_" + list_num,
+			list_description: "No Description",
+			series_list: []
+		};
+		lists.push(custom_list);
+	}
 
+	while (series_left) {
+		var list = lists[intRandom(0, 5 + custom_lists)];
+		list.push(series_arr[series_left - 1]);
+		series_left--;
+	}
 
+	return { lists: lists };
 }
