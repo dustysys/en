@@ -22,7 +22,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src/js/*.js', 'test/src/karma/*.spec.js', 'test/src/test_data/*.dat.js'
+      'src/js/*.js', 'src/lib/*.js', 'test/src/karma/*.spec.js', 'test/src/test_data/*.dat.js', 'test/src/test_util/*.js'
     ],
 
 

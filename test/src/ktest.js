@@ -19,6 +19,7 @@ function configurator(cli_opts){
 
 	if (cli_opts.gui) {
 		config.browsers = ['ChromeDebug'];
+		config.files.push('src/css/*.css');
 	}
 
     return config;

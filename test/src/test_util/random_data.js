@@ -32,7 +32,7 @@ function dateRandom(start, end) {
 
 function seriesTitlesArrayRandom(size_arr) {
 	var series_title_arr = seriesTitlesArray1000();
-	shuffleFY(series_name_arr);
+	shuffleFY(series_title_arr);
 	return series_title_arr;
 }
 
@@ -75,11 +75,12 @@ function seriesIdArrayRandom(size_arr) {
 
 function releaseArrayRandom(size_arr) {
 	var release_arr = [];
+	var series_title_arr = seriesTitlesArrayRandom(size_arr);
 
 	for (var i = 0; i < size_arr; i++) {
 		var release = {
 			date: dateRandom(),
-			title: seriesTitleRandom(),
+			title: series_title_arr[i],
 			volume: volumeRandom(),
 			chapter: chapterRandom(),
 			groups: groupsRandom(),
@@ -112,7 +113,7 @@ function seriesArrayRandom(size_arr, num_releases) {
 			last_update_was_manual: boolRandom(),
 			no_published_releases: Math.random() >= 0.9
 		};
-		series.entime_updated = dateRandom(series.date_added);
+		series.entime_updated = dateRandom();
 		series_arr.push(series);
 	}
 
@@ -155,8 +156,8 @@ function dataRandom(num_custom_lists, num_series, num_releases) {
 	}
 
 	while (series_left) {
-		var list = lists[intRandom(0, 5 + custom_lists)];
-		list.push(series_arr[series_left - 1]);
+		var list = lists[intRandom(0, 5 + num_custom_lists)];
+		list.series_list.push(series_arr[series_left - 1]);
 		series_left--;
 	}
 
