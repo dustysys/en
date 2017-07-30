@@ -28,6 +28,22 @@ function buildListTable(data_list) {
 }
 
 /**
+ * determines if series row has unread releases which have not been
+ * marked as seen already
+ * @param {List} data_list
+ * @param {Series} data_series
+ * @returns {boolean}
+ */
+function seriesRowHasNewReleases(data_list, data_series) {
+	if (data_list.list_type === "read") {
+		if (exists(data_series.latest_unread_release)) {
+			return !data_series.latest_unread_release.marked_seen;
+		}
+	}
+	return false;
+}
+
+/**
  * builds DOM element that encapsulates all info and editing capacity for
  * a series, this composes most the window
  * @param {List} data_list
@@ -42,10 +58,9 @@ function buildSeriesRow(data_list, data_series) {
 	series_row.setAttribute("list_id", data_list.list_id);
 	series_row.setAttribute("series_id", "s" + data_series.series_id);
 	series_row.onclick = handleClickedSeriesRow;
-	if (data_list.list_type == "read" && getNumNewReleasesForSeries(data_series) > 0) {
+	if (seriesRowHasNewReleases(data_list, data_series)){
 		series_row.setAttribute("new_releases", "true");
 	} else series_row.setAttribute("new_releases", "false");
-
 	var title_block = buildTitleBlock(data_list, data_series);
 	var release_block = buildReleaseBlock(data_list, data_series);
 	var button_block = buildButtonBlock(data_list, data_series);
@@ -142,7 +157,7 @@ function buildEditLinkButton(data_series) {
 	if (exists(data_series.user_link)) {
 		edit_link_icon.style.opacity = 1;
 		edit_link_button.style.opacity = .9;
-	} 
+	}
 
 	edit_link_button.appendChild(edit_link_icon);
 	edit_link_wrap.appendChild(edit_link_button);
@@ -376,6 +391,27 @@ function buildButtonBlock(data_list, data_series) {
 }
 
 /**
+ * determines whether a series is up to date as it relates to the
+ * functionality of the up-to-date button. 
+ * @param {Series} data_series
+ * @returns {string}
+ */
+function getUpToDateButtonStatus(data_series) {
+	var latest_release = getLatestRelease(data_series);
+	var latest_unread = data_series.latest_unread_release;
+	var uptodate_status = "false";
+	if (data_series.no_published_releases) {
+		uptodate_status = "true";
+	} else if (!data_series.last_update_was_manual && !exists(latest_unread)) {
+		uptodate_status = "true";
+	} else if (!exists(latest_release)) {
+		uptodate_status = "unknown";
+	} 
+
+	return uptodate_status;
+}
+
+/**
  * builds DOM button which updates the series when clicked by user
  * @param {Series} data_series
  * @returns {Element}
@@ -388,21 +424,16 @@ function buildUpToDateButton(data_series) {
 	uptodate_button.onclick = (function (event) { handleUpToDateClicked(event, handleUpToDate); });
 	uptodate_button.textContent = "Mark\u00A0Up\u2011to\u2011Date";
 
-	var latest_release = getLatestRelease(data_series);
-	if (data_series.no_published_releases) {
-		uptodate_button.setAttribute("up_to_date", "true");
+	var uptodate_status = getUpToDateButtonStatus(data_series);
+	uptodate_button.setAttribute("up_to_date", uptodate_status);
+	if (uptodate_status === "true") {
 		hideElement(uptodate_button);
-	} else if (!data_series.last_update_was_manual && isEmpty(data_series.latest_unread_release)) {
-		uptodate_button.style.display = "none";
-		uptodate_button.setAttribute("up_to_date", "true");
-	} else if (isEmpty(latest_release)) {
-		uptodate_button.setAttribute("up_to_date", "unknown");
+	} else if (uptodate_status === "unknown") {
 		if (!global_pref_one_click_uptodate.enabled) {
 			uptodate_button.textContent = "Sync\u00A0Latest\u00A0Release";
 		}
-	} else {
-		uptodate_button.setAttribute("up_to_date", "false");
 	}
+
 	if (manageModeOn()) {
 		hideElement(uptodate_button);
 	}
