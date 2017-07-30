@@ -28,8 +28,6 @@ function buildNavBar(data_lists) {
  * @param {Data} data
  */
 function buildPopup(data) {
-	data.lists.sort(cmpListAlphabetical);
-
 	var popup = document.createElement("div");
 	popup.id = "popup";
 	document.body.appendChild(popup);

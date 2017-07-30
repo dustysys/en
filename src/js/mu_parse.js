@@ -188,6 +188,8 @@ function parseListPageForSeriesList(list_page, existing_list) {
 			mu_user_chapter: chap_digit,
 			date_added: date,
 			tracked: true,
+			latest_unread_release: {},
+			latest_read_release: {},
 			unread_releases: [],
 			last_update_was_manual: true,
 			no_published_releases: false

@@ -503,6 +503,8 @@ function scanSeries(series_id, callback) {
 			mu_user_chapter: "1",
 			date_added: new Date(Date.now()).toISOString(),
 			tracked: true,
+			latest_unread_release: {},
+			latest_read_release: {},
 			unread_releases: [],
 			last_update_was_manual: true,
 			no_published_releases: false

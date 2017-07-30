@@ -31,23 +31,37 @@ function instancesOf(string, substring) {
 }
 
 /**
- * 1st priority: new releases>no releases
+ * 1st priority: new releases AND ALSO not seen > no releases 
  * 2nd priority: alphabetical
  * @param {Series} a
  * @param {Series} b
  * @returns {boolean}
  */
-function cmpReleaseAlphabetical(a, b) {
+function cmpReleaseUpdateOrder(a, b) {
 	var a_latest = a.latest_unread_release;
 	var b_latest = b.latest_unread_release;
-	if (!isEmpty(a_latest) && !a_latest.marked_seen) {
-		if (isEmpty(b_latest)) {
-			return -1;
-		}
-	} else if (!isEmpty(b_latest) && !b_latest.marked_seen) {
-		return 1;
-	}
+	var a_exists = exists(a_latest);
+	var b_exists = exists(b_latest);
+	var a_seen = a_exists ? a_latest.marked_seen : null;
+	var b_seen = b_exists ? b_latest.marked_seen : null;
 
+	if (!a_exists && !b_exists) return cmpReleaseAlphabetical(a, b);
+	if (a_exists && b_exists) {
+		if (!a_seen && b_seen) return -1;
+		if (a_seen && !b_seen) return 1;
+		else return cmpReleaseAlphabetical(a, b);
+	}
+	if (!a_exists && b_exists) {
+		if (!b_seen) return 1;
+		else return cmpReleaseAlphabetical(a, b);
+	}
+	if (a_exists && !b_exists) {
+		if (!a_seen) return -1;
+		else return cmpReleaseAlphabetical(a, b);
+	}
+}
+
+function cmpReleaseAlphabetical(a, b) {
 	if (a.title === b.title) return 0;
 	else if (a.title.toUpperCase() < b.title.toUpperCase()) return -1;
 	else return 1;
