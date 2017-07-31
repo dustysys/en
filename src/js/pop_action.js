@@ -128,13 +128,13 @@ function redirectToLogin() {
  * applies and refreshes effects of global preferences
  */
 function popupApplyPrefs() {
-	if (global_pref_scrollbar.enabled) {
+	if (pop.prefs.scrollbar.enabled) {
 		document.body.classList.remove("noScroll");
 	} else {
 		document.body.className = "noScroll";
 	}
 
-	if (global_pref_animations.enabled) {
+	if (pop.prefs.animations.enabled) {
 		//shouldn't be necessary but just in case
 		global_block_transitions = false;
 	}

@@ -429,7 +429,7 @@ function buildUpToDateButton(data_series) {
 	if (uptodate_status === "true") {
 		uptodate_button.style.display = "none";
 	} else if (uptodate_status === "unknown") {
-		if (!global_pref_one_click_uptodate.enabled) {
+		if (!pop.getPref("one_click_uptodate").enabled) {
 			uptodate_button.textContent = "Sync\u00A0Latest\u00A0Release";
 		}
 	}

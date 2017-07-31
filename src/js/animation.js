@@ -25,7 +25,7 @@ function interruptAllAnimations() {
  */
 function animateSeriesUpdate(series_row, start_el_index, end_el_index, start_bbox, end_bbox) {
 	// position of marked series relative to its old position
-	if (global_pref_animations.enabled) {
+	if (pop.prefs.animations.enabled) {
 		var marked_rel_start_pos = start_bbox.top - end_bbox.top;
 		var gap = start_bbox.height;
 		var time_marked_series_anim = -marked_rel_start_pos / 2; //linearize animation speed
@@ -90,7 +90,7 @@ function animateListGapClose(series_row_list, start_el_index, end_el_index, gap,
  * @param {boolean} toggle
  */
 function animateToggleManageMode(toggle, callback) {
-	if (global_pref_animations.enabled) {
+	if (pop.prefs.animations.enabled) {
 		fastdom.measure(function () {
 			var onscreen_rows = getOnScreenSeriesRows();
 
@@ -109,7 +109,7 @@ function animateToggleManageMode(toggle, callback) {
  * @param {function} callback
  */
 function animateToggleOptionMode(toggle, callback) {
-	if (global_pref_animations.enabled) {
+	if (pop.prefs.animations.enabled) {
 		animateToggleOptionPage(toggle);
 		animateToggleNonOptionButtons(toggle, callback);
 		animateToggleOptionsButton(toggle);

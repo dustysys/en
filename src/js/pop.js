@@ -53,24 +53,6 @@ function popupUpdatePrefs() {
 }
 
 /**
- * loads user preferences relevant to popup into global
- * @param {function} callback
- */
-function popupLoadPrefs(callback) {
-	loadAllPrefs(function (prefs) {
-		global_pref_scrollbar = prefs["scrollbar"];
-		global_pref_animations = prefs["animations"];
-		global_pref_one_click_uptodate = prefs["one_click_uptodate"];
-		global_pref_release_update = prefs["release_update"];
-		global_pref_list_sync = prefs["list_sync"];
-		global_pref_notifications = prefs["notifications"];
-
-		popupApplyPrefs();
-		callback();
-	});
-}
-
-/**
  * engages global listeners on startup
  */
 function popupHookListeners() {
@@ -94,6 +76,41 @@ function popupValidateSession(data) {
 		} else {
 			popupHandleInvalidSession(data);
 		}
+	});
+}
+
+class PopState {
+	constructor(prefs) {
+		this._prefs = prefs
+	}
+
+	get prefs() {
+		return this._prefs;
+	}
+
+	set prefs(prefs) {
+		this._prefs = prefs;
+	}
+
+	setPref(pref, value) {
+		this._prefs[pref] = value;
+		saveAllPrefs(this._prefs);
+	}
+
+	getPref(pref) {
+		return this._prefs[pref];
+	}
+}
+
+/**
+ * loads user preferences relevant to popup into global
+ * @param {function} callback
+ */
+function popupLoadPrefs(callback) {
+	loadAllPrefs(function (prefs) {
+		window.pop = new PopState(prefs);
+		popupApplyPrefs();
+		callback();
 	});
 }
 

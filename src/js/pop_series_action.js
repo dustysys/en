@@ -106,7 +106,7 @@ function giveSeriesRowSortPrompt(series_row) {
 function handleUpToDate(event) {
 	if (event.altKey) return;
 	var series_row = getUpToDateButtonsSeriesRow(event.target);
-	if (global_pref_one_click_uptodate.enabled) {
+	if (pop.prefs.one_click_uptodate.enabled) {
 		pullSeriesRowUpToDate(series_row);
 	} else {
 		var uptodate_button = event.target;

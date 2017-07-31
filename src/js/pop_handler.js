@@ -13,7 +13,7 @@ to calling an action function.
  * @param {Event} event
  */
 function handleManageSeries(event) {
-	if (!global_block_transitions || !global_pref_animations.enabled) {
+	if (!global_block_transitions || !pop.prefs.animations.enabled) {
 		global_block_transitions = true;
 		//event may be button or its description
 		var manage_button = document.getElementById("manageSeriesButton");
