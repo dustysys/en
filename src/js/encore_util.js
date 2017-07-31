@@ -37,7 +37,7 @@ function instancesOf(string, substring) {
  * @param {Series} b
  * @returns {boolean}
  */
-function cmpReleaseUpdateOrder(a, b) {
+function cmpSeriesPopupUpdateOrder(a, b) {
 	var a_latest = a.latest_unread_release;
 	var b_latest = b.latest_unread_release;
 	var a_exists = exists(a_latest);
@@ -45,27 +45,25 @@ function cmpReleaseUpdateOrder(a, b) {
 	var a_seen = a_exists ? a_latest.marked_seen : null;
 	var b_seen = b_exists ? b_latest.marked_seen : null;
 
-	if (!a_exists && !b_exists) return cmpReleaseAlphabetical(a, b);
+	if (!a_exists && !b_exists) {
+		return cmpSeriesAlphabetical(a, b);
+	}
 	if (a_exists && b_exists) {
 		if (!a_seen && b_seen) return -1;
 		if (a_seen && !b_seen) return 1;
-		else return cmpReleaseAlphabetical(a, b);
+		else return cmpSeriesAlphabetical(a, b);
 	}
 	if (!a_exists && b_exists) {
 		if (!b_seen) return 1;
-		else return cmpReleaseAlphabetical(a, b);
+		else return cmpSeriesAlphabetical(a, b);
 	}
 	if (a_exists && !b_exists) {
 		if (!a_seen) return -1;
-		else return cmpReleaseAlphabetical(a, b);
+		else return cmpSeriesAlphabetical(a, b);
 	}
 }
 
-function cmpReleaseAlphabetical(a, b) {
-	if (a.title === b.title) return 0;
-	else if (a.title.toUpperCase() < b.title.toUpperCase()) return -1;
-	else return 1;
-}
+
 
 /**
  * plain alphabetical comparison
@@ -81,6 +79,10 @@ function cmpAlphabetical(a, b) {
 
 function cmpListAlphabetical(a, b) {
 	return cmpAlphabetical(a.list_name, b.list_name);
+}
+
+function cmpSeriesAlphabetical(a, b) {
+	return cmpAlphabetical(a.title, b.title);
 }
 
 /**
