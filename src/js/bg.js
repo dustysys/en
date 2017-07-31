@@ -6,13 +6,6 @@ as alarms, web requests by the user and notifications. It also is the first
 script to run on install, so it will do initialization if necessary.
 #############################################################################*/
 
-var global_alarm_timestamp = Date.now();
-var global_pref_release_update = { enabled: true, interval: 15 };
-var global_pref_list_sync = { enabled: true, interval: 60 };
-var global_pref_notifications = { enabled: true };
-
-
-
 // TODO: send popup messages about new updates so it can immediately show them to user
 function sendMessage() {
 }
@@ -21,9 +14,9 @@ function sendMessage() {
  * creates an alarm for updating releases with a frequency specified by user preferences
  */
 function scheduleReleaseUpdates() {
-	if (global_pref_release_update.enabled) {
-		var alarm_name = "update_releases:" + global_alarm_timestamp;
-		chrome.alarms.create(alarm_name, { periodInMinutes: global_pref_release_update.interval });
+	if (bg.prefs.release_update.enabled) {
+		var alarm_name = "update_releases:" + bg.alarm_timestamp;
+		chrome.alarms.create(alarm_name, { periodInMinutes: bg.prefs.release_update.interval });
 	}
 }
 
@@ -31,16 +24,16 @@ function scheduleReleaseUpdates() {
  * creates an alarm for syncing uncaught list changes with a frequency specified by user preferences
  */
 function scheduleSyncs() {
-	if (global_pref_list_sync.enabled) {
-		var alarm_name = "update_all:" + global_alarm_timestamp;
-		chrome.alarms.create(alarm_name, { periodInMinutes: global_pref_list_sync.interval });
+	if (bg.prefs.list_sync.enabled) {
+		var alarm_name = "update_all:" + bg.alarm_timestamp;
+		chrome.alarms.create(alarm_name, { periodInMinutes: bg.prefs.list_sync.interval });
 	}
 }
 
 // listens for notification click events 
 // on click creates a new tab using ID of notification as URL.
 function listenNotifications() {
-	if (global_pref_release_update.enabled) {
+	if (bg.prefs.release_update.enabled) {
 		chrome.notifications.onClicked.addListener(openNotificationLink);
 	}
 }
@@ -63,10 +56,9 @@ function listenMessages() {
  */
 function bgLoadPrefs(callback) {
 	loadAllPrefs(function (prefs) {
-		global_pref_release_update = prefs["release_update"];
-		global_pref_list_sync = prefs["list_sync"];
-		global_pref_notifications = prefs["notifications"];
-		callback();
+		window.bg = new bgState(prefs, Date.now());
+		bgApplyPrefs();
+		if (callback) callback();
 	});
 }
 
@@ -85,7 +77,6 @@ function bgApplyPrefs() {
 function clearOldPrefs() {
 	chrome.alarms.clearAll();
 	chrome.notifications.onClicked.removeListener(openNotificationLink);
-	global_alarm_timestamp = Date.now();
 }
 
 /**
@@ -93,21 +84,46 @@ function clearOldPrefs() {
  */
 function bgUpdatePrefs() {
 	clearOldPrefs();
-	bgLoadPrefs(function () {
-		bgApplyPrefs();
-	});
+	bgLoadPrefs();
+}
+
+class bgState {
+	constructor(prefs, time) {
+		this._alarm_timestamp = time;
+		this._prefs = prefs;
+	}
+
+	get alarm_timestamp() {
+		return this._alarm_timestamp;
+	}
+
+	set alarm_timestamp(time) {
+		this._alarm_timestamp = time; 
+	}
+
+	get prefs() {
+		return this._prefs;
+	}
+
+	set prefs(prefs) {
+		this._prefs = prefs;
+	}
+
+	getPref(pref) {
+		return this._prefs[pref];
+	}
 }
 
 /**
  * runs on every extension load, initializes background script
  */
 function bgInit() {
-	listenMUComm();
-	listenStartup();
-	listenMessages();
-	chrome.runtime.onInstalled.addListener(bgNewInstall);
-	chrome.alarms.onAlarm.addListener(checkAlarm);
 	bgLoadPrefs(function () {
-		bgApplyPrefs();
+		listenMUComm();
+		listenStartup();
+		listenMessages();
+		chrome.runtime.onInstalled.addListener(bgNewInstall);
+		chrome.alarms.onAlarm.addListener(checkAlarm);
 	});
+	
 }
