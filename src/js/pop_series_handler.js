@@ -29,7 +29,7 @@ function handleUpToDateClicked(event, callback) {
  * @param {Event} event
  */
 function handleSeriesSelect(event) {
-	var last_clicked = global_last_clicked_el;
+	var last_clicked = pop.last_clicked_el;
 	if (!event.shiftKey || last_clicked === event.target) {
 		var tog = toggleElement(event.target);
 		if (!tog) resetSelectAllSeriesButton();

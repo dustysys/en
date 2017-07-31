@@ -59,7 +59,7 @@ function popupHookListeners() {
 	document.addEventListener("click", function (event) {
 		// saves last clicked element
 		// currently used for shift-click select functionality
-		global_last_clicked_el = event.target;
+		pop.last_clicked_el = event.target;
 	});
 }
 
@@ -83,6 +83,15 @@ class PopState {
 	constructor(prefs) {
 		this._prefs = prefs
 		this._block_transitions = false;
+		this._last_clicked_el = null;
+	}
+
+	get last_clicked_el() {
+		return this._last_clicked_el;
+	}
+
+	set last_clicked_el(el) {
+		this._last_clicked_el = el;
 	}
 
 	get block_transitions() {
