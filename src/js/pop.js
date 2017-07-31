@@ -75,6 +75,18 @@ class PopState {
 		this._prefs = prefs
 		this._block_transitions = false;
 		this._last_clicked_el = null;
+		this._paging = {
+			num_pages: 1,
+			current_page_num: 1
+		}
+	}
+
+	get paging() {
+		return this._paging;
+	}
+
+	set paging(paging) {
+		this._paging = paging;
 	}
 
 	get last_clicked_el() {
