@@ -427,7 +427,7 @@ function buildUpToDateButton(data_series) {
 	var uptodate_status = getUpToDateButtonStatus(data_series);
 	uptodate_button.setAttribute("up_to_date", uptodate_status);
 	if (uptodate_status === "true") {
-		hideElement(uptodate_button);
+		uptodate_button.style.display = "none";
 	} else if (uptodate_status === "unknown") {
 		if (!global_pref_one_click_uptodate.enabled) {
 			uptodate_button.textContent = "Sync\u00A0Latest\u00A0Release";
@@ -435,7 +435,7 @@ function buildUpToDateButton(data_series) {
 	}
 
 	if (manageModeOn()) {
-		hideElement(uptodate_button);
+		uptodate_button.style.display = "none";
 	}
 
 	uptodate_button_wrap.appendChild(uptodate_button);
