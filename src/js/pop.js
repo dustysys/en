@@ -82,6 +82,15 @@ function popupValidateSession(data) {
 class PopState {
 	constructor(prefs) {
 		this._prefs = prefs
+		this._block_transitions = false;
+	}
+
+	get block_transitions() {
+		return this._block_transitions;
+	}
+
+	set block_transitions(block) {
+		this._block_transitions = block;
 	}
 
 	get prefs() {

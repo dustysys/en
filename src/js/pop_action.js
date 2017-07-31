@@ -22,7 +22,7 @@ function toggleManageFieldVisibility(toggle) {
 	var options_button = document.getElementById("optionsButton");
 	toggleElementVisibility(manage_field, toggle);
 	toggleElementVisibility(options_button, !toggle);
-	global_block_transitions = false;
+	pop.block_transitions = false;
 }
 
 /**
@@ -136,7 +136,7 @@ function popupApplyPrefs() {
 
 	if (pop.prefs.animations.enabled) {
 		//shouldn't be necessary but just in case
-		global_block_transitions = false;
+		pop.block_transitions = false;
 	}
 }
 
