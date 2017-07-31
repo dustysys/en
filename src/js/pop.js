@@ -5,15 +5,6 @@ This is the initializer script for when the extension popup is loaded. It
 also contains the functions for communicating with the background script.
 #############################################################################*/
 
-var global_last_clicked_el;
-var global_block_transitions = false;
-var global_pref_scrollbar = { enabled: false };
-var global_pref_animations = { enabled: true };
-var global_pref_one_click_uptodate = { enabled: true };
-var global_pref_release_update = { enabled: true, interval: 15 };
-var global_pref_list_sync = { enabled: true, interval: 60 };
-var global_pref_notifications = { enabled: true };
-
 /**
  * sends a message to the background script letting it know
  * user preferences have changed.
