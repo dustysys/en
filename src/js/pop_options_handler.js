@@ -19,8 +19,7 @@ function handleToggleScrollbar(event) {
 		document.body.className = "noScroll";
 		scroll_pref = { enabled: false };
 	}
-	savePref("scrollbar", scroll_pref);
-	global_pref_scrollbar = scroll_pref;
+	pop.setPref("scrollbar", scroll_pref);
 	popupUpdatePrefs();
 }
 
@@ -39,8 +38,7 @@ function handleToggleAnimations(event) {
 		anim_pref = { enabled: false };
 	}
 	animateToggleOptionPage(toggle);
-	savePref("animations", anim_pref);
-	global_pref_animations = anim_pref;
+	pop.setPref("animations", anim_pref);
 	popupUpdatePrefs();
 }
 
@@ -56,8 +54,7 @@ function handleToggleOneClick(event) {
 	} else {
 		oneclick_pref = { enabled: false };
 	}
-	savePref("one_click_uptodate", oneclick_pref);
-	global_pref_one_click_uptodate = oneclick_pref;
+	pop.setPref("one_click_uptodate", oneclick_pref);
 	unloadAllLists();
 	popupUpdatePrefs();
 }
@@ -77,8 +74,7 @@ function handleToggleReleaseUpdates(event) {
 		release_update_pref = { enabled: false, interval: edit_text_val  };
 	}
 	toggleReleaseUpdateTextDisplay(toggle);
-	savePref("release_update", release_update_pref);
-	global_pref_release_update = release_update_pref;
+	pop.setPref("release_update", release_update_pref);
 	popupUpdatePrefs();
 }
 
@@ -106,8 +102,7 @@ function handleToggleSync(event) {
 		list_sync_pref = { enabled: false, interval: edit_text_val };
 	}
 	toggleSyncTextDisplay(toggle);
-	savePref("list_sync", list_sync_pref);
-	global_pref_list_sync = list_sync_pref;
+	pop.setPref("list_sync", list_sync_pref);
 	popupUpdatePrefs();
 }
 
@@ -132,8 +127,7 @@ function handleToggleNotifications(event) {
 	} else {
 		notif_pref = { enabled: false };
 	}
-	savePref("notifications", notif_pref);
-	global_pref_notifications = notif_pref;
+	pop.setPref("notifications", notif_pref);
 	popupUpdatePrefs();
 }
 
@@ -152,8 +146,7 @@ function handleCompleteReleaseUpdateIntervalEdit(event) {
 	var opt_select = getEditTextsOptionSelect(edit_text);
 	var opt_select_on = opt_select.getAttribute("toggle") === "on";
 	var release_update_pref = { enabled: opt_select_on, interval: edit_input_val };
-	savePref("release_update", release_update_pref);
-	global_pref_release_update = release_update_pref;
+	pop.setPref("release_update", release_update_pref);
 	edit_input.parentElement.removeChild(edit_input);
 	edit_text.style.display = "";
 	popupUpdatePrefs();
@@ -174,8 +167,7 @@ function handleCompleteSyncIntervalEdit(event) {
 	var opt_select = getEditTextsOptionSelect(edit_text);
 	var opt_select_on = opt_select.getAttribute("toggle") === "on";
 	var sync_pref = { enabled: opt_select_on, interval: edit_input_val };
-	savePref("list_sync", sync_pref);
-	global_pref_list_sync = sync_pref;
+	pop.setPref("list_sync", sync_pref);
 	edit_input.parentElement.removeChild(edit_input);
 	edit_text.style.display = "";
 	popupUpdatePrefs();

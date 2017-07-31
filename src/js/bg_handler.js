@@ -45,7 +45,7 @@ function checkAlarm(alarm) {
 	if (alarm && alarm.name) {
 		var alarm_desc = alarm.name.substring(0, alarm.name.indexOf(":"));
 		var alarm_id = alarm.name.substring(alarm.name.indexOf(":") + 1);
-		if (alarm_id === global_alarm_timestamp.toString()) {
+		if (alarm_id === bg.alarm_timestamp.toString()) {
 			if (alarm_desc === "update_all") {
 				console.log("Syncing");
 				bgSync();

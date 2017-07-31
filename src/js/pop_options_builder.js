@@ -153,7 +153,7 @@ function addScrollOptions(opt_block){
 	var scroll_select = document.createElement('div');
 	scroll_select.className = "optionSelectButton";
 	scroll_select.onclick = handleToggleScrollbar;
-	scroll_select.setAttribute("toggle", global_pref_scrollbar.enabled ? "on" : "off");
+	scroll_select.setAttribute("toggle", pop.prefs.scrollbar.enabled ? "on" : "off");
 	opt_block.appendChild(scroll_select);
 }
 
@@ -165,7 +165,7 @@ function addAnimationsOptions(opt_block) {
 	var anim_select = document.createElement('div');
 	anim_select.className = "optionSelectButton";
 	anim_select.onclick = handleToggleAnimations;
-	anim_select.setAttribute("toggle", global_pref_animations.enabled ? "on" : "off");
+	anim_select.setAttribute("toggle", pop.prefs.animations.enabled ? "on" : "off");
 	opt_block.appendChild(anim_select);
 }
 
@@ -177,7 +177,7 @@ function addOneClickUpToDateOptions(opt_block) {
 	var oneclick_select = document.createElement('div');
 	oneclick_select.className = "optionSelectButton";
 	oneclick_select.onclick = handleToggleOneClick;
-	oneclick_select.setAttribute("toggle", global_pref_one_click_uptodate.enabled ? "on" : "off");
+	oneclick_select.setAttribute("toggle", pop.prefs.one_click_uptodate.enabled ? "on" : "off");
 	opt_block.appendChild(oneclick_select);
 }
 
@@ -195,11 +195,11 @@ function addReleaseUpdateOptions(opt_block) {
 	release_update_select.className = "optionSelectButton";
 	release_update_disp.classList.add("optionDisplay","releaseUpdateDisplay");
 	release_edit_text.className = "optionEditText";
-	release_update_select.setAttribute("toggle", global_pref_release_update.enabled ? "on" : "off");
+	release_update_select.setAttribute("toggle", pop.prefs.release_update.enabled ? "on" : "off");
 	txt1.textContent = "Syncs every ";
-	release_edit_text.textContent = (global_pref_release_update.interval).toString();
+	release_edit_text.textContent = (pop.prefs.release_update.interval).toString();
 	txt2.textContent = " minutes.";
-	if (!global_pref_release_update.enabled) {
+	if (!pop.prefs.release_update.enabled) {
 		release_update_disp.style.display = "none";
 	}
 	release_update_select.onclick = handleToggleReleaseUpdates;
@@ -225,11 +225,11 @@ function addSyncOptions(opt_block) {
 	sync_select.className = "optionSelectButton";
 	sync_disp.classList.add ("optionDisplay", "syncDisplay");
 	sync_edit_text.className = "optionEditText";
-	sync_select.setAttribute("toggle", global_pref_list_sync.enabled ? "on" : "off");
+	sync_select.setAttribute("toggle", pop.prefs.list_sync.enabled ? "on" : "off");
 	txt1.textContent = "Syncs every ";
-	sync_edit_text.textContent = (global_pref_list_sync.interval).toString();
+	sync_edit_text.textContent = (pop.prefs.list_sync.interval).toString();
 	txt2.textContent = " minutes.";
-	if (!global_pref_list_sync.enabled) {
+	if (!pop.prefs.list_sync.enabled) {
 		sync_disp.style.display = "none";
 	}
 	sync_select.onclick = handleToggleSync;
@@ -250,6 +250,6 @@ function addNotificationsOptions(opt_block) {
 	var notif_select = document.createElement('div');
 	notif_select.className = "optionSelectButton";
 	notif_select.onclick = handleToggleNotifications;
-	notif_select.setAttribute("toggle", global_pref_notifications.enabled ? "on" : "off");
+	notif_select.setAttribute("toggle", pop.prefs.notifications.enabled ? "on" : "off");
 	opt_block.appendChild(notif_select);
 }
