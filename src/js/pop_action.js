@@ -4,7 +4,26 @@ File: pop_action.js
 These functions modify the global popup display state or global extension data.
 #############################################################################*/
 
+function pageElements(els) {
+	let current_page = pop.paging.current_page_num;
+	let els_per_page = 100;
+	els.forEach((el, index) => {
+		let page_num = Math.floor(index / els_per_page) + 1;
+		el.setAttribute("page", page_num.toString());
+	});
 
+	updatePageVisibility(els);
+}
+
+function updatePageVisibility(els) {
+	els.forEach((el, index) => {
+		if (el.getAttribute("page") !== pop.paging.current_page_num.toString()) {
+			hideElement(el);
+		} else {
+			showElement(el);
+		}
+	});
+}
 
 /**
  * resets the all series select button
