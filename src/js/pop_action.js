@@ -12,6 +12,13 @@ function pageElements(els) {
 		el.setAttribute("page", page_num.toString());
 	});
 
+	let last_el_page = parseInt(els[els.length - 1].getAttribute("page"));
+	if (last_el_page < current_page) {
+		pop.paging = {
+			num_pages: last_el_page,
+			current_page_num: last_el_page
+		}
+	}
 	updatePageVisibility(els);
 }
 
