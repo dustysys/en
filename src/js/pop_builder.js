@@ -225,7 +225,7 @@ function buildManageSeriesButton() {
 	manage_series_button.title = "Manage Series";
 	var manage_button_desc = document.createElement('span');
 	manage_button_desc.id = "manageButtonDescription";
-	manage_button_desc.textContent = "\u270D\uFE0E";
+	manage_button_desc.textContent = "\u{1F56E}";
 	manage_series_button.setAttribute("toggle", "off");
 
 	manage_series_button.appendChild(manage_button_desc);

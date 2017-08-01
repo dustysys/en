@@ -60,6 +60,21 @@ describe('setMUVolumeChapter(volume, chapter, series)', () => {
 	});
 });
 
+describe('getListIdByEnum()', () => {
+	it('should get the correct ID for default lists', () => {
+		getListIdByEnum(ListEnum.READING).should.equal("read");
+		getListIdByEnum(ListEnum.WISH).should.equal("wish");
+		getListIdByEnum(ListEnum.COMPLETE).should.equal("complete");
+		getListIdByEnum(ListEnum.UNFINISHED).should.equal("unfinished");
+		getListIdByEnum(ListEnum.ONHOLD).should.equal("hold");
+	});
+	it('should get the correct ID for custom lists', () => {
+		getListIdByEnum(101).should.equal("user1");
+		getListIdByEnum(110).should.equal("user10");
+		getListIdByEnum(200).should.equal("user100");
+	});
+});
+
 describe('scanLoggedInUserId(callback)', () => {
 
 	it('should return my id', (done) => {
