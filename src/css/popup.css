@@ -178,8 +178,32 @@ button {
 .seriesPage {    
 }
 
+.pageButton {
+    margin: var(--std-margin-width);
+    border: 1px solid;
+    border-color: var(--button-text-color);
+    border-radius: var(--button-border-radius);
+    min-width: 30px;
+    text-align: center;
+}
+
+    .pageButton:hover {
+        background-color: var(--color-brighten);
+        cursor: pointer;
+    }
+
+    .pageButton:active {
+        position:relative;
+        top: 1px;
+    }
+
+.pageButtonDescription {
+    margin: calc(2 * var(--std-border-width));
+    font-size: 12px;
+}
+
 .pageField {
-    height: 18px;
+    overflow:hidden;
 }
 
 .pagePrev {
@@ -543,7 +567,7 @@ button {
 #manageSeriesButton {
     width: 34px;
     height: 24px;
-    left: 467px;
+    left: 469px;
     margin-right: 0px;
     position: relative;
     background-color: var(--block-color);

@@ -6,7 +6,7 @@ These functions modify the global popup display state or global extension data.
 
 function pageElements(els) {
 	let current_page = pop.paging.current_page_num;
-	let els_per_page = 5;
+	let els_per_page = 30;
 	els.forEach((el, index) => {
 		let page_num = Math.floor(index / els_per_page) + 1;
 		el.setAttribute("page", page_num.toString());
@@ -33,7 +33,7 @@ function updatePageVisibility(els) {
 }
 
 function updateNumPages(els) {
-	let els_per_page = 5;
+	let els_per_page = 30;
 	pop.paging.num_pages = Math.floor(els.length / els_per_page) + 1;
 }
 
@@ -63,11 +63,13 @@ function resetCurrentPage() {
 function decrementPage(page) {
 	pop.paging.current_page_num--;
 	updatePaging(page);
+	window.scrollTo(0, 0);
 }
 
 function incrementPage(page) {
 	pop.paging.current_page_num++;
 	updatePaging(page);
+	window.scrollTo(0, 0);
 }
 
 /**

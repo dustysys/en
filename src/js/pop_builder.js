@@ -225,7 +225,7 @@ function buildManageSeriesButton() {
 	manage_series_button.title = "Manage Series";
 	var manage_button_desc = document.createElement('span');
 	manage_button_desc.id = "manageButtonDescription";
-	manage_button_desc.textContent = "\u{1F56E}";
+	manage_button_desc.textContent = "\u270D\uFE0E";
 	manage_series_button.setAttribute("toggle", "off");
 
 	manage_series_button.appendChild(manage_button_desc);
@@ -264,7 +264,7 @@ function buildPageDesc() {
 function buildPageButtonPrev(region, page_num) {
 	let prev_button = buildPageButton();
 	let prev_desc = buildPageDesc();
-	prev_desc.textContent = "<- " + page_num;
+	prev_desc.textContent = "⇽ " + page_num;
 	prev_button.appendChild(prev_desc);
 	prev_button.classList.add("pagePrev");
 	prev_button.setAttribute("region", region);
@@ -278,7 +278,7 @@ function buildPageButtonPrev(region, page_num) {
 function buildPageButtonNext(region, page_num) {
 	let next_button = buildPageButton();
 	let next_desc = buildPageDesc();
-	next_desc.textContent = page_num + " ->";
+	next_desc.textContent = page_num + " ⇾";
 	next_button.appendChild(next_desc);
 	next_button.classList.add("pageNext");
 	next_button.setAttribute("region", region);
