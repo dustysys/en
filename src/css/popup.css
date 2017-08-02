@@ -175,6 +175,13 @@ button {
         background-color: var(--text-color);
     }
 
+.seriesPage {    
+}
+
+.pageField {
+    height: 10px;
+}
+
 .listTable {
     margin-left: var(--table-margin-horiz);
     margin-right: var(--table-margin-horiz);

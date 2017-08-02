@@ -28,14 +28,14 @@ function buildNavBar(data_lists) {
  * @param {Data} data
  */
 function buildPopup(data) {
-	var popup = document.createElement("div");
+	let popup = document.createElement("div");
 	popup.id = "popup";
 	document.body.appendChild(popup);
-	var nav_bar = buildNavBar(data.lists);
+	let nav_bar = buildNavBar(data.lists);
 	popup.appendChild(nav_bar);
-	var list = getListById(data.lists, "read");
-	var list_table = buildListTable(list);
-	popup.appendChild(list_table);
+	let list = getListById(data.lists, "read");
+	let series_page = buildSeriesPage(list);
+	popup.appendChild(series_page);
 	delayScrollbar(popup);
 	changeVisibleCurrentListSelection("read");
 }
@@ -230,6 +230,65 @@ function buildManageSeriesButton() {
 
 	manage_series_button.appendChild(manage_button_desc);
 	return manage_series_button;
+}
+
+function buildPageField(region, current_page_num, num_pages) {
+	let page_field = document.createElement('div');
+	page_field.className = "pageField";
+	page_field.setAttribute("region", region);
+	
+	if (current_page_num > 1) {
+		let prev_button = buildPageButtonPrev(region, current_page_num - 1);
+		page_field.appendChild(prev_button);
+	}
+	if (num_pages > current_page_num) {
+		let next_button = buildPageButtonNext(region, current_page_num + 1);
+		page_field.appendChild(next_button);
+	}
+	return page_field;
+}
+
+function buildPageButton() {
+	let page_button = document.createElement('div');
+	page_button.className = "pageButton";
+
+	return page_button;
+}
+
+function buildPageDesc() {
+	let page_desc = document.createElement('span');
+	page_desc.className = "pageButtonDescription";
+	return page_desc;
+}
+
+function buildPageButtonPrev(region, page_num) {
+	let prev_button = buildPageButton();
+	let prev_desc = buildPageDesc();
+	prev_desc.textContent = "<- " + page_num;
+	prev_button.appendChild(prev_desc);
+	prev_button.classList.add("pagePrev");
+}
+
+function buildPageButtonNext(region, page_num) {
+	let next_button = buildPageButton();
+	let next_desc = buildPageDesc();
+	next_desc.textContent = page_num + " ->";
+	next_button.appendChild(next_desc);
+	next_button.classList.add("pageNext");
+}
+
+function buildSeriesPage(data_list) {
+	var series_page = document.createElement('div');
+	series_page.className = 'seriesPage';
+	var series_table = buildListTable(data_list);
+	var top_page_field = buildPageField("top", pop.paging.current_page_num, pop.paging.num_pages);
+	var bot_page_field = buildPageField("bottom", pop.paging.current_page_num, pop.paging.num_pages);
+
+	series_page.appendChild(top_page_field);
+	series_page.appendChild(series_table);
+	series_page.appendChild(bot_page_field);
+
+	return series_page;
 }
 
 /**
