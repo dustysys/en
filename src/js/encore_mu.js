@@ -482,7 +482,7 @@ function scanListForNewSeries(existing_list, callback, iteration) {
 					new_series.push(series);
 				}
 			});
-			callback(s_list);
+			callback(new_series);
 		}
 	});
 }
