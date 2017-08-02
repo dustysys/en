@@ -267,6 +267,12 @@ function buildPageButtonPrev(region, page_num) {
 	prev_desc.textContent = "<- " + page_num;
 	prev_button.appendChild(prev_desc);
 	prev_button.classList.add("pagePrev");
+	prev_button.setAttribute("region", region);
+	prev_button.onclick = function () {
+		decrementPage(getPageButtonsPage(prev_button));
+	}
+
+	return prev_button;
 }
 
 function buildPageButtonNext(region, page_num) {
@@ -275,20 +281,34 @@ function buildPageButtonNext(region, page_num) {
 	next_desc.textContent = page_num + " ->";
 	next_button.appendChild(next_desc);
 	next_button.classList.add("pageNext");
+	next_button.setAttribute("region", region);
+	next_button.onclick = function () {
+		incrementPage(getPageButtonsPage(next_button));
+	}
+
+	return next_button;
 }
 
 function buildSeriesPage(data_list) {
-	var series_page = document.createElement('div');
-	series_page.className = 'seriesPage';
-	var series_table = buildListTable(data_list);
-	var top_page_field = buildPageField("top", pop.paging.current_page_num, pop.paging.num_pages);
-	var bot_page_field = buildPageField("bottom", pop.paging.current_page_num, pop.paging.num_pages);
+	let series_page = buildPage();
+	series_page.classList.add('seriesPage');
+	let series_table = buildListTable(data_list);
+	let top_page_field = buildPageField("top", pop.paging.current_page_num, pop.paging.num_pages);
+	let bot_page_field = buildPageField("bottom", pop.paging.current_page_num, pop.paging.num_pages);
 
 	series_page.appendChild(top_page_field);
 	series_page.appendChild(series_table);
 	series_page.appendChild(bot_page_field);
 
+	updatePaging(series_page);
+
 	return series_page;
+}
+
+function buildPage() {
+	let page = document.createElement('div');
+	page.className = 'page';
+	return page;
 }
 
 /**

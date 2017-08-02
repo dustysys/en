@@ -179,7 +179,15 @@ button {
 }
 
 .pageField {
-    height: 10px;
+    height: 18px;
+}
+
+.pagePrev {
+    float: left;
+}
+
+.pageNext {
+    float: right;
 }
 
 .listTable {

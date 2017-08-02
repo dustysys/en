@@ -6,7 +6,7 @@ These functions modify the global popup display state or global extension data.
 
 function pageElements(els) {
 	let current_page = pop.paging.current_page_num;
-	let els_per_page = 100;
+	let els_per_page = 5;
 	els.forEach((el, index) => {
 		let page_num = Math.floor(index / els_per_page) + 1;
 		el.setAttribute("page", page_num.toString());
@@ -30,6 +30,40 @@ function updatePageVisibility(els) {
 			showElement(el);
 		}
 	});
+}
+
+function updateNumPages(els) {
+	let els_per_page = 5;
+	pop.paging.num_pages = Math.floor(els.length / els_per_page) + 1;
+}
+
+function updatePageButtons(page) {
+	let page_fields = page.querySelectorAll('.pageField');
+	page_fields.forEach(field => {
+		let region = field.getAttribute('region');
+		let updated_field = buildPageField(region, pop.paging.current_page_num,
+			pop.paging.num_pages);
+		replaceElementInPlace(updated_field, field);
+	});
+}
+
+function updatePaging(page) {
+	if (page.classList.contains("seriesPage")) {
+		let rows = page.querySelectorAll('.seriesRow');
+		updateNumPages(rows);
+		pageElements(rows);
+		updatePageButtons(page);
+	}
+}
+
+function decrementPage(page) {
+	pop.paging.current_page_num--;
+	updatePaging(page);
+}
+
+function incrementPage(page) {
+	pop.paging.current_page_num++;
+	updatePaging(page);
 }
 
 /**
@@ -208,7 +242,7 @@ function popupHandleInvalidSession(data) {
 				//session is suitable for popup
 			}
 		} else {
-			if (   current_user_id === "No User"
+			if (current_user_id === "No User"
 				|| current_user_id !== logged_in_user_id
 				|| data === "No Data") {
 				attemptNewSession(

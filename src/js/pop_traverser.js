@@ -8,6 +8,14 @@ elements but do not modify the state of any elements or underlying data.
 #############################################################################*/
 
 /**
+ * @param {Element} page_button
+ * @returns {Element}
+ */
+function getPageButtonsPage(page_button) {
+	return page_button.closest('.page');
+}
+
+/**
  * @param {Element} title_block
  * @returns {Element}
  */
