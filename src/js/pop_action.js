@@ -56,6 +56,10 @@ function updatePaging(page) {
 	}
 }
 
+function resetCurrentPage() {
+	pop.paging.current_page_num = 1;
+}
+
 function decrementPage(page) {
 	pop.paging.current_page_num--;
 	updatePaging(page);
@@ -104,7 +108,7 @@ function toggleOptionPageVisibility(toggle) {
 	var opt_tables = document.getElementsByClassName("optionTable");
 	var popup = document.getElementById("popup");
 	if (toggle) {
-		hideAllLists();
+		hideAllPages();
 		if (opt_tables.length === 0) {
 			popup.appendChild(buildOptionTable());
 		} else {

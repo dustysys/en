@@ -16,6 +16,14 @@ function getPageButtonsPage(page_button) {
 }
 
 /**
+ * @param {Element} page_button
+ * @returns {Element}
+ */
+function getListTablesPage(list_table) {
+	return list_table.closest('.page');
+}
+
+/**
  * @param {Element} title_block
  * @returns {Element}
  */
