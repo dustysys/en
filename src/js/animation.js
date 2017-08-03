@@ -41,9 +41,11 @@ function animateSeriesUpdate(series_row, start_el_index, end_el_index, start_bbo
 		}
 
 		if (listFilterIsInUse()) {
-			animateListGapClose(getVisibleSeriesRows(), start_el_index, end_el_index, gap, time_list_anim);
+			animateListGapClose(getVisibleSeriesRows(), start_el_index, end_el_index,
+				gap, time_list_anim);
 		} else {
-			animateListGapClose(getSeriesRowsTable(series_row).querySelectorAll('.seriesRow'), start_el_index, end_el_index, gap, time_list_anim);
+			animateListGapClose(getSeriesRowsTable(series_row).querySelectorAll('.seriesRow'),
+				start_el_index, end_el_index, gap, time_list_anim);
 		}
 	}
 }
@@ -64,6 +66,9 @@ function animateMarkedSeries(series_row, start_pos, time_anim) {
 		{ transform: 'translateY(0)' }
 	], { duration: time_anim, easing: 'linear' });
 	global_animations.push(marked_series_anim);
+	marked_series_anim.onfinish = (function () {
+		updatePaging(getSeriesRowsPage(series_row));
+	});
 }
 
 /**
@@ -126,7 +131,7 @@ function animateToggleOptionPage(toggle) {
 	var nav_bar = document.getElementById("navBar");
 	var popup = document.getElementById("popup");
 
-	fastdom.measure(function(){
+	fastdom.measure(function () {
 		var cs = window.getComputedStyle(document.documentElement);
 		var nav_color = cs.getPropertyValue('--block-color');
 		var nav_color_new = cs.getPropertyValue('--block-color-new');
@@ -166,7 +171,7 @@ function animateToggleOptionsButton(toggle) {
  * @param {boolean} toggle
  * @param {function(boolean)} callback
  */
-function animateToggleNonOptionButtons(toggle, callback) {	
+function animateToggleNonOptionButtons(toggle, callback) {
 	var other_buttons = document.querySelectorAll('#manageSeriesButton, #currentListField');
 	var d_y = 100;
 	var y1 = toggle ? 0 : d_y;
@@ -174,7 +179,7 @@ function animateToggleNonOptionButtons(toggle, callback) {
 	var time_anim = 200;
 
 	for (var i = 0; i < other_buttons.length; i++) {
-		
+
 		other_buttons[i].style.display = "";
 		var other_anim = other_buttons[i].animate([
 			{ transform: `translateY(${y1}px)` },
@@ -213,7 +218,7 @@ function animateElementColorChange(element, color_old, color_new, callback) {
 	var color_anim = element.animate([
 		{ background: color_old },
 		{ background: color_new }
-	], { duration: 300, fill:'forwards' });
+	], { duration: 300, fill: 'forwards' });
 
 	if (callback) callback();
 }
