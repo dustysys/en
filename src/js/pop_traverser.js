@@ -200,6 +200,11 @@ function getCurrentListTable() {
 	return document.querySelector('.listTable[list_id=' + list_id + ']');
 }
 
+function getCurrentSeriesPage() {
+	let table = getCurrentListTable();
+	return getListTablesPage(table);
+}
+
 /**
  * gets the series id associated with series row element
  * @param {Element} series_row

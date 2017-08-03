@@ -312,6 +312,7 @@ function changeVisibleCurrentListSelection(list_id) {
 function updateListState(list_id, callback) {
 
 	function finishUpdateListState(list_option, callback) {
+		updatePaging(getCurrentSeriesPage());
 		updateCurrentListOption(list_option, function () {
 			popupSendBgBadgeUpdateRequest();
 			if (callback) callback();
