@@ -25,9 +25,9 @@ function pageElements(els) {
 function updatePageVisibility(els) {
 	els.forEach((el, index) => {
 		if (el.getAttribute("page") !== pop.paging.current_page_num.toString()) {
-			hideElement(el);
+			el.style.display = "none";
 		} else {
-			showElement(el);
+			el.style.display = "";
 		}
 	});
 }
