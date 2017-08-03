@@ -66,12 +66,16 @@ function decrementPage(page) {
 	pop.paging.current_page_num--;
 	updatePaging(page);
 	window.scrollTo(0, 0);
+	resetAllSelectSeriesButtons();
+	resetSelectAllSeriesButton();
 }
 
 function incrementPage(page) {
 	pop.paging.current_page_num++;
 	updatePaging(page);
 	window.scrollTo(0, 0);
+	resetAllSelectSeriesButtons();
+	resetSelectAllSeriesButton();
 }
 
 /**
