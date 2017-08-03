@@ -283,9 +283,13 @@ function filterList(filter) {
 	for (var i = 0; i < titles.length; i++) {
 		var series_row = getTitleLinksSeriesRow(titles[i]);
 		if (titles[i].textContent.toUpperCase().includes(filter)) {
-			series_row.style.display = "";
+			series_row.removeAttribute("filtered");
 		} else {
+			series_row.setAttribute("filtered", "");
 			series_row.style.display = "none";
+		}
+		if (i === titles.length - 1) {
+			updatePaging(getSeriesRowsPage(series_row));
 		}
 	}
 }

@@ -49,7 +49,7 @@ function updatePageButtons(page) {
 
 function updatePaging(page) {
 	if (page.classList.contains("seriesPage")) {
-		let rows = page.querySelectorAll('.seriesRow');
+		let rows = page.querySelectorAll('.seriesRow:not([filtered])');
 		if (rows.length > 0) {
 			pageElements(rows);
 		}

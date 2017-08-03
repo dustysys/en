@@ -16,6 +16,14 @@ function getPageButtonsPage(page_button) {
 }
 
 /**
+ * @param {Element} series_row
+ * @returns {Element}
+ */
+function getSeriesRowsPage(series_row) {
+	return series_row.closest('.page');
+}
+
+/**
  * @param {Element} page_button
  * @returns {Element}
  */
