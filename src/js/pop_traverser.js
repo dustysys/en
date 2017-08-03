@@ -8,6 +8,30 @@ elements but do not modify the state of any elements or underlying data.
 #############################################################################*/
 
 /**
+ * @param {Element} page_button
+ * @returns {Element}
+ */
+function getPageButtonsPage(page_button) {
+	return page_button.closest('.page');
+}
+
+/**
+ * @param {Element} series_row
+ * @returns {Element}
+ */
+function getSeriesRowsPage(series_row) {
+	return series_row.closest('.page');
+}
+
+/**
+ * @param {Element} page_button
+ * @returns {Element}
+ */
+function getListTablesPage(list_table) {
+	return list_table.closest('.page');
+}
+
+/**
  * @param {Element} title_block
  * @returns {Element}
  */
@@ -174,6 +198,11 @@ function getEditTextsOptionSelect(edit_text) {
 function getCurrentListTable() {
 	var list_id = getCurrentListId();
 	return document.querySelector('.listTable[list_id=' + list_id + ']');
+}
+
+function getCurrentSeriesPage() {
+	let table = getCurrentListTable();
+	return getListTablesPage(table);
 }
 
 /**

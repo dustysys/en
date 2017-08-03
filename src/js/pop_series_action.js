@@ -283,9 +283,13 @@ function filterList(filter) {
 	for (var i = 0; i < titles.length; i++) {
 		var series_row = getTitleLinksSeriesRow(titles[i]);
 		if (titles[i].textContent.toUpperCase().includes(filter)) {
-			series_row.style.display = "";
+			series_row.removeAttribute("filtered");
 		} else {
+			series_row.setAttribute("filtered", "");
 			series_row.style.display = "none";
+		}
+		if (i === titles.length - 1) {
+			updatePaging(getSeriesRowsPage(series_row));
 		}
 	}
 }
@@ -308,6 +312,7 @@ function changeVisibleCurrentListSelection(list_id) {
 function updateListState(list_id, callback) {
 
 	function finishUpdateListState(list_option, callback) {
+		updatePaging(getCurrentSeriesPage());
 		updateCurrentListOption(list_option, function () {
 			popupSendBgBadgeUpdateRequest();
 			if (callback) callback();
@@ -334,18 +339,21 @@ function updateListState(list_id, callback) {
  * selected in the current list dropdown
  */
 function changeToSelectedCurrentList() {
+	resetCurrentPage();
 	window.scrollTo(0, 0);
 	var list_id = getCurrentListId();
 	var list_tables = document.getElementsByClassName("listTable");
 	var found = false;
 	fastdom.mutate(function () {
 		for (var i = 0; i < list_tables.length; i++) {
+			let page = getListTablesPage(list_tables[i]);
 			if (list_tables[i].getAttribute("list_id") === list_id) {
-				list_tables[i].style.display = "";
+				updatePaging(page);
+				page.style.display = "";
 				found = true;
 			}
 			else {
-				list_tables[i].style.display = "none";
+				page.style.display = "none";
 			}
 		}
 
@@ -353,10 +361,24 @@ function changeToSelectedCurrentList() {
 			loadData(function (data) {
 				var popup = document.getElementById("popup");
 				var data_list = getList(data.lists, list_id);
-				var new_table = buildListTable(data_list);
-				popup.appendChild(new_table);
+				var new_page = buildSeriesPage(data_list);
+				popup.appendChild(new_page);
 			});
 		}
+	});
+}
+
+/**
+ * makes all pages no longer visible
+ * @param {function} callback
+ */
+function hideAllPages(callback) {
+	let pages = document.getElementsByClassName("page");
+	fastdom.mutate(function () {
+		for (var i = 0; i < pages.length; i++) {
+			pages[i].style.display = "none";
+		}
+		if (callback) callback();
 	});
 }
 
