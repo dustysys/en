@@ -342,12 +342,12 @@ function changeToSelectedCurrentList() {
 	resetCurrentPage();
 	window.scrollTo(0, 0);
 	var list_id = getCurrentListId();
-	var list_tables = document.getElementsByClassName("listTable");
+	var series_tables = document.getElementsByClassName("seriesTable");
 	var found = false;
 	fastdom.mutate(function () {
-		for (var i = 0; i < list_tables.length; i++) {
-			let page = getListTablesPage(list_tables[i]);
-			if (list_tables[i].getAttribute("list_id") === list_id) {
+		for (var i = 0; i < series_tables.length; i++) {
+			let page = getSeriesTablesPage(series_tables[i]);
+			if (series_tables[i].getAttribute("list_id") === list_id) {
 				updatePaging(page);
 				page.style.display = "";
 				found = true;
@@ -387,10 +387,10 @@ function hideAllPages(callback) {
  * @param {function} callback
  */
 function hideAllLists(callback) {
-	var list_tables = document.getElementsByClassName("listTable");
+	var series_tables = document.getElementsByClassName("seriesTable");
 	fastdom.mutate(function () {
-		for (var i = 0; i < list_tables.length; i++) {
-			list_tables[i].style.display = "none";
+		for (var i = 0; i < series_tables.length; i++) {
+			series_tables[i].style.display = "none";
 		}
 		if (callback) callback();
 	});
@@ -402,10 +402,10 @@ function hideAllLists(callback) {
  * @param {function} callback
  */
 function unloadList(list_id, callback) {
-	var list_table = getListTableById(list_id);
-	if (list_table !== null) {
+	var series_table = getSeriesTableByListId(list_id);
+	if (series_table !== null) {
 		fastdom.mutate(function () {
-			list_table.parentElement.removeChild(list_table);
+			series_table.parentElement.removeChild(series_table);
 			if (callback) callback();
 		});
 	}
@@ -416,11 +416,11 @@ function unloadList(list_id, callback) {
  * @param {function} callback
  */
 function unloadAllLists(callback) {
-	var list_tables = document.getElementsByClassName("listTable");
+	var series_tables = document.getElementsByClassName("seriesTable");
 	fastdom.mutate(function () {
-		var i = list_tables.length - 1;
+		var i = series_tables.length - 1;
 		while (i >= 0) {
-			list_tables[i].parentElement.removeChild(list_tables[i]);
+			series_tables[i].parentElement.removeChild(series_tables[i]);
 			i--;
 		}
 		if (callback) callback();

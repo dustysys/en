@@ -27,8 +27,8 @@ function getSeriesRowsPage(series_row) {
  * @param {Element} page_button
  * @returns {Element}
  */
-function getListTablesPage(list_table) {
-	return list_table.closest('.page');
+function getSeriesTablesPage(series_table) {
+	return series_table.closest('.page');
 }
 
 /**
@@ -103,7 +103,7 @@ function getSeriesRowsSeriesSelectButton(series_row) {
  * @returns {Element}
  */
 function getSeriesRowsTable(series_row) {
-	return getSeriesRowsWrap(series_row).closest('.listTable');
+	return getSeriesRowsWrap(series_row).closest('.seriesTable');
 }
 
 /**
@@ -195,14 +195,14 @@ function getEditTextsOptionSelect(edit_text) {
  * gets the currently displayed list table
  * @returns {Element}
  */
-function getCurrentListTable() {
+function getCurrentSeriesTable() {
 	var list_id = getCurrentListId();
-	return document.querySelector('.listTable[list_id=' + list_id + ']');
+	return document.querySelector('.seriesTable[list_id=' + list_id + ']');
 }
 
 function getCurrentSeriesPage() {
-	let table = getCurrentListTable();
-	return getListTablesPage(table);
+	let table = getCurrentSeriesTable();
+	return getSeriesTablesPage(table);
 }
 
 /**
@@ -243,8 +243,8 @@ function getManageListId() {
  * @param {string} list_id
  * @returns {Element}
  */
-function getListTableById(list_id) {
-	return document.querySelector(".listTable[list_id=" + list_id + "]");
+function getSeriesTableById(list_id) {
+	return document.querySelector(".seriesTable[list_id=" + list_id + "]");
 }
 
 /**

@@ -24,7 +24,7 @@ function buildNavBar(data_lists) {
 }
 
 /**
- * builds the navbar, listtable etc composing the default popup view
+ * builds the navbar and page composing the default popup view
  * @param {Data} data
  */
 function buildPopup(data) {
@@ -292,7 +292,7 @@ function buildPageButtonNext(region, page_num) {
 function buildSeriesPage(data_list) {
 	let series_page = buildPage();
 	series_page.classList.add('seriesPage');
-	let series_table = buildListTable(data_list);
+	let series_table = buildSeriesTable(data_list);
 	let top_page_field = buildPageField("top", pop.paging.current_page_num, pop.paging.num_pages);
 	let bot_page_field = buildPageField("bottom", pop.paging.current_page_num, pop.paging.num_pages);
 
