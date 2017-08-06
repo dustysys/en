@@ -102,82 +102,6 @@ button {
     margin-top: 4px;
 }
 
-.seriesRow[new_releases=true],
-[new_releases=true] * {
-    background-color: var(--block-color-new);
-    color: var(--text-color-new);
-    border-color: var(--border-color-new);
-}
-
-    [new_releases=true] .upToDateButton {
-        color: var(--button-text-color-new);
-        border-color: var(--button-text-color-new);
-    }
-
-    [new_releases=true] .seriesSelectButton {
-        color: var(--button-text-color-new);
-        border-color: var(--button-text-color-new);
-    }
-
-        [new_releases=true] .seriesSelectButton[toggle=on] {
-            background-color: var(--button-text-color-new);
-        }
-        [new_releases=true] .seriesSelectButton[toggle=on]:hover,
-        .optionSelectButton[toggle=on]:hover {
-            background-color: var(--text-color-new);
-        }
-    [new_releases=true] .editLinkInput::-webkit-input-placeholder {
-        color: var(--text-color-new);
-    }
-    [new_releases=true] .editLinkButton{
-        border-color: var(--border-color-new);
-    }
-    [new_releases=true] .seriesTitleBlock {
-        border-right-color: var(--border-color-new);
-    }
-    [new_releases=true] .badge {
-        background-color: var(--text-color-new);
-    }
-
-.seriesRow[new_releases=false] ,
-[new_releases=false] * {
-    background-color: var(--block-color);
-    color: var(--text-color);
-    border-color: var(--border-color);
-}
-
-    [new_releases=false] .upToDateButton {
-        color: var(--button-text-color);
-        border-color: var(--button-text-color);
-    }
-    [new_releases=false] .seriesSelectButton, #selectAllButton {
-        color: var(--button-text-color);
-        border-color: var(--button-text-color);
-    }
-        [new_releases=false] .seriesSelectButton[toggle=on],
-        #selectAllButton[toggle=on] {
-            background-color: var(--button-text-color);
-        }
-        [new_releases=false] .seriesSelectButton[toggle=on]:hover,
-        #selectAllButton[toggle=on]:hover {
-            background-color: var(--text-color);
-        }
-    [new_releases=false] .editLinkInput::-webkit-input-placeholder {
-    color: var(--text-color);
-    }
-    [new_releases=false] .editLinkButton {
-        border-color: var(--border-color);
-    }
-    [new_releases=false] .seriesTitleBlock {
-        border-right-color: var(--border-color);
-    }
-    [new_releases=false] .badge {
-        background-color: var(--text-color);
-    }
-
-.seriesPage {    
-}
-
 .pageButton {
     margin: var(--std-margin-width);
     border: 1px solid;
@@ -214,7 +138,7 @@ button {
     float: right;
 }
 
-.listTable {
+.seriesTable {
     margin-left: var(--table-margin-horiz);
     margin-right: var(--table-margin-horiz);
 }

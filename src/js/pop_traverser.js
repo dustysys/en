@@ -243,7 +243,7 @@ function getManageListId() {
  * @param {string} list_id
  * @returns {Element}
  */
-function getSeriesTableById(list_id) {
+function getSeriesTableByListId(list_id) {
 	return document.querySelector(".seriesTable[list_id=" + list_id + "]");
 }
 
