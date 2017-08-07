@@ -1,6 +1,6 @@
 ## Testing
 
-Currently there is no automated testing solution. Getting standard testing options to play nice with the Chrome extension API should be done at some point, but until then this list should be applied via manual visual inspection to check features while making changes, and all of these tests should be checked to demonstrate application compliance before merging to master. It is not exhaustive but executes all the major moving parts of the application. It can also be read as a specification for application behavior.
+Automated and unit testing is done with the node.js module in the same directory as this document. It makes use of selenium, karma, mocha, chai, sinon and other modules. Changes to the code are also automatically tested with continuous integration via TravisCI, so a pull request is sufficient to test changes. Because end-to-end testing is not fully automated, below is a basic test specification for manual inspection of correct application behavior.
 
 ## en core Functions
 
