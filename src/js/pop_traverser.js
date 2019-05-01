@@ -133,7 +133,7 @@ function getTitleLinksSeriesRow(title_link) {
  * @returns {Element}
  */
 function getEditLinkButtonsTitleBlock(edit_link_button) {
-	return edit_link_button.closest('.titleBlock');
+	return edit_link_button.closest('.seriesTitleBlock');
 }
 
 /**
@@ -141,7 +141,7 @@ function getEditLinkButtonsTitleBlock(edit_link_button) {
  * @returns {Element}
  */
 function getEditLinkIconsTitleBlock(edit_link_icon) {
-	return edit_link_icon.closest('.titleBlock');
+	return edit_link_icon.closest('.seriesTitleBlock');
 };
 
 /**
