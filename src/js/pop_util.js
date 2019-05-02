@@ -160,7 +160,12 @@ function validateUrl(url) {
 	var has_http = (url.toLowerCase().includes("http://"));
 	var has_https = (url.toLowerCase().includes("https://"));
 	if (!has_www) {
-		return "http://www." + url;
+		if(has_http) 
+			return url.substring(0,"http://".length) + "www." + url.substring("http://".length)
+		else if(has_https)
+			return url.substring(0,"https://".length) + "www." + url.substring("https://".length);
+		else
+			return "http://www." + url;
 	} else if (!has_http && !has_https) {
 		return "http://" + url;
 	} else return url;
