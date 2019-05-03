@@ -64,6 +64,53 @@ function getSeriesRowsEditLinkWrap(series_row) {
 }
 
 /**
+ * @param {Element} series_row
+ * @returns {Element}
+ */
+function getSeriesRowsCopyTitleButton(series_row) {
+	return series_row.querySelector('.copyTitleButton');
+}
+
+/**
+ * @param {Element} link_button
+ * @returns {Element}
+ */
+function getCopyTitleButtonsLinkIcon(link_button) {
+	return link_button.querySelector('.copyTitleIcon');
+}
+
+/**
+ * @param {Element} series_row
+ * @returns {Element}
+ */
+function getSeriesRowsCopyTitleWrap(series_row) {
+	return series_row.querySelector('.copyTitleWrap');
+}
+
+/**
+ * @param {Element} series_row
+ * @returns {Element}
+ */
+function getSeriesRowsTabURLAsLinkButton(series_row) {
+	return series_row.querySelector('.tabURLAsLinkButton');
+}
+
+/**
+ * @param {Element} link_button
+ * @returns {Element}
+ */
+function getTabURLAsLinkButtonsLinkIcon(link_button) {
+	return link_button.querySelector('.tabURLAsLinkIcon');
+}
+
+/**
+ * @param {Element} series_row
+ * @returns {Element}
+ */
+function getSeriesRowsTabURLAsLinkWrap(series_row) {
+	return series_row.querySelector('.tabURLAsLinkWrap');
+}
+/**
  * @param {Element} input_link
  * @returns {Element}
  */

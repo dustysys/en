@@ -101,7 +101,7 @@ function animateToggleManageMode(toggle, callback) {
 
 			animateToggleManageField(toggle, callback);
 			animateToggleUpToDateSelect(toggle, onscreen_rows);
-			animateToggleEditLink(toggle, onscreen_rows);
+			animateToggleManageButtons(toggle, onscreen_rows);
 		});
 	} else {
 		callback(toggle);
@@ -224,24 +224,33 @@ function animateElementColorChange(element, color_old, color_new, callback) {
 }
 
 /**
- * plays animation for series link button moving from/to its title block position
+ * plays animation for series manage buttons moving from/to its title block position
  * @param {boolean} toggle
  * @param {Element[]} onscreen_rows
  */
-function animateToggleEditLink(toggle, onscreen_rows) {
+function animateToggleManageButtons(toggle, onscreen_rows) {
 	var d_y = 75;
 	var y0 = toggle ? 0 : d_y;
 	var y1 = toggle ? d_y : 0;
 	var time_anim = 200;
 	fastdom.mutate(function () {
 		for (var i = 0; i < onscreen_rows.length; i++) {
-			var edit_link_wrap = getSeriesRowsEditLinkWrap(onscreen_rows[i]);
-			edit_link_wrap.style.display = "";
-			var link_anim = edit_link_wrap.animate([
+			var transform = [
 				{ transform: `translateY(${-y1}px)` },
 				{ offset: 0.8, transform: `translateY(${-y0}px)` },
 				{ transform: `translateY(${-y0}px)` }
-			], { duration: time_anim, easing: 'linear' });
+			];
+			var duration = { duration: time_anim, easing: 'linear' };
+
+			var edit_link_wrap = getSeriesRowsEditLinkWrap(onscreen_rows[i]);
+			edit_link_wrap.style.display = "";
+			edit_link_wrap.animate(transform, duration);
+			var copy_title_wrap = getSeriesRowsCopyTitleWrap(onscreen_rows[i]);
+			copy_title_wrap.style.display = "";
+			copy_title_wrap.animate(transform, duration);
+			var tab_url_as_link_wrap = getSeriesRowsTabURLAsLinkWrap(onscreen_rows[i]);
+			tab_url_as_link_wrap.style.display = "";
+			tab_url_as_link_wrap.animate(transform, duration);
 		}
 	});
 }

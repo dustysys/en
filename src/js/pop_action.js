@@ -105,6 +105,8 @@ function toggleManageModeVisibility(toggle) {
 	toggleManageFieldVisibility(toggle);
 	toggleSeriesSelectVisibility(toggle);
 	toggleEditLinkVisibility(toggle);
+	toggleCopyTitleVisibility(toggle);
+	toggleTabURLAsLinkVisibility(toggle);
 }
 
 /**

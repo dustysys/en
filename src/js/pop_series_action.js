@@ -230,6 +230,28 @@ function toggleEditLinkVisibility(toggle) {
 }
 
 /**
+ * toggles visibility for all copy title buttons
+ * @param {boolean} toggle
+ */
+function toggleCopyTitleVisibility(toggle) {
+	var copy_wraps = document.body.getElementsByClassName("copyTitleWrap");
+	for (var i = 0; i < copy_wraps.length; i++) {
+		toggleElementVisibility(copy_wraps[i], toggle);
+	}
+}
+
+/**
+ * toggles visibility for all copy title buttons
+ * @param {boolean} toggle
+ */
+function toggleTabURLAsLinkVisibility(toggle) {
+	var copy_wraps = document.body.getElementsByClassName("tabURLAsLinkWrap");
+	for (var i = 0; i < copy_wraps.length; i++) {
+		toggleElementVisibility(copy_wraps[i], toggle);
+	}
+}
+
+/**
  * updates the user input volume and chapter on popup, locally and pushes change to MU
  * @param {Element} series_row
  * @param {string} vol_input
