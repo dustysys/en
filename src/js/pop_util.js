@@ -156,12 +156,9 @@ function showElement(el) {
  * @returns {string}
  */
 function validateUrl(url) {
-	var has_www = (url.toLowerCase().includes("www."));
 	var has_http = (url.toLowerCase().includes("http://"));
 	var has_https = (url.toLowerCase().includes("https://"));
-	if (!has_www) {
-		return "http://www." + url;
-	} else if (!has_http && !has_https) {
-		return "http://" + url;
+	if (!has_http && !has_https) {
+		return "https://" + url;
 	} else return url;
 }
