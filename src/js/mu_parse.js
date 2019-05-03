@@ -211,7 +211,7 @@ function parseNewReleasesPageForReleases(new_releases_page, latest_release_updat
 	var series_id_release_pairs = [];
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(new_releases_page, "text/html");
-	var elm_date_list = doc.querySelectorAll('[style="display:inline"]');
+	var elm_date_list = doc.querySelectorAll('[class="d-inline titlesmall"]');
 	if (elm_date_list && elm_date_list.length > 0) {
 		for (var i = 0; i < elm_date_list.length; i++) {
 			var elm_date = elm_date_list[i].firstElementChild;
