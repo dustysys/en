@@ -116,6 +116,9 @@ function buildTitleBlock(data_list, data_series) {
 	if (len > 50) font_size = 10;
 	title_cont.style.fontSize = font_size + 'px';
 	var edit_link_wrap = buildEditLinkButton(data_series);
+	var copy_title_wrap = buildCopyTitleButton(data_series);
+	var tab_url_as_link_wrap = buildSetTabURLAsLinkButton(data_series);
+
 	if (!isEmpty(data_series.unread_releases)) {
 		if (data_series.unread_releases.length > 1 || data_series.latest_unread_release.marked_seen) {
 			var badge = buildBadge(data_series.unread_releases.length);
@@ -131,6 +134,8 @@ function buildTitleBlock(data_list, data_series) {
 	title_disp.appendChild(title_cont);
 	title_cont.appendChild(title_link);
 	title_block.appendChild(edit_link_wrap);
+	title_block.appendChild(copy_title_wrap);
+	title_block.appendChild(tab_url_as_link_wrap);
 
 	return title_block;
 }
@@ -163,6 +168,69 @@ function buildEditLinkButton(data_series) {
 	edit_link_wrap.appendChild(edit_link_button);
 
 	return edit_link_wrap;
+}
+
+/**
+ * builds DOM button for copying the title associated with selected series
+ * @param {Series} data_series
+ * @returns {Element}
+ */
+function buildCopyTitleButton(data_series) {
+	var copy_title_button = document.createElement("div");
+	copy_title_button.className = "copyTitleButton";
+	copy_title_button.onclick =  function(event) {
+		navigator.clipboard.writeText(data_series.title);
+	};
+	copy_title_button.title = "Copy Title";
+	var copy_title_icon = document.createElement("div");
+	copy_title_icon.className = "copyTitleIcon";
+	copy_title_icon.textContent = "C";
+	var copy_title_wrap = document.createElement("div");
+	copy_title_wrap.className = "copyTitleWrap";
+	if (!manageModeOn()) {
+		copy_title_wrap.style.display = "none";
+	}
+
+	if (exists(data_series.user_link)) {
+		copy_title_icon.style.opacity = 1;
+		copy_title_button.style.opacity = .9;
+	}
+
+	copy_title_button.appendChild(copy_title_icon);
+	copy_title_wrap.appendChild(copy_title_button);
+
+	return copy_title_wrap;
+}
+
+/**
+ * builds DOM button for setting the current tab's url as link associated with selected series
+ * @param {Series} data_series
+ * @returns {Element}
+ */
+function buildSetTabURLAsLinkButton(data_series) {
+	var tab_url_as_link_button = document.createElement("div");
+	tab_url_as_link_button.className = "tabURLAsLinkButton";
+	tab_url_as_link_button.onclick =  handleSetCurrentPageAsLink;
+	tab_url_as_link_button.title = "Set Tab URL As Link";
+	var tab_url_as_link_icon = document.createElement("div");
+	tab_url_as_link_icon.className = "tabURLAsLinkIcon";
+	tab_url_as_link_icon.textContent = "+";
+	var tab_url_as_link_wrap = document.createElement("div");
+	tab_url_as_link_wrap.className = "tabURLAsLinkWrap";
+	if (!manageModeOn()) {
+		tab_url_as_link_wrap.style.display = "none";
+	}
+
+	if (exists(data_series.user_link)) {
+		tab_url_as_link_icon.style.opacity = 1;
+		tab_url_as_link_button.style.opacity = .9;
+	}
+
+	tab_url_as_link_button.appendChild(tab_url_as_link_icon);
+	tab_url_as_link_wrap.appendChild(tab_url_as_link_button);
+
+	return tab_url_as_link_wrap;
+
 }
 
 /**
