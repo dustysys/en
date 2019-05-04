@@ -116,8 +116,8 @@ function buildTitleBlock(data_list, data_series) {
 	if (len > 50) font_size = 10;
 	title_cont.style.fontSize = font_size + 'px';
 	var edit_link_wrap = buildEditLinkButton(data_series);
-	var copy_title_wrap = buildCopyTitleButton(data_series);
 	var tab_url_as_link_wrap = buildSetTabURLAsLinkButton(data_series);
+	var copy_title_wrap = buildCopyTitleButton(data_series);
 
 	if (!isEmpty(data_series.unread_releases)) {
 		if (data_series.unread_releases.length > 1 || data_series.latest_unread_release.marked_seen) {
@@ -181,19 +181,14 @@ function buildCopyTitleButton(data_series) {
 	copy_title_button.onclick =  function(event) {
 		navigator.clipboard.writeText(data_series.title);
 	};
-	copy_title_button.title = "Copy Title";
+	copy_title_button.title = "Copy Title To Clipboard";
 	var copy_title_icon = document.createElement("div");
 	copy_title_icon.className = "copyTitleIcon";
-	copy_title_icon.textContent = "C";
+	copy_title_icon.textContent = "\u2397";
 	var copy_title_wrap = document.createElement("div");
 	copy_title_wrap.className = "copyTitleWrap";
 	if (!manageModeOn()) {
 		copy_title_wrap.style.display = "none";
-	}
-
-	if (exists(data_series.user_link)) {
-		copy_title_icon.style.opacity = 1;
-		copy_title_button.style.opacity = .9;
 	}
 
 	copy_title_button.appendChild(copy_title_icon);
@@ -211,7 +206,7 @@ function buildSetTabURLAsLinkButton(data_series) {
 	var tab_url_as_link_button = document.createElement("div");
 	tab_url_as_link_button.className = "tabURLAsLinkButton";
 	tab_url_as_link_button.onclick =  handleSetCurrentPageAsLink;
-	tab_url_as_link_button.title = "Set Tab URL As Link";
+	tab_url_as_link_button.title = "Set Link To Current Tab";
 	var tab_url_as_link_icon = document.createElement("div");
 	tab_url_as_link_icon.className = "tabURLAsLinkIcon";
 	tab_url_as_link_icon.textContent = "+";
@@ -219,11 +214,6 @@ function buildSetTabURLAsLinkButton(data_series) {
 	tab_url_as_link_wrap.className = "tabURLAsLinkWrap";
 	if (!manageModeOn()) {
 		tab_url_as_link_wrap.style.display = "none";
-	}
-
-	if (exists(data_series.user_link)) {
-		tab_url_as_link_icon.style.opacity = 1;
-		tab_url_as_link_button.style.opacity = .9;
 	}
 
 	tab_url_as_link_button.appendChild(tab_url_as_link_icon);
