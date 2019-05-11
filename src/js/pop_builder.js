@@ -15,11 +15,14 @@ function buildNavBar(data_lists) {
 	var nav_bar = document.createElement("div");
 	nav_bar.id = "navBar";
 
-	//nav_bar.appendChild(buildDevTools());
+	
 	nav_bar.appendChild(buildCurrentListField(data_lists));
 	nav_bar.appendChild(buildOptionsButton());
+	nav_bar.appendChild(buildReleaseNavButton());
+	nav_bar.appendChild(buildSeriesNavButton());
 	nav_bar.appendChild(buildManageSeriesField(data_lists));
 	nav_bar.appendChild(buildManageSeriesButton());
+	nav_bar.appendChild(buildDevTools());
 	return nav_bar;
 }
 
@@ -36,6 +39,8 @@ function buildPopup(data) {
 	let list = getListById(data.lists, "read");
 	let series_page = buildSeriesPage(list);
 	popup.appendChild(series_page);
+	let release_page = buildReleasePage(list);
+	//popup.appendChild(release_page);
 	delayScrollbar(popup);
 	changeVisibleCurrentListSelection("read");
 }
@@ -67,6 +72,36 @@ function buildListOption(data_list) {
 	list_option.textContent = data_list.list_name;
 	list_option.setAttribute("list_id", data_list.list_id);
 	return list_option;
+}
+
+/**
+ * builds the button that opens the release page
+ * @returns {Element}
+ */
+function buildReleaseNavButton() {
+	var release_nav_button = document.createElement('div');
+	release_nav_button.id = "releaseNavButton";
+	release_nav_button.className = "enButton navButton";
+	release_nav_button.onclick = handleNavReleasePage;
+	release_nav_button.textContent = "Releases";
+	release_nav_button.setAttribute("toggle", "off");
+
+	return release_nav_button;
+}
+
+/**
+ * builds the button that opens the series page
+ * @returns {Element}
+ */
+function buildSeriesNavButton() {
+	var series_nav_button = document.createElement('div');
+	series_nav_button.id = "seriesNavButton";
+	series_nav_button.className = "enButton navButton";
+	series_nav_button.onclick = handleNavSeriesPage;
+	series_nav_button.textContent = "Series";
+	series_nav_button.setAttribute("toggle", "on");
+
+	return series_nav_button;
 }
 
 /**
@@ -232,6 +267,13 @@ function buildManageSeriesButton() {
 	return manage_series_button;
 }
 
+/**
+ * Creates top or bottom field where prev/next buttons reside
+ * @param {string} region 
+ * @param {Number} current_page_num 
+ * @param {Number} num_pages 
+ * @returns {Element} page_field
+ */
 function buildPageField(region, current_page_num, num_pages) {
 	let page_field = document.createElement('div');
 	page_field.className = "pageField";
@@ -248,6 +290,10 @@ function buildPageField(region, current_page_num, num_pages) {
 	return page_field;
 }
 
+/**
+ * Creates generic button to be used for prev/next buttons
+ * @returns {Element} page_button
+ */
 function buildPageButton() {
 	let page_button = document.createElement('div');
 	page_button.className = "pageButton";
@@ -255,12 +301,22 @@ function buildPageButton() {
 	return page_button;
 }
 
+/**
+ * Creates generic span to be used for the page prev/next buttons 
+ * @returns {Element} page_desc
+ */
 function buildPageDesc() {
 	let page_desc = document.createElement('span');
 	page_desc.className = "pageButtonDescription";
 	return page_desc;
 }
 
+/**
+ * Creates the button which navigates to previous page
+ * @param {string} region 
+ * @param {string} page_num 
+ * @returns {Element} prev_button
+ */
 function buildPageButtonPrev(region, page_num) {
 	let prev_button = buildPageButton();
 	let prev_desc = buildPageDesc();
@@ -275,6 +331,12 @@ function buildPageButtonPrev(region, page_num) {
 	return prev_button;
 }
 
+/**
+ * Creates the button which navigates to next page
+ * @param {string} region 
+ * @param {string} page_num 
+ * @returns {Element} next_button
+ */
 function buildPageButtonNext(region, page_num) {
 	let next_button = buildPageButton();
 	let next_desc = buildPageDesc();
@@ -289,6 +351,11 @@ function buildPageButtonNext(region, page_num) {
 	return next_button;
 }
 
+/**
+ * Builds DOM page for series
+ * @param {*} data_list
+ * @returns {Element} series_page
+ */
 function buildSeriesPage(data_list) {
 	let series_page = buildPage();
 	series_page.classList.add('seriesPage');
@@ -305,6 +372,31 @@ function buildSeriesPage(data_list) {
 	return series_page;
 }
 
+/**
+ * Builds DOM page for releases
+ * @param {List} data_list 
+ * @returns {Element} release_page
+ */
+function buildReleasePage(data_list) {
+	let release_page = buildPage();
+	release_page.classList.add('releasePage');
+	let release_table = buildReleaseTable(data_list);
+	let top_page_field = buildPageField("top", pop.paging.current_page_num, pop.paging.num_pages);
+	let bot_page_field = buildPageField("bottom", pop.paging.current_page_num, pop.paging.num_pages);
+
+	release_page.appendChild(top_page_field);
+	release_page.appendChild(release_table);
+	release_page.appendChild(bot_page_field);
+
+	updatePaging(release_page);
+
+	return release_page;
+}
+
+/**
+ * Builds generic DOM page
+ * @returns {Element} page
+ */
 function buildPage() {
 	let page = document.createElement('div');
 	page.className = 'page';

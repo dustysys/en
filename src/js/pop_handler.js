@@ -35,6 +35,30 @@ function handleToggleOptions(event) {
 }
 
 /**
+ * initiates animation and appearance/building of releases page
+ * @param {Event} event
+ */
+function handleNavReleasePage(event) {
+	toggleOffAllNavButtons(function(){
+	event.target.setAttribute("toggle", "on");
+	hideAllPages(changeToSelectedCurrentList);
+	//animateToggleOptionMode(toggle, toggleOptionModeVisibility);
+	});
+}
+
+/**
+ * initiates animation and appearance/building of series page
+ * @param {Event} event
+ */
+function handleNavSeriesPage(event) {
+		toggleOffAllNavButtons(function(){
+		event.target.setAttribute("toggle", "on");
+		hideAllPages(changeToSelectedCurrentList);
+		//animateToggleOptionMode(toggle, toggleOptionModeVisibility);
+		});
+}
+
+/**
  * Toggles the series select for all elements
  * @param {Event} event
  */

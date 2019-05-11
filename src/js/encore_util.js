@@ -77,10 +77,20 @@ function cmpAlphabetical(a, b) {
 	else return 0;
 }
 
+/**
+ * alphabetical comparison for lists by name
+ * @param {List} a 
+ * @param {List} b 
+ */
 function cmpListAlphabetical(a, b) {
 	return cmpAlphabetical(a.list_name, b.list_name);
 }
 
+/**
+ * alphabetical comparison for series by title
+ * @param {Series} a 
+ * @param {Series} b 
+ */
 function cmpSeriesAlphabetical(a, b) {
 	return cmpAlphabetical(a.title, b.title);
 }

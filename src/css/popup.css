@@ -11,6 +11,7 @@
     --block-color: #d4e2f9;
     --block-color-new: #f5e2e1;
     --color-brighten: rgba(255, 255, 255, 0.7);
+    --color-darken: rgba(0, 0, 0, 0.1);
     --color-brighten-more: rgba(255, 255, 255, 0.95);
     --button-text-color: #12367a;
     --button-text-color-new: #522731;
@@ -138,12 +139,12 @@ button {
     float: right;
 }
 
-.seriesTable {
+.seriesTable, .releaseTable {
     margin-left: var(--table-margin-horiz);
     margin-right: var(--table-margin-horiz);
 }
 
-.seriesRow, .optionRow {
+.seriesRow, .optionRow, .releaseRow {
     border-radius: var(--block-border-radius);
     border-width: var(--std-border-width);
     border-style: dotted;
@@ -153,11 +154,11 @@ button {
     overflow: hidden;
 }
 
-.seriesRowWrap {
+.seriesRowWrap, .releaseRowWrap {
     will-change: transform;
 }
 
-.seriesTitleBlock {
+.seriesTitleBlock, .releaseRowTitleBlock {
     width: var(--title-block-width);
     float: left;
     font-weight: bold;
@@ -317,7 +318,7 @@ button {
     background-color:initial;
 }
 
-.seriesReleaseBlock {
+.seriesReleaseBlock, .releaseRowReleaseBlock {
     overflow: hidden;
     height: 50px;
     font-size: 12px;
@@ -332,7 +333,8 @@ button {
     overflow-y: visible;
 }
 
-.releaseLatestLine {
+.releaseLatestLine, .releaseVolChapLine,
+.releaseGroupsLine, .releaseDateLine {
     height: 16px;
     overflow:hidden;
 }
@@ -596,12 +598,61 @@ button {
     left: 8px;
 }
 
-#optionsButton {
+#seriesNavButton {
     position: absolute;
     width: 71px;
     height: 19px;
     top: 1px;
     left: 221px;
+    padding: 0px;
+    text-align: center;
+    padding-top: 5px;
+    font: 13.3333px Arial;
+    border-color: var(--button-text-color);
+    color: var(--button-text-color);
+}
+    #seriesNavButton:hover {
+        background-color: var(--color-brighten);
+    }
+    #seriesNavButton:active {
+        transform: translateY(1px);
+    }
+    #seriesNavButton[toggle=on] {
+        background-color: var(--color-darken);
+        font-weight: bold;
+    }
+
+
+#releaseNavButton {
+    position: absolute;
+    width: 71px;
+    height: 19px;
+    top: 1px;
+    left: 294px;
+    padding: 0px;
+    text-align: center;
+    padding-top: 5px;
+    font: 13.3333px Arial;
+    border-color: var(--button-text-color);
+    color: var(--button-text-color);
+}
+    #releaseNavButton:hover {
+        background-color: var(--color-brighten);
+    }
+    #releaseNavButton:active {
+        transform: translateY(1px);
+    }
+    #releaseNavButton[toggle=on] {
+        background-color: var(--color-darken);
+        font-weight: bold;
+    }
+
+#optionsButton{
+    position: absolute;
+    width: 71px;
+    height: 19px;
+    top: 1px;
+    left: 366px;
     padding: 0px;
     text-align: center;
     padding-top: 5px;

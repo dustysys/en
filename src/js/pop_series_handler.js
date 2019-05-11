@@ -195,6 +195,11 @@ function handleCompleteEditLink(event) {
 	input_link.parentElement.removeChild(input_link);
 }
 
+/**
+ * Sets theseries' model to the link in the URL bar for the current
+ * opened browser tab
+ * @param {Event} event 
+ */
 function handleSetCurrentPageAsLink(event) {
 	var input_link = event.target;
 	var link = input_link.value;

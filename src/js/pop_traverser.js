@@ -24,11 +24,19 @@ function getSeriesRowsPage(series_row) {
 }
 
 /**
- * @param {Element} page_button
+ * @param {Element} series_table
  * @returns {Element}
  */
 function getSeriesTablesPage(series_table) {
 	return series_table.closest('.page');
+}
+
+/**
+ * @param {Element} table
+ * @returns {Element}
+ */
+function getTablesPage(table) {
+	return table.closest('.page');
 }
 
 /**
@@ -247,9 +255,14 @@ function getCurrentSeriesTable() {
 	return document.querySelector('.seriesTable[list_id=' + list_id + ']');
 }
 
+/**
+ * gets the currently displayed page
+ * @returns {Element}
+ */
 function getCurrentSeriesPage() {
 	let table = getCurrentSeriesTable();
-	return getSeriesTablesPage(table);
+	let page = table.closest(".page");
+	return getSeriesTablesPage(page);
 }
 
 /**
@@ -259,6 +272,15 @@ function getCurrentSeriesPage() {
  */
 function getSeriesRowsId(series_row) {
 	return series_row.getAttribute("series_id").substring(1);
+}
+
+/**
+ * gets the release string associated with release row element
+ * @param {Element} release_row
+ * @returns {string}
+ */
+function getReleaseRowsId(series_row) {
+	return series_row.getAttribute("release_id").substring(1);
 }
 
 /**
@@ -308,6 +330,43 @@ function listFilterIsInUse() {
  */
 function manageModeOn() {
 	var toggle = document.getElementById("manageSeriesButton").getAttribute("toggle") === "on";
+	return toggle;
+}
+
+/**
+ * evaluates whether options page is currently on
+ * @returns {boolean}
+ */
+function optionsPageOn() {
+	var toggle = document.getElementById("manageSeriesButton").getAttribute("toggle") === "on";
+	return toggle;
+}
+
+/**
+ * evaluates whether series page is currently on
+ * @returns {boolean}
+ */
+function seriesPageOn() {
+	var toggle = document.getElementById("seriesNavButton").getAttribute("toggle") === "on";
+	return toggle;
+}
+
+/**
+ * evaluates whether release page is currently on
+ * @returns {boolean}
+ */
+function releasePageOn() {
+	var toggle = document.getElementById("releaseNavButton").getAttribute("toggle") === "on";
+	return toggle;
+}
+
+
+/**
+ * evaluates whether series page is currently on
+ * @returns {boolean}
+ */
+function seriesPageOn() {
+	var toggle = document.getElementById("seriesNavButton").getAttribute("toggle") === "on";
 	return toggle;
 }
 

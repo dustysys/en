@@ -1,2 +1,6 @@
-﻿body {
+﻿.releaseRow[new_releases=true],
+        [new_releases=true] * {
+        background-color: var(--block-color-new);
+        color: var(--text-color-new);
+        border-color: var(--border-color-new);
 }

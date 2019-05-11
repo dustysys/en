@@ -357,40 +357,6 @@ function updateListState(list_id, callback) {
 }
 
 /**
- * switches the currently viewed list table to the one
- * selected in the current list dropdown
- */
-function changeToSelectedCurrentList() {
-	resetCurrentPage();
-	window.scrollTo(0, 0);
-	var list_id = getCurrentListId();
-	var series_tables = document.getElementsByClassName("seriesTable");
-	var found = false;
-	fastdom.mutate(function () {
-		for (var i = 0; i < series_tables.length; i++) {
-			let page = getSeriesTablesPage(series_tables[i]);
-			if (series_tables[i].getAttribute("list_id") === list_id) {
-				updatePaging(page);
-				page.style.display = "";
-				found = true;
-			}
-			else {
-				page.style.display = "none";
-			}
-		}
-
-		if (!found) {
-			loadData(function (data) {
-				var popup = document.getElementById("popup");
-				var data_list = getList(data.lists, list_id);
-				var new_page = buildSeriesPage(data_list);
-				popup.appendChild(new_page);
-			});
-		}
-	});
-}
-
-/**
  * makes all pages no longer visible
  * @param {function} callback
  */

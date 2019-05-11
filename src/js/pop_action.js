@@ -4,6 +4,10 @@ File: pop_action.js
 These functions modify the global popup display state or global extension data.
 #############################################################################*/
 
+/**
+ * Sort a list of elements into a preset number of pages
+ * @param {Element[]} els 
+ */
 function pageElements(els) {
 	let current_page = pop.paging.current_page_num;
 	let els_per_page = 30;
@@ -22,6 +26,10 @@ function pageElements(els) {
 	updatePageVisibility(els);
 }
 
+/**
+ * Determines and modified visibility of each element based on current page1
+ * @param {Element[]} els 
+ */
 function updatePageVisibility(els) {
 	els.forEach((el, index) => {
 		if (el.getAttribute("page") !== pop.paging.current_page_num.toString()) {
@@ -32,11 +40,19 @@ function updatePageVisibility(els) {
 	});
 }
 
+/**
+ * Calculates and records the current number of pages required
+ * @param {Element[]} els 
+ */
 function updateNumPages(els) {
 	let els_per_page = 30;
 	pop.paging.num_pages = Math.floor(els.length / els_per_page) + 1;
 }
 
+/**
+ * Updates the page buttons to reflect current indexing
+ * @param {Element} page 
+ */
 function updatePageButtons(page) {
 	let page_fields = page.querySelectorAll('.pageField');
 	page_fields.forEach(field => {
@@ -47,21 +63,31 @@ function updatePageButtons(page) {
 	});
 }
 
+/**
+ * Re-indexes the rows into pages based on the rows currently visible
+ * @param {Element} page 
+ */
 function updatePaging(page) {
-	if (page.classList.contains("seriesPage")) {
-		let rows = page.querySelectorAll('.seriesRow:not([filtered])');
-		if (rows.length > 0) {
-			pageElements(rows);
-		}
-		updateNumPages(rows);
-		updatePageButtons(page);
+	var currentNavPage = getCurrentNavPage();
+	let rows = page.querySelectorAll("." + currentNavPage + "Row:not([filtered])");
+	if (rows.length > 0) {
+		pageElements(rows);
 	}
+	updateNumPages(rows);
+	updatePageButtons(page);
 }
 
+/**
+ * Reset view to first page
+ */
 function resetCurrentPage() {
 	pop.paging.current_page_num = 1;
 }
 
+/**
+ * Trigger navigation to previous page
+ * @param {Element} page 
+ */
 function decrementPage(page) {
 	pop.paging.current_page_num--;
 	updatePaging(page);
@@ -70,12 +96,77 @@ function decrementPage(page) {
 	resetSelectAllSeriesButton();
 }
 
+/**
+ * Trigger navigation to next page
+ * @param {Element} page 
+ */
 function incrementPage(page) {
 	pop.paging.current_page_num++;
 	updatePaging(page);
 	window.scrollTo(0, 0);
 	resetAllSelectSeriesButtons();
 	resetSelectAllSeriesButton();
+}
+
+/**
+ * switches the currently viewed list table to the one
+ * selected in the current list dropdown
+ */
+function changeToSelectedCurrentList() {
+	resetCurrentPage();
+	window.scrollTo(0, 0);
+	var list_id = getCurrentListId();
+	var currentNavPage = getCurrentNavPage();
+	var tables = document.getElementsByClassName( currentNavPage + "Table");
+	var found = false;
+	fastdom.mutate(function () {
+		for (var i = 0; i < tables.length; i++) {
+			let page = getTablesPage(tables[i]);
+			if (tables[i].getAttribute("list_id") === list_id) {
+				updatePaging(page);
+				page.style.display = "";
+				found = true;
+			}
+			else {
+				page.style.display = "none";
+			}
+		}
+
+		if (!found) {
+			loadData(function (data) {
+				var popup = document.getElementById("popup");
+				var data_list = getList(data.lists, list_id);
+				var new_page;
+				if (currentNavPage === "series") {
+					new_page = buildSeriesPage(data_list);
+				} else if (currentNavPage === "release") {
+					new_page = buildReleasePage(data_list);
+				} else return;
+				popup.appendChild(new_page);
+			});
+		}
+	});
+}
+
+/**
+ * Returns a string representation of the currently viewed page
+ * @returns {string} page
+ */
+function getCurrentNavPage(){
+	if (optionsPageOn()) { return "options"; }
+	if (releasePageOn()) { return "release"; }
+	if (seriesPageOn()) { return "series"; }
+	else return "series";
+}
+
+function toggleOffAllNavButtons(callback) {
+	let nav_buttons = document.getElementsByClassName("navButton");
+	fastdom.mutate(function () {
+		for (var i = 0; i < nav_buttons.length; i++) {
+			nav_buttons[i].setAttribute("toggle", "off");
+		}
+		if (callback) callback();
+	});
 }
 
 /**
