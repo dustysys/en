@@ -1,5 +1,5 @@
 /*#############################################################################
-File: pop_series_builder.js
+File: pop_release_builder.js
 
 These functions build DOM elements composing the Release display state, this
 means a table filled with release rows created from releases stored by each 

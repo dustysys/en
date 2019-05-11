@@ -1,5 +1,5 @@
 ﻿/*#############################################################################
-File: pop_series_action.js
+File: pop_release_action.js
 
 Changes to the the series DOM elements or, in particular, changes to their
 underlying data model, are executed in these functions.
